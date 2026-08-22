@@ -4,11 +4,12 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  // GitHub Pages serves this project from https://<user>.github.io/<repo-name>/,
-  // so every asset URL needs the repo name as a prefix. This MUST exactly match
-  // the GitHub repository name (case-sensitive), including the leading/trailing slash.
-  // Matches the actual repo: github.com/kvicodes/kvi
-  // When migrating to a self-hosted server that serves the site from the domain
-  // root, change this back to '/'.
-  base: '/kvi/',
+  // A custom domain (www.kvinnovations.in) is configured for GitHub Pages via
+  // public/CNAME, so the site is served from the domain root rather than
+  // https://kvicodes.github.io/kvi/. That means base stays '/' — do NOT set
+  // it to '/kvi/' while the custom domain is active, or asset URLs will
+  // 404. If the custom domain is ever removed (deleting public/CNAME) and
+  // the site falls back to the github.io/<repo> URL, set base back to
+  // '/kvi/' to match the repo name.
+  base: '/',
 })

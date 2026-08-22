@@ -1,19 +1,31 @@
 # Deployment Guide
 
-This project is currently configured to deploy to **GitHub Pages**. It uses
-`HashRouter` and a Vite `base` path so that client-side routing and asset
-URLs work correctly on GitHub Pages' static hosting (no server rewrite rules
-available). See the "Migrating to a self-hosted server" section below for
-what to change when you move off GitHub Pages.
+This project is currently configured to deploy to **GitHub Pages**, served
+under a **custom domain**: `www.kvinnovations.in`. It uses `HashRouter` so
+client-side routing works on GitHub Pages' static hosting (no server rewrite
+rules available). See the "Migrating to a self-hosted server" section below
+for what to change when you move off GitHub Pages.
+
+## Custom domain (important)
+
+A `public/CNAME` file contains `www.kvinnovations.in`. Vite copies everything
+in `public/` into `dist/` on every build, so the CNAME file is republished
+automatically with each `npm run deploy` — this is required, because GitHub
+Pages drops the custom domain association if the `CNAME` file is ever
+missing from the published branch.
+
+Because of the custom domain, the site is served from the domain root, so
+`vite.config.js` has `base: '/'`. **Do not** change `base` to `/kvi/` (the
+repo-name-scoped path) while the custom domain is active, or the built CSS/JS
+asset URLs will 404.
+
+If the custom domain is ever removed, delete `public/CNAME` and set `base`
+back to `/kvi/` in [`vite.config.js`](./vite.config.js) so the site works
+again at `https://kvicodes.github.io/kvi/`.
 
 ## 1. Push the code to GitHub
 
-This repo is already connected to `https://github.com/kvicodes/kvi.git`, so
-`vite.config.js` is set to `base: '/kvi/'` to match. **The repository name
-matters**: if you ever rename the repo or fork it under a different name,
-update `base` in [`vite.config.js`](./vite.config.js) to match (e.g.
-`/my-repo-name/`) before deploying.
-
+This repo is already connected to `https://github.com/kvicodes/kvi.git`.
 Commit and push your changes to the branch you work from:
 
 ```bash
@@ -48,19 +60,24 @@ npm run deploy
 ```
 
 This will:
-1. Build the production bundle into `dist/` (via `predeploy`).
-2. Push the contents of `dist/` to a `gh-pages` branch on your GitHub repo.
+1. Build the production bundle (including `CNAME`) into `dist/` (via `predeploy`).
+2. Replace the contents of the `gh-pages` branch on your GitHub repo with `dist/`.
 
-## 4. Enable GitHub Pages in repository settings
+**Note:** this replaces the *entire* contents of `gh-pages` with whatever is
+in `dist/`. Don't hand-edit files directly on the `gh-pages` branch through
+the GitHub web UI (e.g. adding a README there) — anything not produced by
+the build will be wiped out on the next `npm run deploy`. The one exception
+is `CNAME`, since it's checked into `public/` and rebuilt every time.
 
-1. Go to your repository on GitHub → **Settings** → **Pages**.
-2. Under **Build and deployment** → **Source**, choose **Deploy from a branch**.
-3. Under **Branch**, select `gh-pages` and folder `/ (root)`, then **Save**.
-4. After a minute or two, your site will be live at:
+## 4. GitHub Pages settings
 
-   ```
-   https://kvicodes.github.io/kvi/
-   ```
+Under your repo's **Settings → Pages**, the source should be **Deploy from a
+branch**, branch `gh-pages`, folder `/ (root)`, with **Custom domain** set to
+`www.kvinnovations.in`. Once DNS has propagated, the site is live at:
+
+```
+https://www.kvinnovations.in/
+```
 
 Re-run `npm run deploy` any time you want to publish new changes.
 
@@ -74,10 +91,12 @@ control routing), make the following changes:
 - [ ] **Switch the router**: in [`src/App.jsx`](./src/App.jsx), replace
       `HashRouter` with `BrowserRouter` (both are imported from
       `react-router-dom`). This removes the `#` from all URLs.
-- [ ] **Remove/adjust the `base` path**: in [`vite.config.js`](./vite.config.js),
-      change `base: '/kvi/'` to `base: '/'` (or remove the option
-      entirely, since `'/'` is the default) so assets resolve from the
-      domain root.
+- [ ] **Remove `public/CNAME`** — it's specific to GitHub Pages' custom
+      domain feature and has no effect elsewhere; point your new host's DNS
+      / domain settings at the new server instead.
+- [ ] **`base` in `vite.config.js`** can stay `'/'` if the new host also
+      serves the site from its domain root (the common case). Only change it
+      if the new host serves the app from a sub-path.
 - [ ] **Set up SPA fallback routing on the server**: since `BrowserRouter`
       relies on the server returning `index.html` for any unknown path (so
       React Router can take over client-side), configure your server

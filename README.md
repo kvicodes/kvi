@@ -33,9 +33,7 @@ npm install
 npm run dev
 ```
 
-Then open the URL Vite prints in the terminal. Because `vite.config.js` sets
-a `base` path (required for GitHub Pages), the dev server serves the site
-under that path — e.g. `http://localhost:5173/kvi/`.
+Then open the URL Vite prints in the terminal (e.g. `http://localhost:5173/`).
 
 ## Available Scripts
 
