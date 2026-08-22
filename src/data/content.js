@@ -357,7 +357,7 @@ export const contact = {
     // PLACEHOLDER — replace with the primary business phone number
     phone: '+91 00000 00000',
     // PLACEHOLDER — replace with the primary business email
-    email: 'info@kaimurvalley.example',
+    email: 'kaimurvalleyinnovations@gmail.com',
     hours: 'Monday – Saturday, 9:30 AM – 6:00 PM IST',
   },
   form: {
