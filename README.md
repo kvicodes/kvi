@@ -1,62 +1,87 @@
-# Kaimur Valley Innovations — Website
+# Kaimur Valley Innovations — Corporate Website
 
-The marketing website for **Kaimur Valley Innovations Pvt. Ltd. (KVI)**, a
-diversified innovation and technology company building solutions across
-agriculture, farm infrastructure, agri-technology, construction, and digital
-business platforms.
+The main corporate website for **Kaimur Valley Innovations (KVI)**, a
+diversified Indian business group that builds and operates businesses across
+infrastructure, agriculture & natural products, and technology.
 
-## Tech Stack
+This is the **group** website — not the site for any single business
+(KVI Infra, Kaimur Farms, KVI Tech) or product (ContractorOS, CampusGrid).
 
-- [React 19](https://react.dev/) with [Vite](https://vite.dev/)
-- [React Router](https://reactrouter.com/) (`HashRouter`, for static hosting on GitHub Pages)
-- [Tailwind CSS](https://tailwindcss.com/) with a custom brand theme
-- [lucide-react](https://lucide.dev/) for icons
-- [Space Grotesk](https://fonts.google.com/specimen/Space+Grotesk) + [Inter](https://fonts.google.com/specimen/Inter) via Google Fonts
+## Business structure
 
-## Project Structure
+```
+Kaimur Valley Innovations (KVI)  — parent group
+├── KVI Infra      Farm Development & Infrastructure
+├── Kaimur Farms   Agriculture & Natural Products
+└── KVI Tech       Technology & Digital Products
+    ├── ContractorOS   (KVI Tech product)
+    └── CampusGrid     (KVI Tech product)
+```
+
+## Tech stack
+
+- [React 19](https://react.dev/) + [Vite 8](https://vite.dev/) (plain JSX)
+- [React Router 7](https://reactrouter.com/) — `BrowserRouter` (clean URLs)
+- [Tailwind CSS 3](https://tailwindcss.com/) with a token-based theme
+  (all colours are CSS variables in [`src/index.css`](./src/index.css) — edit
+  there to re-skin the whole site; `tailwind.config.js` only maps them)
+- [Inter / Inter Tight](https://fonts.google.com/specimen/Inter) via Google Fonts
+- Local inline-SVG icon set ([`src/components/Icon.jsx`](./src/components/Icon.jsx)) — no icon dependency
+- `oxlint` for linting
+
+## Project structure
 
 ```
 src/
-  components/   Reusable UI: Header, Footer, Button, Card, SectionHeading, etc.
-  pages/        One file per route: Home, About, Services, ServiceDetail, Contact
-  data/         content.js — all site copy, verticals, values, and contact
-                placeholders in one place, so text can be edited without
-                touching component code.
+  components/   Reusable UI (Nav, Footer, Button, Section, Card, Icon, …)
+  layouts/      SiteLayout — the app shell
+  sections/     Page-level composed blocks (Hero, EcosystemSection, …)
+  pages/        One file per route
+  data/         Structured content: businesses, products, insights, navigation
+  lib/          Hooks + the contact-submit seam + per-route <meta> helper
 ```
 
-## Getting Started
+Content lives in `src/data/` as structured data, not hardcoded in components.
+Add a business, product or article by editing the relevant file there.
 
-Requires Node.js 18+.
+## Routes
+
+`/` · `/about` · `/businesses` · `/infra` · `/farms` · `/tech` · `/insights` ·
+`/contact` · `/privacy` · `/terms`
+
+## Getting started
+
+Requires Node.js 20+.
 
 ```bash
 npm install
 npm run dev
 ```
 
-Then open the URL Vite prints in the terminal (e.g. `http://localhost:5173/`).
+| Command           | Description                              |
+| ----------------- | ---------------------------------------- |
+| `npm run dev`     | Local dev server with hot reload         |
+| `npm run build`   | Production build to `dist/`              |
+| `npm run preview` | Preview the production build             |
+| `npm run lint`    | Run oxlint                               |
+| `npm run deploy`  | Build + publish to GitHub Pages fallback |
 
-## Available Scripts
+No Node.js locally? Build in Docker:
 
-| Command           | Description                                      |
-| ------------------ | ------------------------------------------------- |
-| `npm run dev`       | Start the local dev server with hot reload         |
-| `npm run build`     | Build the production bundle into `dist/`           |
-| `npm run preview`   | Preview the production build locally               |
-| `npm run lint`      | Run oxlint                                         |
-| `npm run deploy`    | Build and publish to GitHub Pages (`gh-pages`)     |
+```bash
+docker run --rm -v "${PWD}:/app" -w /app node:22-alpine \
+  sh -c "npm install && npm run build"
+```
 
-## Editing Content
+## Contact form
 
-Nearly all site copy — the hero text, business verticals, core values,
-mission/vision, and contact details — lives in
-[`src/data/content.js`](./src/data/content.js). Update it there rather than
-in the page components.
-
-The contact address, phone, and email in that file are **placeholders** —
-search for `PLACEHOLDER` comments and replace them with real details before
-launch.
+There is **no backend**. The form validates client-side and, until an endpoint
+is configured, hands the visitor a `mailto:` fallback. To wire it to a real
+service later, set `VITE_CONTACT_ENDPOINT` (POST JSON) — see
+[`src/lib/submitContact.js`](./src/lib/submitContact.js). That is the only file
+that needs to change.
 
 ## Deployment
 
-See [`DEPLOYMENT.md`](./DEPLOYMENT.md) for full instructions on publishing to
-GitHub Pages, and a checklist for migrating to a self-hosted server later.
+See [`DEPLOYMENT.md`](./DEPLOYMENT.md). Primary path is Docker + nginx; GitHub
+Pages is kept working as a fallback.

@@ -1,12 +1,20 @@
-import useReveal from './useReveal'
+import useReveal from '../lib/useReveal.js'
 
-// Wraps children in the .reveal fade-up-on-scroll treatment.
-// `delay` (ms) is applied via inline style so cards in a grid can stagger.
-export default function Reveal({ children, delay = 0, className = '' }) {
+/**
+ * Wraps children in a scroll-reveal container. `as` picks the element,
+ * `delay` (ms) staggers grouped items. Respects prefers-reduced-motion
+ * (handled inside useReveal + index.css).
+ */
+export default function Reveal({ as: Tag = 'div', delay = 0, className = '', style, children, ...rest }) {
   const ref = useReveal()
   return (
-    <div ref={ref} className={`reveal ${className}`} style={{ transitionDelay: `${delay}ms` }}>
+    <Tag
+      ref={ref}
+      className={`reveal ${className}`}
+      style={{ '--reveal-delay': `${delay}ms`, ...style }}
+      {...rest}
+    >
       {children}
-    </div>
+    </Tag>
   )
 }

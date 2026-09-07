@@ -1,116 +1,105 @@
 # Deployment Guide
 
-This project is currently configured to deploy to **GitHub Pages**, served
-under a **custom domain**: `www.kvinnovations.in`. It uses `HashRouter` so
-client-side routing works on GitHub Pages' static hosting (no server rewrite
-rules available). See the "Migrating to a self-hosted server" section below
-for what to change when you move off GitHub Pages.
+The site is a static single-page app (React + Vite, `BrowserRouter`). Two
+deployment paths are supported:
 
-## Custom domain (important)
+1. **Docker + nginx** — the primary path (self-hosted).
+2. **GitHub Pages** — kept working as a fallback, served under the custom
+   domain `www.kvinnovations.in`.
 
-A `public/CNAME` file contains `www.kvinnovations.in`. Vite copies everything
-in `public/` into `dist/` on every build, so the CNAME file is republished
-automatically with each `npm run deploy` — this is required, because GitHub
-Pages drops the custom domain association if the `CNAME` file is ever
-missing from the published branch.
-
-Because of the custom domain, the site is served from the domain root, so
-`vite.config.js` has `base: '/'`. **Do not** change `base` to `/kvi/` (the
-repo-name-scoped path) while the custom domain is active, or the built CSS/JS
-asset URLs will 404.
-
-If the custom domain is ever removed, delete `public/CNAME` and set `base`
-back to `/kvi/` in [`vite.config.js`](./vite.config.js) so the site works
-again at `https://kvicodes.github.io/kvi/`.
-
-## 1. Push the code to GitHub
-
-This repo is already connected to `https://github.com/kvicodes/kvi.git`.
-Commit and push your changes to the branch you work from:
-
-```bash
-git add .
-git commit -m "Update site"
-git push
-```
-
-(If you're starting fresh in a brand-new, unconnected repository instead,
-run `git init`, `git remote add origin <your-repo-url>`, and
-`git push -u origin main` first.)
-
-## 2. Install dependencies
-
-```bash
-npm install
-```
-
-## 3. Deploy to GitHub Pages
-
-The `gh-pages` package is already configured in `package.json`:
-
-```json
-"predeploy": "npm run build",
-"deploy": "gh-pages -d dist"
-```
-
-Run:
-
-```bash
-npm run deploy
-```
-
-This will:
-1. Build the production bundle (including `CNAME`) into `dist/` (via `predeploy`).
-2. Replace the contents of the `gh-pages` branch on your GitHub repo with `dist/`.
-
-**Note:** this replaces the *entire* contents of `gh-pages` with whatever is
-in `dist/`. Don't hand-edit files directly on the `gh-pages` branch through
-the GitHub web UI (e.g. adding a README there) — anything not produced by
-the build will be wiped out on the next `npm run deploy`. The one exception
-is `CNAME`, since it's checked into `public/` and rebuilt every time.
-
-## 4. GitHub Pages settings
-
-Under your repo's **Settings → Pages**, the source should be **Deploy from a
-branch**, branch `gh-pages`, folder `/ (root)`, with **Custom domain** set to
-`www.kvinnovations.in`. Once DNS has propagated, the site is live at:
-
-```
-https://www.kvinnovations.in/
-```
-
-Re-run `npm run deploy` any time you want to publish new changes.
+Both serve the app from the domain root, so `vite.config.js` keeps `base: '/'`.
 
 ---
 
-## Migrating later to a self-hosted server
+## 1. Docker + nginx (primary)
 
-When you move off GitHub Pages to your own server (or any host that lets you
-control routing), make the following changes:
+Everything is in the repo:
 
-- [ ] **Switch the router**: in [`src/App.jsx`](./src/App.jsx), replace
-      `HashRouter` with `BrowserRouter` (both are imported from
-      `react-router-dom`). This removes the `#` from all URLs.
-- [ ] **Remove `public/CNAME`** — it's specific to GitHub Pages' custom
-      domain feature and has no effect elsewhere; point your new host's DNS
-      / domain settings at the new server instead.
-- [ ] **`base` in `vite.config.js`** can stay `'/'` if the new host also
-      serves the site from its domain root (the common case). Only change it
-      if the new host serves the app from a sub-path.
-- [ ] **Set up SPA fallback routing on the server**: since `BrowserRouter`
-      relies on the server returning `index.html` for any unknown path (so
-      React Router can take over client-side), configure your server
-      accordingly:
-  - **Nginx**: add `try_files $uri /index.html;` in your `location /` block.
-  - **Apache**: add a `.htaccess` rewrite rule to fallback to `index.html`.
-  - **Node/Express**: serve `dist/` as static, with a catch-all route
-    returning `dist/index.html`.
-  - **Netlify/Vercel**: add a rewrite rule (`_redirects` file or platform
-    config) sending all paths to `/index.html`.
-- [ ] Remove the `predeploy` / `deploy` scripts and the `gh-pages` dev
-      dependency from `package.json` if you no longer need GitHub Pages
-      deployment (optional).
-- [ ] Update the placeholder contact details in
-      [`src/data/content.js`](./src/data/content.js) (address, phone, email)
-      and the map placeholder in
-      [`src/pages/Contact.jsx`](./src/pages/Contact.jsx) if not already done.
+| File                 | Role                                              |
+| -------------------- | ------------------------------------------------- |
+| `Dockerfile`         | Multi-stage: `node:22-alpine` build → `nginx:alpine` |
+| `docker-compose.yml` | Runs the image, publishes host `8080` → container `80` |
+| `nginx.conf`         | SPA fallback (`try_files … /index.html`), gzip, cache + security headers |
+
+### Build and run
+
+```bash
+docker compose up -d --build
+```
+
+The site is then available at `http://localhost:8080/`. Put your own reverse
+proxy / TLS termination (e.g. Caddy, Traefik, or an outer nginx) in front of
+port 8080 and point the domain's DNS at that host.
+
+To rebuild after changes:
+
+```bash
+docker compose up -d --build
+```
+
+### Notes
+
+- The container serves static files only. There is no backend, database or
+  auth, and nothing listens on any port other than the one Compose maps.
+- `nginx.conf`'s `try_files $uri $uri/ /index.html` is what makes deep links
+  (e.g. `/businesses`) work with `BrowserRouter`. Do not remove it.
+- To wire up the contact form, pass `VITE_CONTACT_ENDPOINT` as a build arg /
+  env at build time (it is read at build, not runtime).
+
+---
+
+## 2. GitHub Pages (fallback)
+
+A `public/CNAME` file contains `www.kvinnovations.in`. Vite copies `public/`
+into `dist/` on every build, so `CNAME` is republished automatically — GitHub
+Pages drops the custom-domain association if that file ever goes missing from
+the published branch.
+
+### Deep-link handling
+
+GitHub Pages has no server-side rewrites, so `BrowserRouter` deep links are
+handled with the standard SPA-on-Pages shim:
+
+- [`public/404.html`](./public/404.html) captures the requested path and
+  redirects to `/?redirect=<path>`.
+- The inline script in [`index.html`](./index.html) restores that path with
+  `history.replaceState` before React Router boots.
+
+This is a no-op on Docker/nginx and for normal root visits.
+
+### Publish
+
+```bash
+npm run deploy      # = npm run build (predeploy) + gh-pages -d dist
+```
+
+This replaces the entire contents of the `gh-pages` branch with `dist/`. Don't
+hand-edit files on that branch — they are wiped on the next deploy. Under
+**Settings → Pages**: source *Deploy from a branch*, branch `gh-pages`, folder
+`/ (root)`, custom domain `www.kvinnovations.in`.
+
+### Dropping the Pages fallback later
+
+If GitHub Pages is no longer needed:
+
+- delete `public/CNAME`, `public/404.html`, and the `redirect` shim in
+  `index.html`;
+- remove the `predeploy` / `deploy` scripts and the `gh-pages` devDependency
+  from `package.json`.
+
+Nothing else depends on it.
+
+---
+
+## Pre-launch checklist
+
+- [ ] Set `VITE_CONTACT_ENDPOINT` (or otherwise wire `src/lib/submitContact.js`)
+      so the contact form delivers mail instead of falling back to `mailto:`.
+- [x] ContractorOS / CampusGrid URLs wired in
+      [`src/data/products.js`](./src/data/products.js) and the footer
+      (`contractoros.kvinnovations.in`, `campusgrid.kvinnovations.in`).
+- [ ] Replace the placeholder `public/og.svg` with a real share image if a
+      designed one becomes available.
+- [ ] Publish real Privacy Policy / Terms copy in
+      [`src/pages/Legal.jsx`](./src/pages/Legal.jsx).
+- [ ] Add real articles to [`src/data/insights.js`](./src/data/insights.js).

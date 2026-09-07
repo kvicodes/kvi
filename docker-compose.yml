@@ -1,0 +1,56 @@
+# KVI group website — deployment for the shared KVI host.
+#
+# A single static container: nginx serving the built SPA (see Dockerfile).
+# No database, no API — so, unlike CampusGrid, there is no base/overlay split:
+# this file is never shipped to a client, it only ever runs on the KVI host
+# behind the standalone kvi-proxy Caddy (kvi-proxy/Caddyfile,
+# kvi-proxy/docs/migration.md).
+#
+# Network model (KVI shared-host standard — see
+# kvi-proxy/docs/current-architecture.md §1.4, which already reserves the name
+# "kvi-website-internal" for this app):
+#
+#   kvi-website-internal  this project's private network (nothing else joins it)
+#   kvi-proxy             pre-existing shared external network; the Caddy
+#                         container reaches this one by name  ->  kvi-website:80
+#
+# MIGRATION NOTE (kvi-website onboarding, Phase 2):
+#   The "8080:80" host publish below is a TEMPORARY direct/fallback path, kept
+#   through Phases 2-3 per the agreed plan. It is removed at the Phase 4
+#   cutover, after which kvi-proxy/Caddy is the ONLY public entry point.
+#   Applying this file (Phase 3) also renames the private network from the
+#   Compose default "kvi_default" to "kvi-website-internal" — the now-empty
+#   "kvi_default" network can then be removed with `docker network rm kvi_default`.
+
+services:
+  kvi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kvi-website
+    restart: unless-stopped
+
+    # TEMPORARY — remove at the Phase 4 cutover (kvi-proxy becomes sole entry
+    # point). Kept for Phases 2-3 as a direct fallback while validating the
+    # Caddy path. Publishes on all interfaces, unchanged from the pre-migration
+    # setup.
+    ports:
+      - "8080:80"
+
+    networks:
+      - default
+      - kvi-proxy
+
+networks:
+  # This project's private network. Renamed from the Compose default
+  # (kvi_default) to the KVI naming convention.
+  default:
+    name: kvi-website-internal
+
+  # Pre-existing shared reverse-proxy network. Created once per host
+  # (`docker network create kvi-proxy`) and owned by no single project —
+  # never created or redefined here. `external: true` makes Compose fail
+  # loudly if it is somehow missing rather than silently making a new one.
+  kvi-proxy:
+    external: true
+    name: kvi-proxy

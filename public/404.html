@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Redirecting…</title>
+    <script>
+      // GitHub Pages has no server-side rewrites. For BrowserRouter deep links
+      // it serves this 404 page; we bounce back to "/" with the original path
+      // preserved in ?redirect=, which index.html restores before React boots.
+      // On Docker/nginx this file is never hit (nginx try_files -> index.html).
+      (function () {
+        var l = window.location
+        var path = l.pathname + l.search + l.hash
+        l.replace(l.origin + '/?redirect=' + encodeURIComponent(path))
+      })()
+    </script>
+  </head>
+  <body></body>
+</html>

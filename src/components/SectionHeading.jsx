@@ -1,41 +1,33 @@
+import Reveal from './Reveal.jsx'
+
 /**
- * Consistent section header used across every page: an optional eyebrow
- * label, a heading, and an optional subheading. `align` and `light`
- * (for dark section backgrounds) control presentation.
+ * Standard section header: small eyebrow, large heading, optional intro.
+ * `align` left (default) or center; `tone` adjusts muted-text colour on dark.
  */
 export default function SectionHeading({
   eyebrow,
   heading,
-  subheading,
+  intro,
   align = 'left',
-  light = false,
+  tone = 'light',
+  as: HeadingTag = 'h2',
   className = '',
+  children,
 }) {
-  const alignClasses = align === 'center' ? 'text-center mx-auto' : 'text-left'
+  const alignment = align === 'center' ? 'items-center text-center mx-auto' : 'items-start'
+  const introColor = tone === 'dark' ? 'text-paper/70' : 'text-ink-muted'
+  const eyebrowColor = tone === 'dark' ? 'text-paper/55' : 'text-ink-muted'
 
   return (
-    <div className={`max-w-2xl ${alignClasses} ${className}`}>
+    <Reveal className={`flex flex-col ${alignment} max-w-3xl ${className}`}>
       {eyebrow && (
-        <p
-          className={`mb-3 text-sm font-heading font-semibold uppercase tracking-widest ${
-            light ? 'text-teal-300' : 'text-teal-600'
-          }`}
-        >
-          {eyebrow}
-        </p>
+        <span className={`eyebrow mb-5 ${eyebrowColor}`}>{eyebrow}</span>
       )}
-      <h2
-        className={`text-3xl sm:text-4xl font-heading font-bold leading-tight ${
-          light ? 'text-white' : 'text-forest-950'
-        }`}
-      >
-        {heading}
-      </h2>
-      {subheading && (
-        <p className={`mt-4 text-base sm:text-lg leading-relaxed ${light ? 'text-sand-100/90' : 'text-forest-800/80'}`}>
-          {subheading}
-        </p>
+      <HeadingTag className="text-3xl sm:text-4xl lg:text-5xl">{heading}</HeadingTag>
+      {intro && (
+        <p className={`mt-6 max-w-prose text-lg ${introColor}`}>{intro}</p>
       )}
-    </div>
+      {children}
+    </Reveal>
   )
 }

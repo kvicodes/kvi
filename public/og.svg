@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Kaimur Valley Innovations">
+  <rect width="1200" height="630" fill="#141518"/>
+  <g stroke="#ffffff" stroke-opacity="0.06">
+    <path d="M0 158H1200M0 315H1200M0 472H1200M300 0V630M600 0V630M900 0V630"/>
+  </g>
+  <rect x="96" y="96" width="44" height="44" rx="9" fill="#141518" stroke="#2b2d32"/>
+  <rect x="104" y="122" width="6" height="10" fill="#8a9d8f"/>
+  <rect x="115" y="114" width="6" height="18" fill="#c9d0c9"/>
+  <rect x="126" y="106" width="6" height="26" fill="#38614c"/>
+  <text x="160" y="128" font-family="Inter Tight, Inter, sans-serif" font-size="26" font-weight="600" fill="#f7f5f1" letter-spacing="1">KAIMUR VALLEY INNOVATIONS</text>
+  <text x="96" y="330" font-family="Inter Tight, Inter, sans-serif" font-size="88" font-weight="600" fill="#f7f5f1" letter-spacing="-2">Building the future</text>
+  <text x="96" y="430" font-family="Inter Tight, Inter, sans-serif" font-size="88" font-weight="600" fill="#f7f5f1" letter-spacing="-2">from the ground up.</text>
+  <text x="96" y="520" font-family="Inter, sans-serif" font-size="28" fill="#a5a096">Infrastructure&#160;&#160;·&#160;&#160;Agriculture &amp; natural products&#160;&#160;·&#160;&#160;Technology</text>
+</svg>

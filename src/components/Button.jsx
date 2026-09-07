@@ -1,60 +1,81 @@
 import { Link } from 'react-router-dom'
-import Icon from './icons.jsx'
+import Icon from './Icon.jsx'
 
-const base =
-  'inline-flex items-center justify-center gap-2 rounded-full font-heading font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2'
-
-const variants = {
+const VARIANTS = {
   primary:
-    'bg-forest-700 text-white hover:bg-forest-800 shadow-soft hover:shadow-lift focus-visible:ring-forest-600',
+    'bg-ink text-paper hover:bg-ink-soft border border-ink',
   secondary:
-    'bg-white text-forest-800 border border-forest-200 hover:border-forest-400 hover:bg-forest-50 focus-visible:ring-forest-400',
-  outlineLight:
-    'bg-transparent text-white border border-white/50 hover:bg-white/10 focus-visible:ring-white',
-  teal: 'bg-teal-600 text-white hover:bg-teal-700 shadow-soft hover:shadow-lift focus-visible:ring-teal-500',
+    'bg-transparent text-ink border border-line-strong hover:border-ink hover:bg-ink hover:text-paper',
+  inverse:
+    'bg-paper text-ink border border-paper hover:bg-transparent hover:text-paper',
+  ghost:
+    'bg-transparent text-ink border border-transparent hover:border-line-strong',
 }
 
-const sizes = {
-  md: 'px-6 py-3 text-sm',
-  lg: 'px-8 py-4 text-base',
+const SIZES = {
+  md: 'h-11 px-5 text-xs',
+  lg: 'h-14 px-8 text-xs',
 }
 
 /**
- * Shared CTA button. Renders a <Link> for internal routes ('to') or a plain
- * <button> for form actions, so it can be reused for both navigation and
- * form submission across the site.
+ * Primary CTA element. Renders as <Link>, <a> (external) or <button>.
+ * `withArrow` appends a trailing arrow that nudges on hover.
  */
 export default function Button({
-  children,
   to,
-  onClick,
-  type = 'button',
+  href,
   variant = 'primary',
   size = 'md',
-  icon = 'ArrowRight',
-  showIcon = true,
+  withArrow = false,
+  external = false,
   className = '',
+  children,
+  ...rest
 }) {
-  const classes = `${base} ${variants[variant]} ${sizes[size]} ${className}`
+  const cls = [
+    'group inline-flex items-center justify-center gap-2 rounded-card font-semibold uppercase tracking-[0.12em]',
+    'transition-colors duration-300 ease-editorial',
+    'focus-visible:outline-2 focus-visible:outline-offset-2',
+    VARIANTS[variant],
+    SIZES[size] || SIZES.md,
+    className,
+  ].join(' ')
 
-  const content = (
+  const inner = (
     <>
       {children}
-      {showIcon && <Icon name={icon} className="h-4 w-4" />}
+      {withArrow && (
+        <Icon
+          name="arrow-right"
+          size={16}
+          className="transition-transform duration-300 ease-editorial group-hover:translate-x-1"
+        />
+      )}
     </>
   )
 
   if (to) {
     return (
-      <Link to={to} className={classes}>
-        {content}
+      <Link to={to} className={cls} {...rest}>
+        {inner}
       </Link>
     )
   }
-
+  if (href) {
+    return (
+      <a
+        href={href}
+        className={cls}
+        {...(external ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
+        {...rest}
+      >
+        {inner}
+      </a>
+    )
+  }
   return (
-    <button type={type} onClick={onClick} className={classes}>
-      {content}
+    <button className={cls} {...rest}>
+      {inner}
     </button>
   )
 }

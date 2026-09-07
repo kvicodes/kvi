@@ -2,21 +2,79 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="mask-icon" href="/favicon.svg" color="#38614c" />
+    <meta name="theme-color" content="#141518" />
+
+    <title>Kaimur Valley Innovations | Building the Future from the Ground Up</title>
     <meta
       name="description"
-      content="Kaimur Valley Innovations Pvt. Ltd. (KVI) builds practical, technology-driven solutions across agriculture, farm infrastructure, agri-tech, construction, and digital business platforms."
+      content="Kaimur Valley Innovations (KVI) builds and operates businesses across infrastructure, agriculture, natural products and technology — through KVI Infra, Kaimur Farms and KVI Tech."
     />
-    <title>Kaimur Valley Innovations Pvt. Ltd. | KVI</title>
+    <link rel="canonical" href="https://www.kvinnovations.in/" />
 
-    <!-- Google Fonts: Space Grotesk (headings) + Inter (body) -->
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Kaimur Valley Innovations" />
+    <meta property="og:title" content="Kaimur Valley Innovations | Building the Future from the Ground Up" />
+    <meta
+      property="og:description"
+      content="A modern Indian business group building across infrastructure, agriculture and technology."
+    />
+    <meta property="og:url" content="https://www.kvinnovations.in/" />
+    <meta property="og:image" content="https://www.kvinnovations.in/og.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Kaimur Valley Innovations" />
+    <meta
+      name="twitter:description"
+      content="A modern Indian business group building across infrastructure, agriculture and technology."
+    />
+    <meta name="twitter:image" content="https://www.kvinnovations.in/og.svg" />
+
+    <!-- Fonts: Inter + Inter Tight (display). Kept to a single family. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
+
+    <!--
+      GitHub Pages SPA fallback: public/404.html stores the requested deep link
+      in the query string and redirects here; this restores the real path
+      before React Router boots. No-op on Docker/nginx (which rewrites to
+      index.html server-side) and for normal root visits.
+    -->
+    <script>
+      // Mark JS as available so the scroll-reveal hidden state applies only
+      // when it can actually be undone (see .js .reveal in index.css).
+      document.documentElement.classList.add('js')
+      // GitHub Pages SPA deep-link restore (see public/404.html).
+      ;(function () {
+        var r = new URLSearchParams(window.location.search).get('redirect')
+        if (r) {
+          window.history.replaceState(null, '', r)
+        }
+      })()
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Kaimur Valley Innovations",
+        "alternateName": "KVI",
+        "url": "https://www.kvinnovations.in/",
+        "description": "A modern Indian business group building and operating businesses across infrastructure, agriculture, natural products and technology.",
+        "email": "kaimurvalleyinnovations@gmail.com",
+        "subOrganization": [
+          { "@type": "Organization", "name": "KVI Infra" },
+          { "@type": "Organization", "name": "Kaimur Farms" },
+          { "@type": "Organization", "name": "KVI Tech" }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
