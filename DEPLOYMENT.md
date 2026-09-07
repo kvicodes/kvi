@@ -1,105 +1,94 @@
 # Deployment Guide
 
-The site is a static single-page app (React + Vite, `BrowserRouter`). Two
-deployment paths are supported:
+The site is a static single-page app (React + Vite, `BrowserRouter`), served
+from the domain root (`vite.config.js` keeps `base: '/'`).
 
-1. **Docker + nginx** — the primary path (self-hosted).
-2. **GitHub Pages** — kept working as a fallback, served under the custom
-   domain `www.kvinnovations.in`.
-
-Both serve the app from the domain root, so `vite.config.js` keeps `base: '/'`.
+**Live at `https://kvinnovations.in`** (as of 2026-09), served on the shared
+KVI host by the standalone **kvi-proxy** Caddy — the same reverse proxy that
+fronts `contractoros.kvinnovations.in` and `campusgrid.kvinnovations.in`.
 
 ---
 
-## 1. Docker + nginx (primary)
+## 1. How it's deployed (kvi-proxy + Caddy)
 
-Everything is in the repo:
-
-| File                 | Role                                              |
-| -------------------- | ------------------------------------------------- |
-| `Dockerfile`         | Multi-stage: `node:22-alpine` build → `nginx:alpine` |
-| `docker-compose.yml` | Runs the image, publishes host `8080` → container `80` |
-| `nginx.conf`         | SPA fallback (`try_files … /index.html`), gzip, cache + security headers |
-
-### Build and run
-
-```bash
-docker compose up -d --build
+```
+Internet ─▶ kvi-proxy (Caddy, :80/:443, TLS via Let's Encrypt)
+              kvinnovations.in       ─▶ reverse_proxy kvi-website:80
+              www.kvinnovations.in   ─▶ 301 ─▶ https://kvinnovations.in
+              http://(either)        ─▶ 308 ─▶ https
+           ─▶ kvi-website  (this repo's container: nginx serving the SPA)
 ```
 
-The site is then available at `http://localhost:8080/`. Put your own reverse
-proxy / TLS termination (e.g. Caddy, Traefik, or an outer nginx) in front of
-port 8080 and point the domain's DNS at that host.
+| File | Role |
+| --- | --- |
+| `Dockerfile` | Multi-stage: `node:22-alpine` build → `nginx:alpine` |
+| `nginx.conf` | SPA fallback (`try_files … /index.html`), gzip, cache + security headers |
+| `docker-compose.yml` | Container `kvi-website` on `kvi-website-internal` (private) + `kvi-proxy` (shared external). **No host ports** — Caddy is the only entry point. |
 
-To rebuild after changes:
+`kvi-proxy` itself lives in a separate repo (`kvi-proxy/`, on the shared
+host). Its `Caddyfile` holds the routing; `docs/kvi-website-integration.md`
+there records how this site was brought in.
+
+### Deploy a change
 
 ```bash
-docker compose up -d --build
+# on the shared KVI host, from this repo:
+docker compose up -d --build          # rebuild image + recreate kvi-website
 ```
+
+Caddy needs no restart — it already routes `kvinnovations.in` to the
+`kvi-website` container by name over the `kvi-proxy` network. If a routing
+change is ever needed, that's an edit to `kvi-proxy/Caddyfile` followed by
+`docker exec kvi-proxy caddy reload --config /etc/caddy/Caddyfile` (zero
+downtime), not a change here.
 
 ### Notes
 
-- The container serves static files only. There is no backend, database or
-  auth, and nothing listens on any port other than the one Compose maps.
+- Static files only — no backend, database, auth, or host-published port.
 - `nginx.conf`'s `try_files $uri $uri/ /index.html` is what makes deep links
   (e.g. `/businesses`) work with `BrowserRouter`. Do not remove it.
-- To wire up the contact form, pass `VITE_CONTACT_ENDPOINT` as a build arg /
-  env at build time (it is read at build, not runtime).
+- To wire the contact form, set `VITE_CONTACT_ENDPOINT` at **build** time
+  (read by `src/lib/submitContact.js`; it is a build-time env, not runtime).
+- First-time build with no local Node: see the Docker one-liner in
+  [`README.md`](./README.md).
 
 ---
 
-## 2. GitHub Pages (fallback)
+## 2. GitHub Pages fallback — INACTIVE (pending removal)
 
-A `public/CNAME` file contains `www.kvinnovations.in`. Vite copies `public/`
-into `dist/` on every build, so `CNAME` is republished automatically — GitHub
-Pages drops the custom-domain association if that file ever goes missing from
-the published branch.
+The repo still carries a GitHub Pages setup from before the kvi-proxy
+architecture: `public/CNAME` (`www.kvinnovations.in`), `public/404.html` +
+the `redirect` shim in `index.html`, and the `predeploy`/`deploy` scripts
+with the `gh-pages` devDependency.
 
-### Deep-link handling
+**This is no longer a live fallback.** `www.kvinnovations.in` now resolves to
+the KVI host and is served by Caddy, so `npm run deploy` would publish to a
+`gh-pages` branch that nothing points at, and `public/CNAME` is stale.
 
-GitHub Pages has no server-side rewrites, so `BrowserRouter` deep links are
-handled with the standard SPA-on-Pages shim:
+### To remove it
 
-- [`public/404.html`](./public/404.html) captures the requested path and
-  redirects to `/?redirect=<path>`.
-- The inline script in [`index.html`](./index.html) restores that path with
-  `history.replaceState` before React Router boots.
-
-This is a no-op on Docker/nginx and for normal root visits.
-
-### Publish
-
-```bash
-npm run deploy      # = npm run build (predeploy) + gh-pages -d dist
+```
+- delete public/CNAME, public/404.html
+- remove the `redirect` <script> block from index.html
+- remove the `predeploy` / `deploy` scripts and the `gh-pages` devDependency
+  from package.json
 ```
 
-This replaces the entire contents of the `gh-pages` branch with `dist/`. Don't
-hand-edit files on that branch — they are wiped on the next deploy. Under
-**Settings → Pages**: source *Deploy from a branch*, branch `gh-pages`, folder
-`/ (root)`, custom domain `www.kvinnovations.in`.
-
-### Dropping the Pages fallback later
-
-If GitHub Pages is no longer needed:
-
-- delete `public/CNAME`, `public/404.html`, and the `redirect` shim in
-  `index.html`;
-- remove the `predeploy` / `deploy` scripts and the `gh-pages` devDependency
-  from `package.json`.
-
-Nothing else depends on it.
+Nothing else depends on it. (The `404.html` + `index.html` shim only ever
+mattered for Pages; Caddy/nginx do server-side SPA fallback via `try_files`.)
 
 ---
 
-## Pre-launch checklist
+## Pre-launch / follow-up checklist
 
-- [ ] Set `VITE_CONTACT_ENDPOINT` (or otherwise wire `src/lib/submitContact.js`)
-      so the contact form delivers mail instead of falling back to `mailto:`.
+- [x] Live behind kvi-proxy at `https://kvinnovations.in` with a Let's
+      Encrypt cert; `www` → apex; HTTP → HTTPS.
 - [x] ContractorOS / CampusGrid URLs wired in
-      [`src/data/products.js`](./src/data/products.js) and the footer
-      (`contractoros.kvinnovations.in`, `campusgrid.kvinnovations.in`).
-- [ ] Replace the placeholder `public/og.svg` with a real share image if a
-      designed one becomes available.
-- [ ] Publish real Privacy Policy / Terms copy in
-      [`src/pages/Legal.jsx`](./src/pages/Legal.jsx).
+      [`src/data/products.js`](./src/data/products.js) + footer.
+- [ ] Set `VITE_CONTACT_ENDPOINT` (or wire `src/lib/submitContact.js`) so the
+      contact form delivers mail instead of the `mailto:` fallback.
+- [ ] Remove the inactive GitHub Pages fallback (section 2).
+- [ ] Replace the placeholder `public/og.svg` with a real share image.
+- [ ] Publish real Privacy / Terms copy in [`src/pages/Legal.jsx`](./src/pages/Legal.jsx).
 - [ ] Add real articles to [`src/data/insights.js`](./src/data/insights.js).
+- [ ] Push `rebuild/kvi-group-site` and merge to `dev` (branch is local-only).

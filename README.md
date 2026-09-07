@@ -83,5 +83,9 @@ that needs to change.
 
 ## Deployment
 
-See [`DEPLOYMENT.md`](./DEPLOYMENT.md). Primary path is Docker + nginx; GitHub
-Pages is kept working as a fallback.
+**Live at [`https://kvinnovations.in`](https://kvinnovations.in)** — served on
+the shared KVI host by the standalone **kvi-proxy** Caddy (container
+`kvi-website`, no host ports; `www` → apex; HTTP → HTTPS; Let's Encrypt).
+
+See [`DEPLOYMENT.md`](./DEPLOYMENT.md) for the full picture. The GitHub Pages
+setup in this repo is now **inactive** and pending removal.
