@@ -14,13 +14,10 @@
 #   kvi-proxy             pre-existing shared external network; the Caddy
 #                         container reaches this one by name  ->  kvi-website:80
 #
-# MIGRATION NOTE (kvi-website onboarding, Phase 2):
-#   The "8080:80" host publish below is a TEMPORARY direct/fallback path, kept
-#   through Phases 2-3 per the agreed plan. It is removed at the Phase 4
-#   cutover, after which kvi-proxy/Caddy is the ONLY public entry point.
-#   Applying this file (Phase 3) also renames the private network from the
-#   Compose default "kvi_default" to "kvi-website-internal" — the now-empty
-#   "kvi_default" network can then be removed with `docker network rm kvi_default`.
+# There are NO host port mappings: kvi-proxy/Caddy is the only public entry
+# point (kvinnovations.in -> reverse_proxy kvi-website:80, www -> 301 apex).
+# The temporary "8080:80" fallback used during migration Phases 2-3 was
+# removed at the Phase 4 cutover.
 
 services:
   kvi:
@@ -29,21 +26,13 @@ services:
       dockerfile: Dockerfile
     container_name: kvi-website
     restart: unless-stopped
-
-    # TEMPORARY — remove at the Phase 4 cutover (kvi-proxy becomes sole entry
-    # point). Kept for Phases 2-3 as a direct fallback while validating the
-    # Caddy path. Publishes on all interfaces, unchanged from the pre-migration
-    # setup.
-    ports:
-      - "8080:80"
-
     networks:
       - default
       - kvi-proxy
 
 networks:
-  # This project's private network. Renamed from the Compose default
-  # (kvi_default) to the KVI naming convention.
+  # This project's private network (renamed from the Compose default
+  # "kvi_default" to the KVI naming convention).
   default:
     name: kvi-website-internal
 
