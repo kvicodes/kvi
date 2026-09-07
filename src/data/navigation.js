@@ -33,6 +33,7 @@ export const footerNav = [
     heading: 'Technology',
     links: [
       { label: 'KVI Tech', to: '/tech' },
+      { label: 'FarmGrid', href: 'https://farmgrid.kvinnovations.in/', external: true },
       { label: 'ContractorOS', href: 'https://contractoros.kvinnovations.in/', external: true },
       { label: 'CampusGrid', href: 'https://campusgrid.kvinnovations.in/', external: true },
     ],

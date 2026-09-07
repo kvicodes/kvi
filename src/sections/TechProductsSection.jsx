@@ -14,7 +14,7 @@ export default function TechProductsSection({ id = 'products', tone = 'paper' })
         intro="Software platforms developed by KVI Tech. Each is a product line — not a separate KVI business."
       />
 
-      <div className="mt-14 grid gap-4 sm:grid-cols-2">
+      <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {products.map((p, i) => (
           <Reveal key={p.id} delay={i * 90}>
             <ProductCard product={p} />
