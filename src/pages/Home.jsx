@@ -7,7 +7,7 @@ import TechProductsSection from '../sections/TechProductsSection.jsx'
 import FarmsSection from '../sections/FarmsSection.jsx'
 import PhilosophySection from '../sections/PhilosophySection.jsx'
 import RootedSection from '../sections/RootedSection.jsx'
-import InsightsSection from '../sections/InsightsSection.jsx'
+import UpdatesSection from '../sections/UpdatesSection.jsx'
 import ContactCtaSection from '../sections/ContactCtaSection.jsx'
 
 export default function Home() {
@@ -23,15 +23,16 @@ export default function Home() {
       <Hero />
       <Intro />
       <BusinessesSection
-        heading="KVI Infra. Kaimur Farms. KVI Tech."
-        intro="This is the core of KVI: three businesses that develop, operate and innovate — distinct, and built to work well together."
+        heading="A closer look at each business."
+        intro="Same group, same standards — but each business has its own discipline, its own environment and its own way of working."
+        featured
       />
       <EcosystemSection />
-      <TechProductsSection />
       <FarmsSection />
+      <TechProductsSection tone="sunken" />
       <PhilosophySection />
       <RootedSection />
-      <InsightsSection />
+      <UpdatesSection />
       <ContactCtaSection />
     </>
   )

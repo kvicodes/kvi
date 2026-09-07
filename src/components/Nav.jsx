@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { primaryNav } from '../data/navigation.js'
 import useScrolled from '../lib/useScrolled.js'
@@ -8,8 +8,38 @@ import Icon from './Icon.jsx'
 
 export default function Nav() {
   const [open, setOpen] = useState(false)
+  const [hidden, setHidden] = useState(false)
+  const openRef = useRef(false)
   const scrolled = useScrolled(12)
   const close = () => setOpen(false)
+
+  useEffect(() => {
+    openRef.current = open
+  }, [open])
+
+  // Apple-style: retract the bar when scrolling down, bring it back on the
+  // way up. Never hidden near the top; `open` overrides via the render below.
+  useEffect(() => {
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return
+    let last = window.scrollY
+    let frame = 0
+    const check = () => {
+      frame = 0
+      const y = window.scrollY
+      if (Math.abs(y - last) > 6) {
+        setHidden(!openRef.current && y > last && y > 220)
+        last = y
+      }
+    }
+    const onScroll = () => {
+      if (!frame) frame = window.requestAnimationFrame(check)
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      if (frame) window.cancelAnimationFrame(frame)
+    }
+  }, [])
 
   // Lock body scroll + close on Escape / resize to desktop while menu is open.
   useEffect(() => {
@@ -34,7 +64,9 @@ export default function Nav() {
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-all duration-300 ease-editorial ${
+      className={`sticky top-0 z-50 transition-[transform,background-color,border-color,padding] duration-300 ease-editorial ${
+        hidden && !open ? '-translate-y-full' : 'translate-y-0'
+      } ${
         scrolled
           ? 'border-b border-line bg-paper/85 backdrop-blur-md'
           : 'border-b border-transparent bg-paper'

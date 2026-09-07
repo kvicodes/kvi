@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
-import { businesses } from '../data/businesses.js'
+import { businesses, TINT } from '../data/businesses.js'
 import { products } from '../data/products.js'
+import BusinessGlyph from './BusinessGlyph.jsx'
 
 /**
  * The KVI group hierarchy as a structured diagram:
@@ -30,9 +31,18 @@ export default function GroupStructure({ tone = 'light' }) {
       {/* Three businesses */}
       <div className="grid gap-4 sm:grid-cols-3">
         {businesses.map((b) => (
-          <div key={b.id} className={`flex flex-col border ${border} p-5`}>
-            <span className="eyebrow">{b.verb}</span>
-            <Link to={b.to} className="mt-2 font-display text-base font-semibold link-underline">
+          <div key={b.id} className={`relative flex flex-col border ${border} p-5`}>
+            <span
+              aria-hidden="true"
+              className={`absolute inset-x-0 top-0 h-px ${TINT[b.id]?.bar || 'bg-accent'}`}
+            />
+            <div className="flex items-center justify-between">
+              <span className="eyebrow">{b.verb}</span>
+              <span className={dark ? 'text-paper/45' : TINT[b.id]?.text}>
+                <BusinessGlyph id={b.id} size={22} />
+              </span>
+            </div>
+            <Link to={b.to} className="mt-3 font-display text-base font-semibold link-underline">
               {b.name}
             </Link>
             <p className={`mt-2 text-sm ${muted}`}>{b.discipline}</p>

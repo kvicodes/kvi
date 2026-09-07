@@ -19,15 +19,21 @@ export default function SectionHeading({
   const eyebrowColor = tone === 'dark' ? 'text-paper/55' : 'text-ink-muted'
 
   return (
-    <Reveal className={`flex flex-col ${alignment} max-w-3xl ${className}`}>
+    <div className={`flex flex-col ${alignment} max-w-3xl ${className}`}>
       {eyebrow && (
-        <span className={`eyebrow mb-5 ${eyebrowColor}`}>{eyebrow}</span>
+        <Reveal as="span" className={`eyebrow mb-5 ${eyebrowColor}`}>
+          {eyebrow}
+        </Reveal>
       )}
-      <HeadingTag className="text-3xl sm:text-4xl lg:text-5xl">{heading}</HeadingTag>
+      <Reveal as={HeadingTag} variant="heading" delay={60} className="text-3xl sm:text-4xl lg:text-5xl">
+        {heading}
+      </Reveal>
       {intro && (
-        <p className={`mt-6 max-w-prose text-lg ${introColor}`}>{intro}</p>
+        <Reveal as="p" delay={140} className={`mt-6 max-w-prose text-lg ${introColor}`}>
+          {intro}
+        </Reveal>
       )}
       {children}
-    </Reveal>
+    </div>
   )
 }

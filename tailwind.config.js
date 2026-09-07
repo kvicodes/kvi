@@ -57,6 +57,10 @@ export default {
           deep: withVar('--c-accent-deep'),
           wash: withVar('--c-accent-wash'),
         },
+        // Per-business identity tints (used sparingly — one hairline / glyph)
+        infra: { DEFAULT: withVar('--c-infra'), wash: withVar('--c-infra-wash') },
+        farms: { DEFAULT: withVar('--c-farms'), wash: withVar('--c-farms-wash') },
+        tech: { DEFAULT: withVar('--c-tech'), wash: withVar('--c-tech-wash') },
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],

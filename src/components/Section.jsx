@@ -23,9 +23,11 @@ export default function Section({
 }) {
   const t = TONES[tone] || TONES.paper
   const pad = size === 'sm' ? 'py-section-sm' : size === 'none' ? '' : 'py-section'
+  const dark = tone === 'ink' || tone === 'accent'
   return (
     <Tag
       id={id}
+      data-tone={dark ? 'dark' : undefined}
       className={`${t.bg} ${pad} ${divide ? `border-t ${t.border}` : ''} ${className}`}
       {...rest}
     >

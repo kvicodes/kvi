@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.kvinnovations.in/sitemap.xml
+Sitemap: https://kvinnovations.in/sitemap.xml

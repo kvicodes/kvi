@@ -6,6 +6,33 @@
 // cards and page headers, while all three stay unmistakably part of KVI.
 // ---------------------------------------------------------------------------
 
+// Per-business visual identity. All three stay in the KVI card system — this
+// only swaps a single hairline colour, the glyph stroke and an optional
+// background texture so each business has its own character.
+export const TINT = {
+  'kvi-infra': {
+    text: 'text-infra',
+    bar: 'bg-infra',
+    wash: 'bg-infra-wash',
+    texture: 'bg-blueprint',
+    character: 'Structured · Engineered · Solid',
+  },
+  'kaimur-farms': {
+    text: 'text-farms',
+    bar: 'bg-farms',
+    wash: 'bg-farms-wash',
+    texture: 'bg-furrow',
+    character: 'Grounded · Seasonal · Natural',
+  },
+  'kvi-tech': {
+    text: 'text-tech',
+    bar: 'bg-tech',
+    wash: 'bg-tech-wash',
+    texture: 'bg-lattice',
+    character: 'Precise · Digital · Intelligent',
+  },
+}
+
 export const businesses = [
   {
     id: 'kvi-infra',

@@ -60,11 +60,11 @@ export default function Insights() {
               ))}
             </ul>
           ) : (
-            <Reveal className="border border-line bg-paper-sunken p-10 text-center">
-              <p className="mx-auto max-w-md text-lg text-ink-muted">
+            <Reveal className="border border-line bg-paper-sunken p-10">
+              <p className="max-w-prose text-lg text-ink-muted">
                 {filter === 'All'
-                  ? 'The Insights library is in preparation. Published pieces will appear here.'
-                  : `No ${filter} pieces published yet.`}
+                  ? 'KVI Insights will collect notes from across the group — on the work of building infrastructure, running farm operations and developing technology. Pieces are published here as they are written.'
+                  : `No ${filter} pieces yet.`}
               </p>
             </Reveal>
           )}

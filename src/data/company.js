@@ -16,7 +16,7 @@ export const company = {
   email: 'kaimurvalleyinnovations@gmail.com',
   origin: 'Kaimur',
   region: 'Bihar, India',
-  domain: 'https://www.kvinnovations.in',
+  domain: 'https://kvinnovations.in',
 }
 
 export const philosophy = {
@@ -32,29 +32,31 @@ export const philosophy = {
 }
 
 export const ecosystem = {
-  heading: 'Build. Operate. Innovate.',
+  heading: 'Built independently. Connected by purpose.',
   intro:
-    'Three businesses, each independent, each with its own focus — and complementary by design.',
+    'Each business is run on its own terms, with its own team and its own commercial responsibility. They are complementary by design — not dependent on one another.',
   nodes: [
     {
       verb: 'Build',
       business: 'KVI Infra',
       to: '/infra',
-      body: 'Develops physical assets — farm development, infrastructure and construction.',
+      body: 'Develops physical assets — farm land development, agricultural infrastructure and construction.',
     },
     {
       verb: 'Operate',
       business: 'Kaimur Farms',
       to: '/farms',
-      body: 'Operates agricultural assets and builds businesses around farm, food and natural products.',
+      body: 'Manages farmland and builds businesses around farm, food and natural products.',
     },
     {
       verb: 'Innovate',
       business: 'KVI Tech',
       to: '/tech',
-      body: 'Builds technology and digital products that can support businesses across the ecosystem.',
+      body: 'Builds software platforms and digital products for real-world businesses.',
     },
   ],
+  note:
+    'Where one business can help another — infrastructure supporting farm operations, technology supporting either — it does so on normal terms. KVI Tech builds for its own market first, not only for the group.',
 }
 
 export const rooted = {

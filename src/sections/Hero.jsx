@@ -1,15 +1,30 @@
 import Button from '../components/Button.jsx'
 import HeroFigure from '../components/HeroFigure.jsx'
+import useScrollProgress from '../lib/useScrollProgress.js'
 import { company } from '../data/company.js'
 
 export default function Hero() {
+  // Gentle parallax as the hero scrolls away — writes --hp (0 → 1) on the
+  // section; children drift via the independent `translate` property so the
+  // figure's own SVG entrance animation is untouched. Reduced motion pins --hp.
+  const ref = useScrollProgress(
+    (p, el) => el.style.setProperty('--hp', String(p)),
+    { enter: 0, exit: 0, reducedValue: 0 },
+  )
+
   return (
-    <section className="relative overflow-hidden border-b border-line bg-paper">
+    <section
+      ref={ref}
+      className="relative overflow-hidden border-b border-line bg-paper [--hp:0]"
+    >
       <div aria-hidden="true" className="bg-grid absolute inset-0 opacity-60" />
       <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-b from-paper/0 via-paper/0 to-paper" />
 
       <div className="shell relative grid items-center gap-12 py-[clamp(3.5rem,9vw,7rem)] lg:grid-cols-12 lg:gap-8">
-        <div className="lg:col-span-7">
+        <div
+          className="lg:col-span-7"
+          style={{ translate: '0 calc(var(--hp) * -18px)', opacity: 'calc(1 - var(--hp) * 0.55)' }}
+        >
           <p className="hero-eyebrow eyebrow">
             Kaimur Valley Innovations
           </p>
@@ -31,8 +46,8 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="lg:col-span-5">
-          <HeroFigure className="mx-auto max-w-md lg:max-w-none" />
+        <div className="lg:col-span-5" style={{ translate: '0 calc(var(--hp) * -46px)' }}>
+          <HeroFigure className="mx-auto max-h-[380px] w-auto max-w-full lg:max-h-none lg:w-full" />
         </div>
       </div>
 

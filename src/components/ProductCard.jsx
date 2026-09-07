@@ -1,4 +1,5 @@
 import Icon from './Icon.jsx'
+import ProductPreview from './ProductPreview.jsx'
 
 /**
  * KVI Tech product card. Always carries the "KVI Tech product" attribution so
@@ -6,7 +7,7 @@ import Icon from './Icon.jsx'
  * a real `url` is configured in src/data/products.js.
  */
 export default function ProductCard({ product }) {
-  const { name, category, description, url, attribution, status } = product
+  const { id, name, category, description, url, attribution, status } = product
   const isLink = Boolean(url)
   const Tag = isLink ? 'a' : 'div'
   const linkProps = isLink ? { href: url, target: '_blank', rel: 'noreferrer noopener' } : {}
@@ -14,8 +15,8 @@ export default function ProductCard({ product }) {
   return (
     <Tag
       {...linkProps}
-      className={`group flex flex-col border border-line bg-paper-raised p-7 transition-colors duration-300 ease-editorial ${
-        isLink ? 'hover:border-ink' : ''
+      className={`group flex flex-col border border-line bg-paper-raised p-7 transition duration-300 ease-editorial ${
+        isLink ? 'hover:-translate-y-1 hover:border-ink hover:shadow-card' : ''
       }`}
     >
       <div className="flex items-center justify-between">
@@ -28,6 +29,10 @@ export default function ProductCard({ product }) {
             Live
           </span>
         )}
+      </div>
+
+      <div className="mt-5 overflow-hidden border border-line bg-lattice">
+        <ProductPreview id={id} />
       </div>
 
       <h3 className="mt-6 font-display text-xl font-semibold">{name}</h3>

@@ -3,7 +3,9 @@ import PageHeader from './PageHeader.jsx'
 import Section from './Section.jsx'
 import SectionHeading from './SectionHeading.jsx'
 import Reveal from './Reveal.jsx'
+import BusinessGlyph from './BusinessGlyph.jsx'
 import ContactCtaSection from '../sections/ContactCtaSection.jsx'
+import { TINT } from '../data/businesses.js'
 
 /**
  * Shared scaffold for the three business pages (Infra / Farms / Tech).
@@ -18,6 +20,9 @@ export default function BusinessPage({ business, metaDescription, headerTone = '
     path: business.to,
   })
 
+  const tint = TINT[business.id] || {}
+  const glyphTone = headerTone === 'ink' ? 'text-paper' : 'text-ink'
+
   return (
     <>
       <PageHeader
@@ -25,15 +30,28 @@ export default function BusinessPage({ business, metaDescription, headerTone = '
         eyebrow={`KVI Group · ${business.verb}`}
         title={business.name}
         lede={business.summary}
-        meta={<p className="mt-6 text-sm font-medium text-accent-soft">{business.discipline}</p>}
+        rule={tint.bar}
+        figure={<span className={glyphTone}><BusinessGlyph id={business.id} size={340} /></span>}
+        meta={
+          <>
+            <p className="mt-6 text-sm font-medium text-accent-soft">{business.discipline}</p>
+            <p
+              className={`mt-2 text-xs uppercase tracking-[0.16em] ${
+                headerTone === 'ink' ? 'text-paper/55' : 'text-ink-muted'
+              }`}
+            >
+              {tint.character}
+            </p>
+          </>
+        }
       />
 
       <Section tone="sunken" divide>
         <SectionHeading eyebrow="Focus areas" heading="What this business covers." />
         <ul className="mt-12 grid gap-px overflow-hidden border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
           {business.focus.map((f, i) => (
-            <Reveal key={f} delay={i * 50} className="bg-paper-raised p-6">
-              <span className="font-display text-xs text-ink-muted">
+            <Reveal key={f} delay={i * 50} className={`${tint.texture || ''} bg-paper-raised p-6`}>
+              <span className={`font-display text-xs ${tint.text || 'text-ink-muted'}`}>
                 {String(i + 1).padStart(2, '0')}
               </span>
               <p className="mt-3 font-display text-lg font-medium text-ink">{f}</p>
