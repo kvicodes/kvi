@@ -7,13 +7,15 @@ import { useEffect, useRef } from 'react'
  * `enter` (fraction of viewport height below which the element top sits) to
  * fully scrolled past by `exit`.
  *
- * Respects prefers-reduced-motion: fires once with `reducedValue` and stops.
+ * `enabled: false` (e.g. below the desktop breakpoint) skips all listeners and
+ * resolves once to `reducedValue`, so viewports that shouldn't run a
+ * scroll-linked effect pay nothing for it. prefers-reduced-motion does the same.
  *
  *   const ref = useScrollProgress((p, el) => el.style.setProperty('--p', p))
  */
 export default function useScrollProgress(
   onProgress,
-  { enter = 0.85, exit = 0.15, reducedValue = 1 } = {},
+  { enter = 0.85, exit = 0.15, reducedValue = 1, enabled = true } = {},
 ) {
   const ref = useRef(null)
   const cb = useRef(onProgress)
@@ -26,7 +28,11 @@ export default function useScrollProgress(
     const node = ref.current
     if (!node) return
 
-    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+    const reduced = window.matchMedia?.(
+      '(prefers-reduced-motion: reduce)',
+    ).matches
+
+    if (!enabled || reduced) {
       cb.current(reducedValue, node)
       return
     }
@@ -47,13 +53,13 @@ export default function useScrollProgress(
 
     measure()
     window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll)
+    window.addEventListener('resize', onScroll, { passive: true })
     return () => {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)
       if (frame) window.cancelAnimationFrame(frame)
     }
-  }, [enter, exit, reducedValue])
+  }, [enter, exit, reducedValue, enabled])
 
   return ref
 }

@@ -34,8 +34,21 @@ export default function HeroFigure({ className = '' }) {
         `}</style>
       </defs>
 
-      {/* Spine threading the three planes */}
+      {/* Spine threading the three planes. The accent overlay draws upward from
+          the foundation as the hero scrolls (via --hp on the section) — Build
+          -> Operate -> Innovate, bottom to top. Pinned at 0 under reduced
+          motion and on mobile, where --hp never leaves 0. */}
       <line x1="512" y1="70" x2="512" y2="500" className="hf-soft" />
+      <line
+        x1="512"
+        y1="70"
+        x2="512"
+        y2="500"
+        className="hf-acc"
+        pathLength="1"
+        strokeDasharray="1"
+        style={{ strokeDashoffset: 'calc(var(--hp, 0) - 1)' }}
+      />
 
       {/* ---- TOP · INNOVATE (KVI Tech) ---- */}
       <g className="hf-a">

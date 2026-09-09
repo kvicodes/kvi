@@ -47,6 +47,11 @@
   --c-tech: 74 78 102;        /* graphite indigo */
   --c-tech-wash: 233 233 238;
 
+  /* FamGrid product accent — soft green / teal on a dark interface. Used only
+     on the FamGrid product card and its callout, never site-wide. */
+  --c-famgrid: 45 138 122;
+  --c-famgrid-ink: 15 27 25;
+
   color-scheme: light;
 }
 
@@ -60,20 +65,21 @@
 
   html {
     -webkit-text-size-adjust: 100%;
-    scroll-behavior: smooth;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
-    }
+    /* No global `scroll-behavior: smooth`. Wheel, trackpad, touch, spacebar and
+       arrow-key scrolling stay 100% native — the browser is never fought for
+       an effect. The few intentional jumps (in-page anchors, the Kaimur Farms
+       stage rail) opt into smooth per-call and drop it under reduced motion. */
+    scroll-padding-top: 5rem;
   }
 
   body {
     @apply bg-paper font-sans text-base text-ink antialiased;
     font-feature-settings: 'ss01', 'cv05', 'cv11';
     text-rendering: optimizeLegibility;
-    overflow-x: hidden;
+    /* `clip` (not `hidden`) contains stray horizontal overflow without turning
+       <body> into a scroll container — which would destabilise the sticky nav
+       on iOS Safari during URL-bar resize. */
+    overflow-x: clip;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -122,6 +128,32 @@
 
   .eyebrow {
     @apply font-sans text-xs font-semibold uppercase tracking-[0.2em] text-ink-muted;
+  }
+
+  /* Editorial accent tick — a short restrained green rule that sits above a
+     heading or eyebrow to give sections a consistent architectural rhythm and
+     put the accent colour to work. Draws itself in when revealed. */
+  .accent-tick::before {
+    content: '';
+    display: block;
+    width: 2.25rem;
+    height: 2px;
+    margin-bottom: 1.25rem;
+    background: rgb(var(--c-accent));
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  [data-tone='dark'] .accent-tick::before {
+    background: rgb(var(--c-paper) / 0.85);
+  }
+  .accent-tick.is-visible::before,
+  .is-visible .accent-tick::before {
+    transform: scaleX(1);
+  }
+  :where(html:not(.js)) .accent-tick::before {
+    transform: scaleX(1);
   }
 
   .link-underline {
@@ -269,5 +301,10 @@
     transform: none;
     clip-path: none;
     transition: none;
+  }
+
+  .accent-tick::before {
+    transform: scaleX(1) !important;
+    transition: none !important;
   }
 }

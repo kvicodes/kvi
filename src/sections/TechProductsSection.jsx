@@ -10,13 +10,18 @@ export default function TechProductsSection({ id = 'products', tone = 'paper' })
     <Section tone={tone} divide id={id}>
       <SectionHeading
         eyebrow="KVI Tech"
-        heading="Technology built for real-world businesses."
-        intro="Software platforms developed by KVI Tech. Each is a product line — not a separate KVI business."
+        heading="Technology built for real-world problems."
+        intro="KVI Tech builds software platforms and digital products around practical problems across business, education, agriculture and everyday life."
       />
 
-      <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <Reveal className="mt-14 flex items-baseline justify-between border-b border-line pb-3">
+        <p className="eyebrow">Product portfolio</p>
+        <p className="text-sm text-ink-muted">Four products</p>
+      </Reveal>
+
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {products.map((p, i) => (
-          <Reveal key={p.id} delay={i * 90}>
+          <Reveal key={p.id} delay={i * 90} className="h-full">
             <ProductCard product={p} />
           </Reveal>
         ))}

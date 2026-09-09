@@ -11,11 +11,20 @@ export default function SiteLayout() {
     if (hash) {
       const el = document.getElementById(hash.slice(1))
       if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        const reduced = window.matchMedia?.(
+          '(prefers-reduced-motion: reduce)',
+        ).matches
+        el.scrollIntoView({
+          behavior: reduced ? 'auto' : 'smooth',
+          block: 'start',
+        })
         return
       }
     }
-    window.scrollTo(0, 0)
+    // Route change: jump to top instantly. A smooth animation here (the global
+    // scroll-behavior) reads as the page fighting the user on mobile when the
+    // previous page was scrolled down.
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
   }, [pathname, hash])
 
   return (

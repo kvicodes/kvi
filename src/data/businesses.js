@@ -122,9 +122,9 @@ export const businesses = [
     name: 'KVI Tech',
     to: '/tech',
     discipline: 'Technology & Digital Products',
-    tagline: 'Building software platforms, digital products and technology solutions.',
+    tagline: 'Building software platforms and digital products for real-world problems.',
     summary:
-      'KVI Tech builds software for real-world businesses — enterprise platforms, digital products and automation. Its products are developed to stand on their own commercially while drawing on the group’s operating experience.',
+      'KVI Tech builds digital products that turn practical problems into usable software — platforms for business and for everyday life. Each product is developed to stand on its own commercially while drawing on the group’s operating experience.',
     focus: [
       'SaaS',
       'Enterprise software',

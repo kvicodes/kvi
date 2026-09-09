@@ -59,7 +59,7 @@ export default function About() {
         <SectionHeading
           eyebrow="KVI business structure"
           heading="One group. Three businesses. Products inside KVI Tech."
-          intro="FarmGrid, ContractorOS and CampusGrid are KVI Tech products — not separate KVI businesses."
+          intro="FarmGrid, ContractorOS, CampusGrid and FamGrid are KVI Tech products — not separate KVI businesses."
         />
         <Reveal className="mx-auto mt-14 max-w-3xl">
           <GroupStructure />

@@ -138,7 +138,10 @@ export default function Nav() {
             <Icon name="close" size={22} />
           </button>
         </div>
-        <nav className="shell flex flex-1 flex-col overflow-y-auto pb-10 pt-2" aria-label="Mobile">
+        <nav
+          className="shell flex flex-1 flex-col overflow-y-auto overscroll-contain pb-10 pt-2"
+          aria-label="Mobile"
+        >
           {primaryNav.map((item) => (
             <NavLink
               key={item.to}

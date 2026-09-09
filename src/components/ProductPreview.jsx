@@ -52,11 +52,38 @@ const WIRES = {
       <rect x="96" y="108" width="32" height="20" className="pv-soft" />
     </>
   ),
+  // FamGrid — a dark shared "family ledger": header, member dots, entry rows
+  // with one teal-highlighted line. Matches the live product's dark/teal look.
+  famgrid: (
+    <>
+      <rect x="0.5" y="0.5" width="239" height="151" rx="2" className="fg-bg" />
+      <circle cx="24" cy="24" r="7" className="fg-acc-stroke" />
+      <circle cx="41" cy="24" r="7" className="fg-dim" />
+      <circle cx="58" cy="24" r="7" className="fg-dim" />
+      <path d="M182 20h40M182 29h26" className="fg-hair" />
+      {[0, 1, 2, 3].map((r) => (
+        <g key={r}>
+          <path d={`M16 ${60 + r * 22}h208`} className="fg-hair" />
+          <circle cx="28" cy={48 + r * 22} r="5" className={r === 1 ? 'fg-acc' : 'fg-dim'} />
+          <rect x="42" y={44 + r * 22} width="76" height="7" rx="1" className="fg-dim" />
+          <rect
+            x={r === 1 ? 176 : 190}
+            y={44 + r * 22}
+            width={r === 1 ? 48 : 34}
+            height="7"
+            rx="1"
+            className={r === 1 ? 'fg-acc' : 'fg-dim'}
+          />
+        </g>
+      ))}
+    </>
+  ),
 }
 
 export default function ProductPreview({ id, className = '' }) {
   const wire = WIRES[id]
   if (!wire) return null
+  const isFam = id === 'famgrid'
   return (
     <svg
       viewBox="0 0 240 152"
@@ -70,9 +97,14 @@ export default function ProductPreview({ id, className = '' }) {
           .pv-line { stroke: rgb(var(--c-tech) / 0.55); stroke-width: 1.1; }
           .pv-soft { stroke: rgb(var(--c-tech) / 0.28); stroke-width: 1; fill: none; }
           .pv-acc-fill { fill: rgb(var(--c-accent) / 0.16); stroke: rgb(var(--c-accent) / 0.5); stroke-width: 1; }
+          .fg-bg { fill: rgb(var(--c-famgrid-ink)); stroke: rgb(var(--c-famgrid) / 0.30); stroke-width: 1; }
+          .fg-hair { stroke: rgb(var(--c-famgrid) / 0.16); stroke-width: 1; }
+          .fg-dim { fill: rgb(var(--c-famgrid) / 0.34); }
+          .fg-acc { fill: rgb(var(--c-famgrid) / 0.92); }
+          .fg-acc-stroke { fill: none; stroke: rgb(var(--c-famgrid) / 0.92); stroke-width: 1.4; }
         `}</style>
       </defs>
-      <rect x="0.5" y="0.5" width="239" height="151" className="pv-soft" />
+      {!isFam && <rect x="0.5" y="0.5" width="239" height="151" className="pv-soft" />}
       {wire}
     </svg>
   )

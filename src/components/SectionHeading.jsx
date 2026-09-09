@@ -10,6 +10,7 @@ export default function SectionHeading({
   intro,
   align = 'left',
   tone = 'light',
+  tick = true,
   as: HeadingTag = 'h2',
   className = '',
   children,
@@ -21,7 +22,10 @@ export default function SectionHeading({
   return (
     <div className={`flex flex-col ${alignment} max-w-3xl ${className}`}>
       {eyebrow && (
-        <Reveal as="span" className={`eyebrow mb-5 ${eyebrowColor}`}>
+        <Reveal
+          as="span"
+          className={`eyebrow mb-5 block ${tick && align !== 'center' ? 'accent-tick' : ''} ${eyebrowColor}`}
+        >
           {eyebrow}
         </Reveal>
       )}

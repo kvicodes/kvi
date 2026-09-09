@@ -1,5 +1,6 @@
 import Reveal from './Reveal.jsx'
 import useScrollProgress from '../lib/useScrollProgress.js'
+import useMediaQuery from '../lib/useMediaQuery.js'
 
 const TONES = {
   paper: { wrap: 'border-line bg-paper', eyebrow: 'text-ink-muted', lede: 'text-ink-muted' },
@@ -12,9 +13,10 @@ const TONES = {
  */
 export default function PageHeader({ eyebrow, title, lede, meta, tone = 'paper', rule, figure }) {
   const t = TONES[tone] || TONES.paper
+  const isDesktop = useMediaQuery('(min-width: 1024px)')
   const ref = useScrollProgress(
     (p, el) => el.style.setProperty('--hp', String(p)),
-    { enter: 0, exit: 0, reducedValue: 0 },
+    { enter: 0, exit: 0, reducedValue: 0, enabled: isDesktop },
   )
   return (
     <header ref={ref} className={`relative overflow-hidden border-b [--hp:0] ${t.wrap}`}>

@@ -61,6 +61,8 @@ export default {
         infra: { DEFAULT: withVar('--c-infra'), wash: withVar('--c-infra-wash') },
         farms: { DEFAULT: withVar('--c-farms'), wash: withVar('--c-farms-wash') },
         tech: { DEFAULT: withVar('--c-tech'), wash: withVar('--c-tech-wash') },
+        // FamGrid product accent (used only on the FamGrid card / callout)
+        famgrid: { DEFAULT: withVar('--c-famgrid'), ink: withVar('--c-famgrid-ink') },
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
