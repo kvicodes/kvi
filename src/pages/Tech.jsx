@@ -42,22 +42,28 @@ export default function Tech() {
         <Section tone="sunken" divide id="farmgrid">
           <Reveal className="grid gap-10 lg:grid-cols-12 lg:gap-12">
             <div className="lg:col-span-5">
-              <span className="eyebrow accent-tick is-visible block">In development</span>
+              <span className="eyebrow accent-tick is-visible block">Agriculture × technology</span>
               <h2 className="mt-5 text-3xl sm:text-4xl">FarmGrid</h2>
               <p className="mt-3 text-sm font-medium text-accent-deep">{farmgrid.category}</p>
             </div>
             <div className="lg:col-span-6 lg:col-start-7">
               <p className="max-w-prose text-lg text-ink-muted">
-                {farmgrid.description} It brings crop planning, field operations, activities and
-                records into one system — built by KVI Tech on the group&rsquo;s own experience
-                of running farmland through Kaimur Farms.
+                {farmgrid.description} It brings farms, units, activities, inventory and
+                production into one system — built by KVI Tech on the group&rsquo;s own
+                experience of running farmland through Kaimur Farms.
               </p>
               <p className="mt-5 max-w-prose text-sm text-ink-muted">
-                FarmGrid is an active KVI Tech build and is not yet publicly available. It is
-                distinct from FamGrid, KVI Tech&rsquo;s family finance platform.
+                FarmGrid is a farm operations platform — distinct from FamGrid, KVI Tech&rsquo;s
+                family finance platform.
               </p>
               <div className="mt-8">
-                <ArrowLink to="/contact">Enquire about FarmGrid</ArrowLink>
+                <ArrowLink
+                  href={farmgrid.url}
+                  external
+                  icon="arrow-up-right"
+                >
+                  Visit FarmGrid
+                </ArrowLink>
               </div>
             </div>
           </Reveal>

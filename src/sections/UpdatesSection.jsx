@@ -16,7 +16,7 @@ const UPDATES = [
   {
     business: 'KVI Tech',
     to: '/tech',
-    body: `${liveProducts.join(', ')} are live — platforms for government contracting, education institutions and family finances. FarmGrid, a farm operations platform, is in development.`,
+    body: `${liveProducts.join(', ')} are live — platforms for farm operations, government contracting, education institutions and family finances.`,
   },
   {
     business: 'Kaimur Farms',

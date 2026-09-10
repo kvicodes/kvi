@@ -19,7 +19,8 @@
 //              stay in the KVI card system otherwise.
 //
 // Status: 'live' (in production, links out) | 'development' (active build, no
-// public product site yet — shown clearly, never styled as disabled).
+// public product site yet — shown with a clear "In development" marker, never
+// styled as disabled). All four products are currently live.
 // ---------------------------------------------------------------------------
 
 export const products = [
@@ -28,10 +29,9 @@ export const products = [
     name: 'FarmGrid',
     category: 'Farm Operations & Management Platform',
     description:
-      'A digital platform for planning, managing and operating agricultural farms.',
-    status: 'development',
-    to: '/tech#farmgrid',
-    cta: 'Learn more',
+      'Planning, field operations, units, activities, inventory and production records for farm businesses.',
+    status: 'live',
+    url: 'https://farmgrid.kvinnovations.in/',
     attribution: 'KVI Tech product',
   },
   {
