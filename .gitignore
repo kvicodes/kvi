@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Build-time secrets (e.g. VITE_CONTACT_ENDPOINT for docker-compose) — never
+# commit these; see DEPLOYMENT.md.
+.env
+.env.*
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

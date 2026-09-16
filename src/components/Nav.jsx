@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { NavLink } from 'react-router-dom'
 import { primaryNav } from '../data/navigation.js'
 import useScrolled from '../lib/useScrolled.js'
@@ -63,105 +64,115 @@ export default function Nav() {
     }`
 
   return (
-    <header
-      className={`sticky top-0 z-50 transition-[transform,background-color,border-color,padding] duration-300 ease-editorial ${
-        hidden && !open ? '-translate-y-full' : 'translate-y-0'
-      } ${
-        scrolled
-          ? 'border-b border-line bg-paper/85 backdrop-blur-md'
-          : 'border-b border-transparent bg-paper'
-      }`}
-    >
-      <div
-        className={`shell flex items-center justify-between transition-all duration-300 ease-editorial ${
-          scrolled ? 'py-3' : 'py-5'
+    <>
+      <header
+        className={`sticky top-0 z-50 transition-[transform,background-color,border-color,padding] duration-300 ease-editorial ${
+          hidden && !open ? '-translate-y-full' : 'translate-y-0'
+        } ${
+          scrolled
+            ? 'border-b border-line bg-paper/85 backdrop-blur-md'
+            : 'border-b border-transparent bg-paper'
         }`}
       >
-        <Wordmark onClick={() => setOpen(false)} />
-
-        {/* Desktop nav — the three operating businesses sit between hairline
-            dividers to read as a group within the KVI navigation. */}
-        <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary">
-          {primaryNav.map((item, i) => (
-            <span key={item.to} className="flex items-center gap-7">
-              {item.group && !primaryNav[i - 1]?.group && (
-                <span aria-hidden="true" className="h-4 w-px bg-line-strong" />
-              )}
-              <NavLink to={item.to} className={linkClass} end={item.to === '/'}>
-                {item.label}
-              </NavLink>
-              {item.group && !primaryNav[i + 1]?.group && (
-                <span aria-hidden="true" className="h-4 w-px bg-line-strong" />
-              )}
-            </span>
-          ))}
-        </nav>
-
-        <div className="hidden lg:block">
-          <Button to="/contact" size="md" variant="secondary">
-            Contact
-          </Button>
-        </div>
-
-        {/* Mobile toggle */}
-        <button
-          type="button"
-          className="-mr-2 flex h-10 w-10 items-center justify-center text-ink lg:hidden"
-          aria-label={open ? 'Close menu' : 'Open menu'}
-          aria-expanded={open}
-          aria-controls="mobile-menu"
-          onClick={() => setOpen((v) => !v)}
+        <div
+          className={`shell flex items-center justify-between transition-all duration-300 ease-editorial ${
+            scrolled ? 'py-3' : 'py-5'
+          }`}
         >
-          <Icon name={open ? 'close' : 'menu'} size={22} />
-        </button>
-      </div>
-
-      {/* Mobile menu — full-screen overlay */}
-      <div
-        id="mobile-menu"
-        className={`lg:hidden fixed inset-0 z-[60] flex flex-col bg-paper transition-[opacity,transform] duration-300 ease-editorial ${
-          open
-            ? 'pointer-events-auto translate-y-0 opacity-100'
-            : 'pointer-events-none -translate-y-1.5 opacity-0'
-        }`}
-        inert={!open}
-        aria-hidden={!open}
-      >
-        <div className="shell flex items-center justify-between py-5">
           <Wordmark onClick={() => setOpen(false)} />
+
+          {/* Desktop nav — the three operating businesses sit between hairline
+              dividers to read as a group within the KVI navigation. */}
+          <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary">
+            {primaryNav.map((item, i) => (
+              <span key={item.to} className="flex items-center gap-7">
+                {item.group && !primaryNav[i - 1]?.group && (
+                  <span aria-hidden="true" className="h-4 w-px bg-line-strong" />
+                )}
+                <NavLink to={item.to} className={linkClass} end={item.to === '/'}>
+                  {item.label}
+                </NavLink>
+                {item.group && !primaryNav[i + 1]?.group && (
+                  <span aria-hidden="true" className="h-4 w-px bg-line-strong" />
+                )}
+              </span>
+            ))}
+          </nav>
+
+          <div className="hidden lg:block">
+            <Button to="/contact" size="md" variant="secondary">
+              Contact
+            </Button>
+          </div>
+
+          {/* Mobile toggle */}
           <button
             type="button"
-            className="-mr-2 flex h-10 w-10 items-center justify-center text-ink"
-            aria-label="Close menu"
-            onClick={() => setOpen(false)}
+            className="-mr-2 flex h-10 w-10 items-center justify-center text-ink lg:hidden"
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            onClick={() => setOpen((v) => !v)}
           >
-            <Icon name="close" size={22} />
+            <Icon name={open ? 'close' : 'menu'} size={22} />
           </button>
         </div>
-        <nav
-          className="shell flex flex-1 flex-col overflow-y-auto overscroll-contain pb-10 pt-2"
-          aria-label="Mobile"
+      </header>
+
+      {/* Mobile menu — full-screen overlay. Portaled to <body> rather than
+          nested in <header>: the header carries a permanent translate-y
+          transform (for the scroll-hide effect above), and any transform on
+          an ancestor makes it the containing block for `position: fixed`
+          descendants — which silently shrank this overlay to the header's
+          own height instead of the full viewport. */}
+      {createPortal(
+        <div
+          id="mobile-menu"
+          className={`lg:hidden fixed inset-0 z-[60] flex flex-col bg-paper transition-[opacity,transform] duration-300 ease-editorial ${
+            open
+              ? 'pointer-events-auto translate-y-0 opacity-100'
+              : 'pointer-events-none -translate-y-1.5 opacity-0'
+          }`}
+          inert={!open}
+          aria-hidden={!open}
         >
-          {primaryNav.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.to === '/'}
-              onClick={close}
-              className={({ isActive }) =>
-                `border-b border-line py-4 font-display text-2xl transition-colors ${
-                  isActive ? 'text-ink' : 'text-ink-soft'
-                } ${item.group ? 'pl-4 text-xl' : ''}`
-              }
+          <div className="shell flex items-center justify-between py-5">
+            <Wordmark onClick={() => setOpen(false)} />
+            <button
+              type="button"
+              className="-mr-2 flex h-10 w-10 items-center justify-center text-ink"
+              aria-label="Close menu"
+              onClick={() => setOpen(false)}
             >
-              {item.label}
-            </NavLink>
-          ))}
-          <Button to="/contact" size="lg" className="mt-8 w-full" onClick={close}>
-            Contact KVI
-          </Button>
-        </nav>
-      </div>
-    </header>
+              <Icon name="close" size={22} />
+            </button>
+          </div>
+          <nav
+            className="shell flex flex-1 flex-col overflow-y-auto overscroll-contain pb-10 pt-2"
+            aria-label="Mobile"
+          >
+            {primaryNav.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.to === '/'}
+                onClick={close}
+                className={({ isActive }) =>
+                  `border-b border-line py-4 font-display text-2xl transition-colors ${
+                    isActive ? 'text-ink' : 'text-ink-soft'
+                  } ${item.group ? 'pl-4 text-xl' : ''}`
+                }
+              >
+                {item.label}
+              </NavLink>
+            ))}
+            <Button to="/contact" size="lg" className="mt-8 w-full" onClick={close}>
+              Contact KVI
+            </Button>
+          </nav>
+        </div>,
+        document.body,
+      )}
+    </>
   )
 }

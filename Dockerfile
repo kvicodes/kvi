@@ -9,6 +9,13 @@ RUN npm ci
 
 COPY . .
 
+# Baked in at build time (Vite env vars are compiled into the bundle, not read
+# at runtime). Set via `docker compose build --build-arg` or the `args:` block
+# in docker-compose.yml. Leave unset to keep the mailto: fallback — see
+# src/lib/submitContact.js and DEPLOYMENT.md.
+ARG VITE_CONTACT_ENDPOINT
+ENV VITE_CONTACT_ENDPOINT=${VITE_CONTACT_ENDPOINT}
+
 RUN npm run build
 
 

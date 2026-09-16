@@ -11,9 +11,8 @@ import Contact from './pages/Contact.jsx'
 import Legal from './pages/Legal.jsx'
 import NotFound from './pages/NotFound.jsx'
 
-// BrowserRouter (clean URLs). Server-side SPA fallback:
-//   - Docker / nginx: `try_files $uri /index.html` in nginx.conf
-//   - GitHub Pages:   public/404.html -> ?redirect= -> index.html shim
+// BrowserRouter (clean URLs). Server-side SPA fallback via nginx:
+// `try_files $uri /index.html` in nginx.conf.
 export default function App() {
   return (
     <BrowserRouter>

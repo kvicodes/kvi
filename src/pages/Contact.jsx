@@ -44,6 +44,30 @@ export default function Contact() {
                 </dd>
               </div>
               <div>
+                <dt className="eyebrow">Phone</dt>
+                <dd className="mt-2">
+                  <a
+                    href={`tel:${company.phoneE164}`}
+                    className="font-display text-lg font-medium text-ink link-underline"
+                  >
+                    {company.phone}
+                  </a>
+                </dd>
+              </div>
+              <div>
+                <dt className="eyebrow">WhatsApp</dt>
+                <dd className="mt-2">
+                  <a
+                    href={`https://wa.me/${company.phoneE164.replace('+', '')}`}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="font-display text-lg font-medium text-ink link-underline"
+                  >
+                    Message on WhatsApp
+                  </a>
+                </dd>
+              </div>
+              <div>
                 <dt className="eyebrow">Origin</dt>
                 <dd className="mt-2 text-base text-ink-muted">
                   {company.origin}, {company.region}

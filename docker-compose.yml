@@ -24,6 +24,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        # Formspree (or other) endpoint the contact form posts to — baked in
+        # at build time. Set VITE_CONTACT_ENDPOINT in the host's environment
+        # or a .env file next to this compose file before building; leave
+        # unset to keep the mailto: fallback. See DEPLOYMENT.md.
+        VITE_CONTACT_ENDPOINT: ${VITE_CONTACT_ENDPOINT:-}
     container_name: kvi-website
     restart: unless-stopped
     networks:

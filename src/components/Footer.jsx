@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { footerNav } from '../data/navigation.js'
 import { company } from '../data/company.js'
 import Wordmark from './Wordmark.jsx'
+import Icon from './Icon.jsx'
 
 export default function Footer() {
   const year = new Date().getFullYear()
@@ -19,6 +20,24 @@ export default function Footer() {
                 {company.email}
               </a>
             </p>
+            <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-paper/60">
+              <a
+                href={`tel:${company.phoneE164}`}
+                className="inline-flex items-center gap-1.5 transition-colors hover:text-paper"
+              >
+                <Icon name="phone" size={14} />
+                {company.phone}
+              </a>
+              <a
+                href={`https://wa.me/${company.phoneE164.replace('+', '')}`}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="inline-flex items-center gap-1.5 transition-colors hover:text-paper"
+              >
+                <Icon name="chat" size={14} />
+                WhatsApp
+              </a>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 lg:col-span-8">

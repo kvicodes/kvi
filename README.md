@@ -64,7 +64,6 @@ npm run dev
 | `npm run build`   | Production build to `dist/`              |
 | `npm run preview` | Preview the production build             |
 | `npm run lint`    | Run oxlint                               |
-| `npm run deploy`  | Build + publish to GitHub Pages fallback |
 
 No Node.js locally? Build in Docker:
 
@@ -77,9 +76,9 @@ docker run --rm -v "${PWD}:/app" -w /app node:22-alpine \
 
 There is **no backend**. The form validates client-side and, until an endpoint
 is configured, hands the visitor a `mailto:` fallback. To wire it to a real
-service later, set `VITE_CONTACT_ENDPOINT` (POST JSON) — see
-[`src/lib/submitContact.js`](./src/lib/submitContact.js). That is the only file
-that needs to change.
+service (e.g. Formspree), set `VITE_CONTACT_ENDPOINT` (POST JSON) at **build**
+time — see [`src/lib/submitContact.js`](./src/lib/submitContact.js) and
+[`DEPLOYMENT.md`](./DEPLOYMENT.md#2-wiring-the-contact-form-to-formspree).
 
 ## Deployment
 
@@ -87,5 +86,4 @@ that needs to change.
 the shared KVI host by the standalone **kvi-proxy** Caddy (container
 `kvi-website`, no host ports; `www` → apex; HTTP → HTTPS; Let's Encrypt).
 
-See [`DEPLOYMENT.md`](./DEPLOYMENT.md) for the full picture. The GitHub Pages
-setup in this repo is now **inactive** and pending removal.
+See [`DEPLOYMENT.md`](./DEPLOYMENT.md) for the full picture.

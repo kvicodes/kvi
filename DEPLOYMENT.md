@@ -47,35 +47,36 @@ downtime), not a change here.
 - Static files only — no backend, database, auth, or host-published port.
 - `nginx.conf`'s `try_files $uri $uri/ /index.html` is what makes deep links
   (e.g. `/businesses`) work with `BrowserRouter`. Do not remove it.
-- To wire the contact form, set `VITE_CONTACT_ENDPOINT` at **build** time
-  (read by `src/lib/submitContact.js`; it is a build-time env, not runtime).
 - First-time build with no local Node: see the Docker one-liner in
   [`README.md`](./README.md).
 
 ---
 
-## 2. GitHub Pages fallback — INACTIVE (pending removal)
+## 2. Wiring the contact form to Formspree
 
-The repo still carries a GitHub Pages setup from before the kvi-proxy
-architecture: `public/CNAME` (`www.kvinnovations.in`), `public/404.html` +
-the `redirect` shim in `index.html`, and the `predeploy`/`deploy` scripts
-with the `gh-pages` devDependency.
+The contact form (`src/components/ContactForm.jsx`) posts JSON to whatever
+`VITE_CONTACT_ENDPOINT` points at (`src/lib/submitContact.js`). This is a
+**build-time** Vite env var — it gets compiled into the bundle, so it must be
+set when the image is *built*, not when the container runs.
 
-**This is no longer a live fallback.** `www.kvinnovations.in` now resolves to
-the KVI host and is served by Caddy, so `npm run deploy` would publish to a
-`gh-pages` branch that nothing points at, and `public/CNAME` is stale.
+1. Create a free form at [formspree.io](https://formspree.io) using
+   `kaimurvalleyinnovations@gmail.com`. Formspree gives you an endpoint like
+   `https://formspree.io/f/xxxxxxxx`.
+2. On the shared KVI host, put it in a `.env` file next to
+   `docker-compose.yml` (this file is git-ignored — never commit it):
+   ```
+   VITE_CONTACT_ENDPOINT=https://formspree.io/f/xxxxxxxx
+   ```
+3. Build with that value picked up automatically by Compose:
+   ```bash
+   docker compose up -d --build
+   ```
+4. Submit the live form once — Formspree requires one confirmation click on
+   the first real submission before it starts delivering mail.
 
-### To remove it
-
-```
-- delete public/CNAME, public/404.html
-- remove the `redirect` <script> block from index.html
-- remove the `predeploy` / `deploy` scripts and the `gh-pages` devDependency
-  from package.json
-```
-
-Nothing else depends on it. (The `404.html` + `index.html` shim only ever
-mattered for Pages; Caddy/nginx do server-side SPA fallback via `try_files`.)
+Leaving `VITE_CONTACT_ENDPOINT` unset keeps the current behaviour: the form
+validates client-side and then opens a pre-filled `mailto:` draft instead of
+posting anywhere.
 
 ---
 
@@ -85,10 +86,14 @@ mattered for Pages; Caddy/nginx do server-side SPA fallback via `try_files`.)
       Encrypt cert; `www` → apex; HTTP → HTTPS.
 - [x] ContractorOS / CampusGrid URLs wired in
       [`src/data/products.js`](./src/data/products.js) + footer.
-- [ ] Set `VITE_CONTACT_ENDPOINT` (or wire `src/lib/submitContact.js`) so the
-      contact form delivers mail instead of the `mailto:` fallback.
-- [ ] Remove the inactive GitHub Pages fallback (section 2).
-- [ ] Replace the placeholder `public/og.svg` with a real share image.
+- [x] Inactive GitHub Pages fallback removed (`public/CNAME`,
+      `public/404.html`, the `redirect` shim in `index.html`, the
+      `predeploy`/`deploy` scripts and `gh-pages` devDependency).
+- [x] Replaced `public/og.svg` with a real rasterized `public/og.png`
+      (1200×630) — SVG `og:image` isn't reliably rendered by Facebook,
+      LinkedIn, Slack or WhatsApp link previews; PNG is universally supported.
+- [ ] Set `VITE_CONTACT_ENDPOINT` per section 2 above so the contact form
+      delivers mail instead of the `mailto:` fallback.
 - [ ] Publish real Privacy / Terms copy in [`src/pages/Legal.jsx`](./src/pages/Legal.jsx).
 - [ ] Add real articles to [`src/data/insights.js`](./src/data/insights.js).
 - [ ] Push `rebuild/kvi-group-site` and merge to `dev` (branch is local-only).

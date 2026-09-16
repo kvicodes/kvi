@@ -14,6 +14,10 @@ export const company = {
   // The primary business email (configured in the repo). Do not replace with an
   // invented address.
   email: 'kaimurvalleyinnovations@gmail.com',
+  // Primary business number — also reachable on WhatsApp. Do not replace with
+  // an invented number.
+  phone: '+91 87559 48184',
+  phoneE164: '+918755948184',
   origin: 'Kaimur',
   region: 'Bihar, India',
   domain: 'https://kvinnovations.in',

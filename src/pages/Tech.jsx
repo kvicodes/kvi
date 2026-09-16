@@ -10,6 +10,8 @@ import { products, productsNote } from '../data/products.js'
 export default function Tech() {
   const famgrid = products.find((p) => p.id === 'famgrid')
   const farmgrid = products.find((p) => p.id === 'farmgrid')
+  const contractoros = products.find((p) => p.id === 'contractoros')
+  const campusgrid = products.find((p) => p.id === 'campusgrid')
 
   return (
     <BusinessPage
@@ -63,6 +65,46 @@ export default function Tech() {
                   icon="arrow-up-right"
                 >
                   Visit FarmGrid
+                </ArrowLink>
+              </div>
+            </div>
+          </Reveal>
+        </Section>
+      )}
+
+      {contractoros && (
+        <Section tone="paper" divide id="contractoros">
+          <Reveal className="grid gap-10 lg:grid-cols-12 lg:gap-12">
+            <div className="lg:col-span-5">
+              <span className="eyebrow accent-tick is-visible block">Government contracting × technology</span>
+              <h2 className="mt-5 text-3xl sm:text-4xl">ContractorOS</h2>
+              <p className="mt-3 text-sm font-medium text-accent-deep">{contractoros.category}</p>
+            </div>
+            <div className="lg:col-span-6 lg:col-start-7">
+              <p className="max-w-prose text-lg text-ink-muted">{contractoros.description}</p>
+              <div className="mt-8">
+                <ArrowLink href={contractoros.url} external icon="arrow-up-right">
+                  Visit ContractorOS
+                </ArrowLink>
+              </div>
+            </div>
+          </Reveal>
+        </Section>
+      )}
+
+      {campusgrid && (
+        <Section tone="sunken" divide id="campusgrid">
+          <Reveal className="grid gap-10 lg:grid-cols-12 lg:gap-12">
+            <div className="lg:col-span-5">
+              <span className="eyebrow accent-tick is-visible block">Education × technology</span>
+              <h2 className="mt-5 text-3xl sm:text-4xl">CampusGrid</h2>
+              <p className="mt-3 text-sm font-medium text-accent-deep">{campusgrid.category}</p>
+            </div>
+            <div className="lg:col-span-6 lg:col-start-7">
+              <p className="max-w-prose text-lg text-ink-muted">{campusgrid.description}</p>
+              <div className="mt-8">
+                <ArrowLink href={campusgrid.url} external icon="arrow-up-right">
+                  Visit CampusGrid
                 </ArrowLink>
               </div>
             </div>
