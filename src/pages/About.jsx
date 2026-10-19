@@ -5,35 +5,50 @@ import SectionHeading from '../components/SectionHeading.jsx'
 import Reveal from '../components/Reveal.jsx'
 import GroupStructure from '../components/GroupStructure.jsx'
 import PhilosophySection from '../sections/PhilosophySection.jsx'
+import VisionSection from '../sections/VisionSection.jsx'
+import RootedSection from '../sections/RootedSection.jsx'
 import ContactCtaSection from '../sections/ContactCtaSection.jsx'
 import { about } from '../data/about.js'
 import { company } from '../data/company.js'
+import { businesses } from '../data/businesses.js'
 
 export default function About() {
   useDocumentMeta({
-    title: 'About',
+    title: 'About KVI',
     description:
-      'Kaimur Valley Innovations is a modern Indian business group building and operating businesses across infrastructure, agriculture, natural products and technology.',
+      'Kaimur Valley Innovations Pvt. Ltd. is an AgroTech-led company from Kaimur, Bihar, building businesses around agriculture, food processing, rural infrastructure and enterprise software.',
     path: '/about',
   })
 
+  const facts = [
+    { term: 'Company', value: company.legalName },
+    { term: 'Origin', value: `${company.origin}, ${company.region}` },
+    { term: 'Focus', value: 'Agriculture, food processing, infrastructure and technology' },
+    { term: 'Divisions', value: businesses.map((b) => b.name).join(' · ') },
+  ]
+
   return (
     <>
-      <PageHeader eyebrow="About KVI" title="A business group, built to last." lede={about.lede} />
+      <PageHeader
+        eyebrow="About KVI"
+        title="An AgroTech-led company, built from the ground up."
+        lede={about.lede}
+      />
 
-      <Section tone="paper" divide>
-        <div className="grid gap-4 lg:grid-cols-2">
-          <Reveal className="border border-line bg-paper-raised p-8">
-            <p className="eyebrow">Positioning</p>
-            <p className="mt-5 font-display text-2xl font-semibold sm:text-3xl">
-              {company.positioning}
-            </p>
+      <Section tone="paper">
+        <div className="grid gap-12 lg:grid-cols-12">
+          <Reveal className="lg:col-span-7">
+            <p className="font-serif text-2xl font-medium leading-snug sm:text-3xl">{company.supporting}</p>
           </Reveal>
-          <Reveal delay={80} className="border border-line bg-paper-raised p-8">
-            <p className="eyebrow">In practice</p>
-            <p className="mt-5 font-display text-2xl font-semibold sm:text-3xl">
-              {company.supporting}
-            </p>
+          <Reveal delay={80} className="lg:col-span-4 lg:col-start-9">
+            <dl className="divide-y divide-line border-y border-line">
+              {facts.map((f) => (
+                <div key={f.term} className="py-4">
+                  <dt className="eyebrow">{f.term}</dt>
+                  <dd className="mt-1.5 text-base text-ink">{f.value}</dd>
+                </div>
+              ))}
+            </dl>
           </Reveal>
         </div>
       </Section>
@@ -55,19 +70,20 @@ export default function About() {
         </Section>
       ))}
 
-      <Section tone="sunken" divide id="structure">
+      <Section tone="paper" divide id="structure">
         <SectionHeading
-          eyebrow="KVI business structure"
-          heading="One group. Three businesses. Products inside KVI Tech."
-          intro="FarmGrid, ContractorOS, CampusGrid and FamGrid are KVI Tech products — not separate KVI businesses."
+          eyebrow="Company structure"
+          heading="One company. Three divisions. Agriculture at the centre."
+          intro="KVI Greens leads the agricultural work. KV Infra and KVI Tech provide infrastructure and technology — for KVI’s own ventures and for their own clients. Software products sit inside KVI Tech."
         />
         <Reveal className="mx-auto mt-14 max-w-3xl">
           <GroupStructure />
         </Reveal>
       </Section>
 
-      <PhilosophySection tone="paper" />
-
+      <PhilosophySection tone="sunken" />
+      <VisionSection showLink={false} />
+      <RootedSection />
       <ContactCtaSection />
     </>
   )

@@ -33,8 +33,36 @@ there records how this site was brought in.
 
 ```bash
 # on the shared KVI host, from this repo:
-docker compose up -d --build          # rebuild image + recreate kvi-website
+# 1. keep the running image for rollback (Compose names it kvi-kvi:latest —
+#    the service has no `image:` key, so the name is <project>-<service>)
+docker tag kvi-kvi:latest kvi-kvi:rollback-$(date +%Y%m%d-%H%M)
+# 2. rebuild the image and recreate kvi-website (only this container)
+docker compose up -d --build
 ```
+
+### Verify after deploying
+
+```bash
+docker ps --filter name=kvi-website            # Up, image kvi-kvi
+for p in / /greens /infra /tech /products /products/farmgrid /contact /privacy; do
+  curl -s -o /dev/null -w "%{http_code} $p\n" https://kvinnovations.in$p; done   # all 200
+curl -sI https://kvinnovations.in/farms | grep -i location     # /greens (301)
+curl -sI https://www.kvinnovations.in/ | grep -i location      # https://kvinnovations.in/
+```
+
+Then open the site on desktop and a phone: navigation menus, a product page,
+and the contact form (it opens an email draft unless an endpoint is set —
+see section 2).
+
+### Roll back
+
+```bash
+docker images kvi-kvi                                   # find the rollback-* tag
+docker tag kvi-kvi:rollback-YYYYMMDD-HHMM kvi-kvi:latest
+docker compose up -d --no-build --force-recreate kvi    # recreate from that image
+```
+
+Rollback touches only `kvi-website`; Caddy keeps routing to it by name.
 
 Caddy needs no restart — it already routes `kvinnovations.in` to the
 `kvi-website` container by name over the `kvi-proxy` network. If a routing
@@ -47,6 +75,8 @@ downtime), not a change here.
 - Static files only — no backend, database, auth, or host-published port.
 - `nginx.conf`'s `try_files $uri $uri/ /index.html` is what makes deep links
   (e.g. `/businesses`) work with `BrowserRouter`. Do not remove it.
+- `nginx.conf` also 301-redirects the renamed `/farms` route to `/greens`
+  (`absolute_redirect off` keeps the Location relative behind Caddy).
 - First-time build with no local Node: see the Docker one-liner in
   [`README.md`](./README.md).
 
@@ -84,8 +114,11 @@ posting anywhere.
 
 - [x] Live behind kvi-proxy at `https://kvinnovations.in` with a Let's
       Encrypt cert; `www` → apex; HTTP → HTTPS.
-- [x] ContractorOS / CampusGrid URLs wired in
-      [`src/data/products.js`](./src/data/products.js) + footer.
+- [x] Product URLs (FarmGrid, BillGrid, CampusGrid, BhattaGrid,
+      ContractorOS) wired in [`src/data/products.js`](./src/data/products.js);
+      nav, footer and product pages derive from it.
+- [ ] BuildGrid / FamGrid: their containers are stopped (502). They are
+      hidden via `listed: false` in `src/data/products.js` until restored.
 - [x] Inactive GitHub Pages fallback removed (`public/CNAME`,
       `public/404.html`, the `redirect` shim in `index.html`, the
       `predeploy`/`deploy` scripts and `gh-pages` devDependency).
@@ -96,4 +129,7 @@ posting anywhere.
       delivers mail instead of the `mailto:` fallback.
 - [ ] Publish real Privacy / Terms copy in [`src/pages/Legal.jsx`](./src/pages/Legal.jsx).
 - [ ] Add real articles to [`src/data/insights.js`](./src/data/insights.js).
-- [ ] Push `rebuild/kvi-group-site` and merge to `dev` (branch is local-only).
+- [ ] Real photography: no authentic KVI farm, processing or project photos
+      exist yet, so the site uses line illustrations. Replace/augment with
+      genuine KVI images (farms, Mokari processing/packing, sites) — never
+      stock photos presented as KVI work.

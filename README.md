@@ -1,22 +1,25 @@
 # Kaimur Valley Innovations — Corporate Website
 
-The main corporate website for **Kaimur Valley Innovations (KVI)**, a
-diversified Indian business group that builds and operates businesses across
-infrastructure, agriculture & natural products, and technology.
-
-This is the **group** website — not the site for any single business
-(KVI Infra, Kaimur Farms, KVI Tech) or product (ContractorOS, CampusGrid).
+The corporate website for **Kaimur Valley Innovations Pvt. Ltd. (KVI)**, an
+AgroTech-led company building businesses and technology around agriculture,
+food processing, rural infrastructure and enterprise software.
 
 ## Business structure
 
 ```
-Kaimur Valley Innovations (KVI)  — parent group
-├── KVI Infra      Farm Development & Infrastructure
-├── Kaimur Farms   Agriculture & Natural Products
-└── KVI Tech       Technology & Digital Products
-    ├── ContractorOS   (KVI Tech product)
-    └── CampusGrid     (KVI Tech product)
+Kaimur Valley Innovations Pvt. Ltd.
+├── KVI Greens   Agriculture, food processing & natural products  (lead division)
+├── KV Infra     Infrastructure & project execution
+└── KVI Tech     Software products & technology services
+    ├── FarmGrid       farmgrid.kvinnovations.in
+    ├── BillGrid       billgrid.kvinnovations.in
+    ├── CampusGrid     campusgrid.kvinnovations.in
+    ├── BhattaGrid     bhattagrid.kvinnovations.in
+    └── ContractorOS   contractoros.kvinnovations.in
 ```
+
+BuildGrid and FamGrid are kept in `src/data/products.js` with `listed: false`
+while their public sites are offline; flip the flag to show them again.
 
 ## Tech stack
 
@@ -25,7 +28,7 @@ Kaimur Valley Innovations (KVI)  — parent group
 - [Tailwind CSS 3](https://tailwindcss.com/) with a token-based theme
   (all colours are CSS variables in [`src/index.css`](./src/index.css) — edit
   there to re-skin the whole site; `tailwind.config.js` only maps them)
-- [Inter / Inter Tight](https://fonts.google.com/specimen/Inter) via Google Fonts
+- [Fraunces](https://fonts.google.com/specimen/Fraunces) (h1/h2) + [Inter / Inter Tight](https://fonts.google.com/specimen/Inter) via Google Fonts
 - Local inline-SVG icon set ([`src/components/Icon.jsx`](./src/components/Icon.jsx)) — no icon dependency
 - `oxlint` for linting
 
@@ -46,8 +49,23 @@ Add a business, product or article by editing the relevant file there.
 
 ## Routes
 
-`/` · `/about` · `/businesses` · `/infra` · `/farms` · `/tech` · `/insights` ·
-`/contact` · `/privacy` · `/terms`
+| Route | Page |
+| --- | --- |
+| `/` | Corporate homepage |
+| `/about` | Company overview, mission, model, structure, vision |
+| `/businesses` | The three divisions and how they connect |
+| `/greens` | KVI Greens — farmer partnerships, ecosystem, Mokari |
+| `/infra` | KV Infra — capability areas and execution |
+| `/tech` | KVI Tech — products and technology services |
+| `/products` | Full product portfolio by sector |
+| `/products/:slug` | One page per product (`farmgrid`, `billgrid`, `campusgrid`, `bhattagrid`, `contractoros`) |
+| `/contact` | Enquiry routes + form (`?enquiry=<type>&product=<slug>` preselects) |
+| `/insights`, `/privacy`, `/terms` | Supporting pages |
+| `/farms` | 301 → `/greens` (nginx) and client-side redirect |
+
+Content rules (see the comments at the top of each `src/data/*.js` file): no
+invented projects, clients, figures, certifications or history. The KVI Greens
+ecosystem is always shown with its "being built progressively" note.
 
 ## Getting started
 
@@ -75,7 +93,8 @@ docker run --rm -v "${PWD}:/app" -w /app node:22-alpine \
 ## Contact form
 
 There is **no backend**. The form validates client-side and, until an endpoint
-is configured, hands the visitor a `mailto:` fallback. To wire it to a real
+is configured, hands the visitor a pre-filled `mailto:` draft — it never shows
+a fake "sent" confirmation. To wire it to a real
 service (e.g. Formspree), set `VITE_CONTACT_ENDPOINT` (POST JSON) at **build**
 time — see [`src/lib/submitContact.js`](./src/lib/submitContact.js) and
 [`DEPLOYMENT.md`](./DEPLOYMENT.md#2-wiring-the-contact-form-to-formspree).

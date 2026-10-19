@@ -50,23 +50,36 @@ export default {
           strong: withVar('--c-line-strong'),
           inverse: withVar('--c-line-inverse'),
         },
-        // Accent — restrained natural green / earthy tone
+        // Brand — deep forest green
+        forest: {
+          DEFAULT: withVar('--c-forest'),
+          deep: withVar('--c-forest-deep'),
+          soft: withVar('--c-forest-soft'),
+        },
+        // Earthy tones — ripe grain and soil
+        grain: withVar('--c-grain'),
+        earth: {
+          DEFAULT: withVar('--c-earth'),
+          deep: withVar('--c-earth-deep'),
+          wash: withVar('--c-earth-wash'),
+        },
+        // Accent — the readable mid-green
         accent: {
           DEFAULT: withVar('--c-accent'),
           soft: withVar('--c-accent-soft'),
           deep: withVar('--c-accent-deep'),
           wash: withVar('--c-accent-wash'),
         },
-        // Per-business identity tints (used sparingly — one hairline / glyph)
+        // Division identity tints (used sparingly — one hairline / glyph)
+        greens: { DEFAULT: withVar('--c-greens'), wash: withVar('--c-greens-wash') },
         infra: { DEFAULT: withVar('--c-infra'), wash: withVar('--c-infra-wash') },
-        farms: { DEFAULT: withVar('--c-farms'), wash: withVar('--c-farms-wash') },
         tech: { DEFAULT: withVar('--c-tech'), wash: withVar('--c-tech-wash') },
-        // FamGrid product accent (used only on the FamGrid card / callout)
-        famgrid: { DEFAULT: withVar('--c-famgrid'), ink: withVar('--c-famgrid-ink') },
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
         display: ['"Inter Tight"', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        // Editorial serif for h1 / h2
+        serif: ['Fraunces', 'ui-serif', 'Georgia', 'Cambria', '"Times New Roman"', 'serif'],
       },
       fontSize: {
         // Body scale
@@ -76,12 +89,12 @@ export default {
         'lg': ['1.0625rem', { lineHeight: '1.6' }],
         'xl': ['1.1875rem', { lineHeight: '1.55' }],
         // Display scale — tight tracking handled via utilities
-        '2xl': ['1.5rem', { lineHeight: '1.2', letterSpacing: '-0.02em' }],
-        '3xl': ['1.9375rem', { lineHeight: '1.12', letterSpacing: '-0.022em' }],
-        '4xl': ['2.5rem', { lineHeight: '1.06', letterSpacing: '-0.026em' }],
-        '5xl': ['3.25rem', { lineHeight: '1.02', letterSpacing: '-0.03em' }],
-        '6xl': ['4.25rem', { lineHeight: '0.98', letterSpacing: '-0.033em' }],
-        '7xl': ['5.5rem', { lineHeight: '0.94', letterSpacing: '-0.035em' }],
+        '2xl': ['1.5rem', { lineHeight: '1.22', letterSpacing: '-0.015em' }],
+        '3xl': ['1.9375rem', { lineHeight: '1.14', letterSpacing: '-0.018em' }],
+        '4xl': ['2.5rem', { lineHeight: '1.08', letterSpacing: '-0.02em' }],
+        '5xl': ['3.25rem', { lineHeight: '1.04', letterSpacing: '-0.022em' }],
+        '6xl': ['4.25rem', { lineHeight: '1', letterSpacing: '-0.025em' }],
+        '7xl': ['5.5rem', { lineHeight: '0.98', letterSpacing: '-0.028em' }],
       },
       spacing: {
         section: 'clamp(4.5rem, 9vw, 8.5rem)',

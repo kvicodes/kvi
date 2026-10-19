@@ -3,8 +3,11 @@ const TONES = {
   raised: { bg: 'bg-paper-raised text-ink', border: 'border-line' },
   sunken: { bg: 'bg-paper-sunken text-ink', border: 'border-line' },
   ink: { bg: 'bg-ink text-paper', border: 'border-white/12' },
-  accent: { bg: 'bg-accent-deep text-paper', border: 'border-white/15' },
+  accent: { bg: 'bg-forest text-paper', border: 'border-white/15' },
+  forest: { bg: 'bg-forest-deep text-paper', border: 'border-white/12' },
 }
+
+const DARK = new Set(['ink', 'accent', 'forest'])
 
 /**
  * A page section with consistent vertical rhythm and an optional background
@@ -23,7 +26,7 @@ export default function Section({
 }) {
   const t = TONES[tone] || TONES.paper
   const pad = size === 'sm' ? 'py-section-sm' : size === 'none' ? '' : 'py-section'
-  const dark = tone === 'ink' || tone === 'accent'
+  const dark = DARK.has(tone)
   return (
     <Tag
       id={id}

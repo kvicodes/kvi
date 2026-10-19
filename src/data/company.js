@@ -6,11 +6,13 @@
 
 export const company = {
   name: 'Kaimur Valley Innovations',
+  legalName: 'Kaimur Valley Innovations Pvt. Ltd.',
   shortName: 'KVI',
-  positioning: 'Building the future from the ground up.',
-  supporting: 'Building businesses. Developing infrastructure. Creating technology.',
+  positioning: 'Growing agriculture. Building enterprises. Enabling progress.',
+  supporting:
+    'KVI brings together agricultural development, food processing, infrastructure and technology to create practical, connected business opportunities.',
   summary:
-    'Kaimur Valley Innovations builds and operates businesses across infrastructure, agriculture, natural products and technology.',
+    'An AgroTech-led company building businesses around agriculture, food processing, rural infrastructure and software.',
   // The primary business email (configured in the repo). Do not replace with an
   // invented address.
   email: 'kaimurvalleyinnovations@gmail.com',
@@ -23,50 +25,58 @@ export const company = {
   domain: 'https://kvinnovations.in',
 }
 
+export const whatsappUrl = `https://wa.me/${company.phoneE164.replace('+', '')}`
+
 export const philosophy = {
-  heading: 'From problems to possibilities.',
+  heading: 'We solve problems we actually understand.',
   intro:
-    'A consistent way of working across every KVI business — grounded, deliberate and built for the long term.',
+    'We do not build solutions from a distance. We encounter problems through real work on farms, sites and in businesses, build solutions to solve them, and test those solutions in practice.',
   steps: [
-    { no: '01', title: 'Identify', body: 'Find meaningful problems worth solving.' },
-    { no: '02', title: 'Build', body: 'Develop practical solutions.' },
-    { no: '03', title: 'Validate', body: 'Test them in the real world.' },
-    { no: '04', title: 'Scale', body: 'Turn successful ideas into sustainable businesses.' },
+    { no: '01', title: 'Encounter', body: 'Real operations reveal problems worth solving.' },
+    { no: '02', title: 'Build', body: 'Develop infrastructure, systems and practical solutions.' },
+    { no: '03', title: 'Test', body: 'Use them in the conditions they were made for.' },
+    { no: '04', title: 'Share', body: 'Turn useful solutions into products and services for others.' },
   ],
 }
 
+// How the three divisions relate — agriculture at the centre.
 export const ecosystem = {
-  heading: 'Built independently. Connected by purpose.',
+  heading: 'Agriculture leads. Infrastructure and technology make it work.',
   intro:
-    'Each business is run on its own terms, with its own team and its own commercial responsibility. They are complementary by design — not dependent on one another.',
+    'The three divisions are distinct businesses with their own customers. What connects them is a single focus: making agricultural and rural enterprise more productive and more commercially viable.',
   nodes: [
     {
+      verb: 'Grow',
+      division: 'kvi-greens',
+      body: 'Partners with farmers, develops farms, adds value through processing and builds brands that reach customers.',
+    },
+    {
       verb: 'Build',
-      business: 'KVI Infra',
-      to: '/infra',
-      body: 'Develops physical assets — farm land development, agricultural infrastructure and construction.',
+      division: 'kv-infra',
+      body: 'Executes the infrastructure that farms, processing and rural enterprises depend on — and takes on infrastructure work for other clients.',
     },
     {
-      verb: 'Operate',
-      business: 'Kaimur Farms',
-      to: '/farms',
-      body: 'Manages farmland and builds businesses around farm, food and natural products.',
-    },
-    {
-      verb: 'Innovate',
-      business: 'KVI Tech',
-      to: '/tech',
-      body: 'Builds software platforms and digital products for real-world businesses.',
+      verb: 'Enable',
+      division: 'kvi-tech',
+      body: 'Builds software that keeps operations disciplined — for farms, contractors, kilns, institutions and businesses of every kind.',
     },
   ],
   note:
-    'Where one business can help another — infrastructure supporting farm operations, technology supporting either — it does so on normal terms. KVI Tech builds for its own market first, not only for the group.',
+    'Each division stands on its own commercially. Where one can help another — infrastructure for a farm, software for a site — it does so on normal terms.',
+}
+
+export const vision = {
+  heading: 'Connecting agricultural production, rural enterprise, infrastructure and software.',
+  paragraphs: [
+    'Our long-term aim is an enterprise in which these parts strengthen each other: farms that are better developed and better run, produce that is processed and branded closer to where it is grown, infrastructure that holds up, and software that keeps operations disciplined.',
+    'We are early in that journey. We would rather show work as it becomes real than describe it before it is.',
+  ],
 }
 
 export const rooted = {
-  heading: 'Rooted in Kaimur. Building beyond.',
+  heading: 'Rooted in Kaimur. Built for a wider world.',
   paragraphs: [
-    'The name comes from the Kaimur region in Bihar, where the group began. It reflects where the work started rather than where it has to stay.',
-    'KVI is built to develop businesses that can operate well beyond any single region — while keeping the practical, ground-level approach that shaped it.',
+    'The name comes from the Kaimur region of Bihar, where KVI began. It reflects where the work started and the kind of ground-level, practical approach that shaped it.',
+    'The businesses KVI builds — on farms, on sites and in software — are designed to work well beyond any single region.',
   ],
 }

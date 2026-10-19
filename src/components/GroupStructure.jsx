@@ -1,72 +1,71 @@
 import { Link } from 'react-router-dom'
 import { businesses, TINT } from '../data/businesses.js'
-import { products } from '../data/products.js'
+import { products, productPath } from '../data/products.js'
 import BusinessGlyph from './BusinessGlyph.jsx'
 
 /**
- * The KVI group hierarchy as a structured diagram:
- *   KVI (parent) -> KVI Infra / Kaimur Farms / KVI Tech -> KVI Tech products
- * Built from borders and grid rather than an SVG flowchart so it stays crisp
- * and legible at every breakpoint. `tone` = 'light' | 'dark'.
+ * The KVI structure as a diagram:
+ *   Kaimur Valley Innovations Pvt. Ltd. -> three divisions -> KVI Tech products
+ * KVI Greens is filled in forest green — agriculture is the centre of the
+ * company. Built from borders and grid rather than an SVG flowchart so it stays
+ * crisp and legible at every breakpoint.
  */
-export default function GroupStructure({ tone = 'light' }) {
-  const dark = tone === 'dark'
-  const border = dark ? 'border-white/15' : 'border-line-strong'
-  const muted = dark ? 'text-paper/60' : 'text-ink-muted'
-  const rule = dark ? 'bg-white/15' : 'bg-line-strong'
-
+export default function GroupStructure() {
   return (
     <div className="w-full">
-      {/* Parent */}
-      <div className={`border ${border} bg-transparent px-5 py-4 text-center`}>
-        <p className="eyebrow">{dark ? 'Parent group' : 'Parent group'}</p>
-        <p className="mt-2 font-display text-lg font-semibold">Kaimur Valley Innovations</p>
+      <div className="border border-line-strong bg-paper-raised px-5 py-4 text-center">
+        <p className="eyebrow">Parent company</p>
+        <p className="mt-2 font-display text-lg font-semibold">Kaimur Valley Innovations Pvt. Ltd.</p>
       </div>
 
-      {/* Connector */}
-      <div className="flex justify-center">
-        <span aria-hidden="true" className={`h-8 w-px ${rule}`} />
+      <div className="flex justify-center" aria-hidden="true">
+        <span className="h-8 w-px bg-line-strong" />
       </div>
 
-      {/* Three businesses */}
-      <div className="grid gap-4 sm:grid-cols-3">
-        {businesses.map((b) => (
-          <div key={b.id} className={`relative flex flex-col border ${border} p-5`}>
-            <span
-              aria-hidden="true"
-              className={`absolute inset-x-0 top-0 h-px ${TINT[b.id]?.bar || 'bg-accent'}`}
-            />
-            <div className="flex items-center justify-between">
-              <span className="eyebrow">{b.verb}</span>
-              <span className={dark ? 'text-paper/45' : TINT[b.id]?.text}>
-                <BusinessGlyph id={b.id} size={22} />
-              </span>
-            </div>
-            <Link to={b.to} className="mt-3 font-display text-base font-semibold link-underline">
-              {b.name}
-            </Link>
-            <p className={`mt-2 text-sm ${muted}`}>{b.discipline}</p>
-          </div>
-        ))}
-      </div>
+      <ul className="grid gap-4 sm:grid-cols-3">
+        {businesses.map((b) => {
+          const lead = b.id === 'kvi-greens'
+          return (
+            <li
+              key={b.id}
+              className={`relative flex flex-col border p-5 ${
+                lead ? 'border-forest bg-forest-deep text-paper' : 'border-line-strong bg-paper-raised'
+              }`}
+            >
+              <span aria-hidden="true" className={`absolute inset-x-0 top-0 h-[3px] ${TINT[b.id]?.bar}`} />
+              <div className="flex items-center justify-between">
+                <span className={`eyebrow ${lead ? 'text-grain' : ''}`}>{lead ? 'Lead division' : 'Division'}</span>
+                <span className={lead ? 'text-grain' : TINT[b.id]?.text}>
+                  <BusinessGlyph id={b.id} size={22} />
+                </span>
+              </div>
+              <Link to={b.to} className="mt-3 font-display text-base font-semibold link-underline">
+                {b.name}
+              </Link>
+              <p className={`mt-2 text-sm ${lead ? 'text-paper/70' : 'text-ink-muted'}`}>{b.discipline}</p>
+            </li>
+          )
+        })}
+      </ul>
 
       {/* Products belong to KVI Tech only */}
       <div className="mt-2 grid sm:grid-cols-3">
         <div className="hidden sm:block" />
         <div className="hidden sm:block" />
         <div>
-          <div className="flex justify-center sm:justify-start sm:pl-5">
-            <span aria-hidden="true" className={`h-8 w-px ${rule}`} />
+          <div className="flex justify-center sm:justify-start sm:pl-5" aria-hidden="true">
+            <span className="h-8 w-px bg-line-strong" />
           </div>
-          <div className={`border ${border} p-5`}>
+          <div className="border border-line-strong bg-paper-raised p-5">
             <span className="eyebrow">KVI Tech products</span>
             <ul className="mt-3 space-y-1">
               {products.map((p) => (
-                <li key={p.id} className="font-display text-sm font-semibold">
-                  {p.name}
+                <li key={p.id}>
+                  <Link to={productPath(p)} className="font-display text-sm font-semibold link-underline">
+                    {p.name}
+                  </Link>
                 </li>
               ))}
-              <li className={`text-sm ${muted}`}>More in development</li>
             </ul>
           </div>
         </div>

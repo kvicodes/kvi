@@ -10,7 +10,7 @@ export default function Insights() {
   useDocumentMeta({
     title: 'Insights',
     description:
-      'Perspectives from Kaimur Valley Innovations on infrastructure, agriculture, technology, business and innovation.',
+      'Perspectives from Kaimur Valley Innovations on agriculture, infrastructure, technology, business and innovation.',
     path: '/insights',
   })
 
@@ -23,7 +23,7 @@ export default function Insights() {
       <PageHeader
         eyebrow="Insights"
         title="Notes on what we're building."
-        lede="Perspectives on infrastructure, agriculture, technology and the practical work of building businesses for the long term."
+        lede="Perspectives on agriculture, infrastructure, technology and the practical work of building businesses for the long term."
       />
 
       <Section tone="paper" divide>

@@ -4,12 +4,10 @@ import StageArt from './StageArt.jsx'
 import useScrollProgress from '../lib/useScrollProgress.js'
 import useReducedMotion from '../lib/useReducedMotion.js'
 import useMediaQuery from '../lib/useMediaQuery.js'
-import { farmChain } from '../data/farmChain.js'
-
-const N = farmChain.length
+import { ecosystemStages } from '../data/greens.js'
 
 /**
- * "From land to product" — the five Kaimur Farms stages.
+ * The KVI Greens ecosystem — five stages from farmer partnership to market.
  *
  * Large desktop (>= lg, motion allowed): a pinned scroll sequence. The section
  *   is tall; an inner panel sticks to the viewport while native scrolling
@@ -22,7 +20,8 @@ const N = farmChain.length
  * The tall pinned track is only mounted when it is actually used, so small
  * screens never carry a 300vh+ invisible element or its scroll listener.
  */
-export default function ProcessJourney() {
+export default function ProcessJourney({ stages = ecosystemStages }) {
+  const N = stages.length
   const [active, setActive] = useState(0)
   const fillRef = useRef(null)
   const reduced = useReducedMotion()
@@ -59,10 +58,10 @@ export default function ProcessJourney() {
                 >
                   <span
                     ref={fillRef}
-                    className="block h-full w-px origin-top scale-y-0 bg-farms"
+                    className="block h-full w-px origin-top scale-y-0 bg-greens"
                   />
                 </span>
-                {farmChain.map((stage, i) => {
+                {stages.map((stage, i) => {
                   const on = i === active
                   return (
                     <li key={stage.step}>
@@ -82,7 +81,7 @@ export default function ProcessJourney() {
                       >
                         <span
                           className={`font-display text-xs tabular-nums transition-colors ${
-                            on ? 'text-farms' : 'text-ink-muted'
+                            on ? 'text-greens' : 'text-ink-muted'
                           }`}
                         >
                           {stage.no}
@@ -104,8 +103,8 @@ export default function ProcessJourney() {
 
               {/* Stage stage */}
               <div className="col-span-8">
-                <div className="relative overflow-hidden border border-line bg-farms-wash/40">
-                  {farmChain.map((stage, i) => (
+                <div className="relative overflow-hidden border border-line bg-greens-wash/40">
+                  {stages.map((stage, i) => (
                     <div
                       key={stage.step}
                       aria-hidden={i !== active}
@@ -120,7 +119,7 @@ export default function ProcessJourney() {
                   ))}
                 </div>
                 <div className="relative mt-8 min-h-[8.5rem]">
-                  {farmChain.map((stage, i) => (
+                  {stages.map((stage, i) => (
                     <div
                       key={stage.step}
                       aria-hidden={i !== active}
@@ -137,11 +136,11 @@ export default function ProcessJourney() {
                 </div>
                 {/* Progress ticks */}
                 <div className="mt-8 flex gap-1.5" aria-hidden="true">
-                  {farmChain.map((s, i) => (
+                  {stages.map((s, i) => (
                     <span
                       key={s.step}
                       className={`h-0.5 flex-1 transition-colors duration-500 ${
-                        i <= active ? 'bg-farms' : 'bg-line-strong'
+                        i <= active ? 'bg-greens' : 'bg-line-strong'
                       }`}
                     />
                   ))}
@@ -154,7 +153,7 @@ export default function ProcessJourney() {
 
       {/* ---------- tablet / mobile / reduced-motion / no-JS : stacked rail ---------- */}
       <ol className={`mt-12 ${pinned ? 'lg:hidden' : ''}`}>
-        {farmChain.map((stage, i) => (
+        {stages.map((stage, i) => (
           <Reveal
             as="li"
             key={stage.step}
@@ -163,14 +162,14 @@ export default function ProcessJourney() {
           >
             <span
               aria-hidden="true"
-              className="absolute -left-[5px] top-1.5 h-2.5 w-2.5 rounded-full border border-farms bg-paper"
+              className="absolute -left-[5px] top-1.5 h-2.5 w-2.5 rounded-full border border-greens bg-paper"
             />
             <div className="flex items-baseline gap-3">
-              <span className="font-display text-xs tabular-nums text-farms">{stage.no}</span>
+              <span className="font-display text-xs tabular-nums text-greens">{stage.no}</span>
               <h3 className="font-display text-2xl font-semibold sm:text-3xl">{stage.step}</h3>
             </div>
             <p className="mt-2 max-w-sm text-sm text-ink-muted">{stage.body}</p>
-            <div className="mt-5 max-w-sm border border-line bg-farms-wash/50 p-5">
+            <div className="mt-5 max-w-sm border border-line bg-greens-wash/50 p-5">
               <StageArt scene={stage.scene} />
             </div>
           </Reveal>

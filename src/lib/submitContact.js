@@ -2,24 +2,31 @@
 // Contact form submission seam.
 //
 // There is no backend. This is the single place to wire the form to an email
-// service or API later (Formspree, a serverless function, etc.). Until then it
-// resolves after a short delay so the UI can show a success state, and returns
-// a mailto: fallback the form uses to open the user's mail client.
+// service or API (Formspree, a serverless function, etc.) via the build-time
+// VITE_CONTACT_ENDPOINT. Without it, the form never claims a message was sent:
+// it returns a pre-filled mailto: draft for the visitor to send themselves.
 // ---------------------------------------------------------------------------
 
 import { company } from '../data/company.js'
 
 const ENDPOINT = import.meta.env.VITE_CONTACT_ENDPOINT || null
 
-export function buildMailto({ name, email, type, message }) {
+// Lets the form tell visitors up front how their enquiry will be delivered.
+export const deliversDirectly = Boolean(ENDPOINT)
+
+export function buildMailto({ name, email, phone, organisation, type, message }) {
   const subject = `[${type || 'General enquiry'}] Website enquiry from ${name || 'a visitor'}`
   const body = [
     `Name: ${name || ''}`,
     `Email: ${email || ''}`,
+    phone ? `Phone: ${phone}` : null,
+    organisation ? `Organisation / farm: ${organisation}` : null,
     `Enquiry type: ${type || ''}`,
     '',
     message || '',
-  ].join('\n')
+  ]
+    .filter((line) => line !== null)
+    .join('\n')
   return `mailto:${company.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
 }
 
@@ -34,7 +41,6 @@ export async function submitContact(payload) {
     return { delivered: true }
   }
 
-  // No endpoint configured yet — hand back a mailto fallback.
-  await new Promise((r) => setTimeout(r, 600))
+  // No endpoint configured — hand back a mailto draft.
   return { delivered: false, mailto: buildMailto(payload) }
 }

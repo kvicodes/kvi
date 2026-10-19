@@ -2,46 +2,38 @@
 // revenue, clients, offices, certifications or market position.
 
 export const about = {
-  lede: 'Kaimur Valley Innovations is a modern Indian business group. It builds and operates businesses across infrastructure, agriculture, natural products and technology.',
+  lede: 'Kaimur Valley Innovations Pvt. Ltd. is an AgroTech-led company building businesses and technology around agriculture, food processing, rural infrastructure and enterprise software.',
 
   sections: [
     {
-      key: 'who-we-are',
-      heading: 'Who we are',
+      key: 'why',
+      heading: 'Why KVI exists',
       body: [
-        'KVI is a diversified business group. Rather than operating as a single company with departments, it builds and runs distinct businesses — each with its own focus, its own team and its own commercial responsibility.',
-        'Three businesses operate under the group today: KVI Infra, Kaimur Farms and KVI Tech. The group holds them together with a shared way of working and a long-term view.',
+        'Much of agriculture’s value is lost between the field and the customer — in under-developed farms, limited processing and weak routes to market.',
+        'KVI exists to build businesses that close those gaps: by working with farmers, by building the infrastructure farms and rural enterprises need, and by bringing practical software to the way they operate.',
       ],
     },
     {
-      key: 'what-we-build',
-      heading: 'What we build',
+      key: 'mission',
+      heading: 'Our mission',
       body: [
-        'Physical infrastructure and agricultural assets, through KVI Infra. Agricultural operations, food and natural products, through Kaimur Farms. Software platforms and digital products, through KVI Tech.',
-        'The common thread is practical work: things that get built, operated and used — not concepts.',
+        'To make agricultural and rural enterprise more productive and more commercially viable — farm by farm, product by product and system by system.',
       ],
     },
     {
       key: 'business-model',
       heading: 'Our business model',
       body: [
-        'KVI develops businesses and holds them for the long term. Each business is expected to stand on its own commercially.',
-        'Where one business can help another — infrastructure supporting farm operations, technology supporting either — it does so on normal terms. The businesses are complementary by design, but not dependent on one another.',
-      ],
-    },
-    {
-      key: 'vision',
-      heading: 'Our vision',
-      body: [
-        'To build a group of durable businesses that do useful work across infrastructure, agriculture and technology — and that can operate well beyond the region where KVI began.',
+        'KVI operates through three divisions. KVI Greens leads the agricultural work: farmer partnerships, farm development, processing and product brands. KV Infra executes infrastructure and construction works. KVI Tech builds and runs software products and provides IT-related services.',
+        'Each division serves its own customers and is expected to stand on its own commercially. Together they let KVI take an agricultural opportunity from the ground to the market.',
       ],
     },
     {
       key: 'approach',
-      heading: 'Our approach',
+      heading: 'How we work',
       body: [
-        'Start with a real problem. Build a practical solution. Test it in the real world. Scale what works into a sustainable business.',
-        'This applies whether the work is a piece of farm infrastructure, an agricultural product or a software platform.',
+        'Start with a real problem. Build a practical solution. Test it in the conditions it was made for. Scale only what works.',
+        'This applies whether the work is a farm partnership, a piece of infrastructure, an agricultural product or a software platform.',
       ],
     },
   ],

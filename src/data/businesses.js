@@ -1,151 +1,103 @@
 // ---------------------------------------------------------------------------
-// The three operating businesses under the KVI group.
+// KVI's three business divisions.
 //
-// Order is fixed: Infra (build) -> Farms (operate) -> Tech (innovate).
-// Each business has an `index` used for the subtle accent differentiation in
-// cards and page headers, while all three stay unmistakably part of KVI.
+// Order is fixed: Greens (agriculture — the centre of the company) -> Infra ->
+// Tech. Greens is always given the most visual prominence.
+//
+// Copy rule: describe what each division does and is building towards. Never
+// list completed projects, customers, contracts, certifications or figures
+// that have not been verified and published by KVI.
 // ---------------------------------------------------------------------------
 
-// Per-business visual identity. All three stay in the KVI card system — this
-// only swaps a single hairline colour, the glyph stroke and an optional
-// background texture so each business has its own character.
+// Per-division visual identity. All three stay in the KVI card system — this
+// only swaps a hairline colour, the glyph stroke and an optional texture.
 export const TINT = {
-  'kvi-infra': {
+  'kvi-greens': {
+    text: 'text-greens',
+    bar: 'bg-greens',
+    wash: 'bg-greens-wash',
+    texture: 'bg-furrow',
+  },
+  'kv-infra': {
     text: 'text-infra',
     bar: 'bg-infra',
     wash: 'bg-infra-wash',
     texture: 'bg-blueprint',
-    character: 'Structured · Engineered · Solid',
-  },
-  'kaimur-farms': {
-    text: 'text-farms',
-    bar: 'bg-farms',
-    wash: 'bg-farms-wash',
-    texture: 'bg-furrow',
-    character: 'Grounded · Seasonal · Natural',
   },
   'kvi-tech': {
     text: 'text-tech',
     bar: 'bg-tech',
     wash: 'bg-tech-wash',
     texture: 'bg-lattice',
-    character: 'Precise · Digital · Intelligent',
   },
 }
 
 export const businesses = [
   {
-    id: 'kvi-infra',
+    id: 'kvi-greens',
     index: '01',
-    verb: 'Build',
-    name: 'KVI Infra',
-    to: '/infra',
-    discipline: 'Farm Development & Infrastructure',
-    tagline: 'Developing agricultural assets, infrastructure and physical projects.',
+    name: 'KVI Greens',
+    short: 'Greens',
+    to: '/greens',
+    discipline: 'Agriculture, food processing & natural products',
+    tagline:
+      'Building an agricultural ecosystem that connects farmers, farms, processing and consumer brands.',
     summary:
-      'KVI Infra develops physical assets for the group and for partners — farm land development, agricultural infrastructure and construction, delivered with a long-term view.',
-    focus: [
-      'Farm development',
-      'Agricultural infrastructure',
-      'Irrigation',
-      'Farm buildings',
-      'Warehousing',
-      'Internal roads and site infrastructure',
-      'Development projects',
-      'Construction work',
+      'KVI Greens works with farmers and farm owners to develop and improve farms, source and process agricultural produce, and build natural-product brands with reliable routes to market.',
+    activities: [
+      'Farmer and farm-owner partnerships',
+      'Farm development and renovation',
+      'Productivity and operational improvement',
+      'Sourcing agricultural produce',
+      'Food processing and packaging',
+      'Natural and agricultural product brands',
+      'Farm-to-customer supply chains',
+      'Contract-farming and farm-development models, where commercially appropriate',
     ],
-    cta: 'Explore KVI Infra',
-    // Sections the page reserves space for as the business grows.
-    sections: [
-      {
-        key: 'capabilities',
-        heading: 'Capabilities',
-        body: 'Planning and delivery across farm development and agricultural infrastructure — from site assessment and land development through irrigation, farm buildings and storage.',
-      },
-      {
-        key: 'projects',
-        heading: 'Projects',
-        body: 'A record of completed development and infrastructure work will be published here as projects are delivered.',
-        placeholder: true,
-      },
-      {
-        key: 'approach',
-        heading: 'How we work',
-        body: 'Infrastructure is designed to keep working long after handover: practical specifications, maintainable systems and construction matched to local conditions.',
-      },
-    ],
+    cta: 'Explore KVI Greens',
   },
   {
-    id: 'kaimur-farms',
+    id: 'kv-infra',
     index: '02',
-    verb: 'Operate',
-    name: 'Kaimur Farms',
-    to: '/farms',
-    discipline: 'Agriculture & Natural Products',
+    name: 'KV Infra',
+    short: 'Infra',
+    to: '/infra',
+    discipline: 'Infrastructure & project execution',
     tagline:
-      'Operating farms and building businesses around agricultural, food and natural products.',
+      'The infrastructure arm of KVI — planning and executing physical works with a practical, long-term view.',
     summary:
-      'Kaimur Farms manages and operates farmland and develops businesses around what it produces — agricultural output, processed food and natural products, moving from land to finished product.',
-    focus: [
-      'Farm management',
-      'Farm operations',
-      'Agricultural production',
-      'Processing',
-      'Packaging',
-      'Food products',
-      'Natural products',
-      'Consumer brands',
+      'KV Infra focuses on infrastructure-related works and project execution: construction, site development and the physical infrastructure that agricultural and rural enterprises depend on.',
+    activities: [
+      'Construction works',
+      'Infrastructure development',
+      'Project planning and execution',
+      'Farm development and land preparation',
+      'Irrigation and water systems',
+      'Farm buildings, storage and warehousing',
+      'Internal roads and site infrastructure',
     ],
-    cta: 'Explore Kaimur Farms',
-    sections: [
-      {
-        key: 'operations',
-        heading: 'Farm operations',
-        body: 'Day-to-day management of farmland and agricultural production, with an emphasis on consistency and quality suited to local growing conditions.',
-      },
-      {
-        key: 'products',
-        heading: 'Products',
-        body: 'Kaimur Farms is developing food and natural products from its own production. Mokari Gobindbhog rice is an early initiative. Product details and availability will be published here as they are confirmed.',
-      },
-      {
-        key: 'brands',
-        heading: 'Consumer businesses',
-        body: 'Where a product line can stand on its own, it is developed into a consumer brand with its own identity — while remaining a Kaimur Farms business.',
-      },
-    ],
+    cta: 'Explore KV Infra',
   },
   {
     id: 'kvi-tech',
     index: '03',
-    verb: 'Innovate',
     name: 'KVI Tech',
+    short: 'Tech',
     to: '/tech',
-    discipline: 'Technology & Digital Products',
-    tagline: 'Building software platforms and digital products for real-world problems.',
+    discipline: 'Software products & technology services',
+    tagline:
+      'Software products and IT services that help agricultural businesses, infrastructure operations and other organisations run better.',
     summary:
-      'KVI Tech builds digital products that turn practical problems into usable software — platforms for business and for everyday life. Each product is developed to stand on its own commercially while drawing on the group’s operating experience.',
-    focus: [
-      'SaaS',
-      'Enterprise software',
-      'Digital platforms',
-      'AI and automation',
-      'Business technology',
-      'Product development',
+      'KVI Tech builds and operates a portfolio of software products — FarmGrid, BillGrid, CampusGrid, BhattaGrid and ContractorOS — and provides software development and IT-related services.',
+    activities: [
+      'Industry-specific operations software',
+      'Multi-tenant SaaS platforms',
+      'Custom software development',
+      'Implementation support for KVI products',
+      'Integrations and automation',
+      'IT-related services',
     ],
     cta: 'Explore KVI Tech',
-    sections: [
-      {
-        key: 'capabilities',
-        heading: 'What we build',
-        body: 'Multi-tenant SaaS platforms, workflow and management systems, integrations and automation — built for organisations that run on process.',
-      },
-      {
-        key: 'approach',
-        heading: 'Product approach',
-        body: 'Products start from a specific operational problem, are validated with real users, and are built to scale only once they work.',
-      },
-    ],
   },
 ]
 

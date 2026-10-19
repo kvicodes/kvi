@@ -18,9 +18,10 @@ function setMeta(selector, attr, value) {
 
 /**
  * Per-route document metadata without a helmet dependency.
- * Pass a page title (composed with the brand), description, and path.
+ * Pass a page title (composed with the brand), description, path and an
+ * optional robots directive (e.g. 'noindex' for the 404 page).
  */
-export default function useDocumentMeta({ title, description, path } = {}) {
+export default function useDocumentMeta({ title, description, path, robots } = {}) {
   useEffect(() => {
     const fullTitle = title ? `${title} | ${BASE_TITLE}` : `${BASE_TITLE} | ${company.positioning}`
     document.title = fullTitle
@@ -31,6 +32,7 @@ export default function useDocumentMeta({ title, description, path } = {}) {
     setMeta('meta[property="og:description"]', 'content', desc)
     setMeta('meta[name="twitter:title"]', 'content', fullTitle)
     setMeta('meta[name="twitter:description"]', 'content', desc)
+    setMeta('meta[name="robots"]', 'content', robots || 'index, follow')
 
     if (path) {
       const url = `${company.domain}${path}`
@@ -43,5 +45,5 @@ export default function useDocumentMeta({ title, description, path } = {}) {
       }
       canonical.setAttribute('href', url)
     }
-  }, [title, description, path])
+  }, [title, description, path, robots])
 }

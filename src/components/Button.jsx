@@ -3,19 +3,23 @@ import Icon from './Icon.jsx'
 
 const VARIANTS = {
   primary:
-    'bg-ink text-paper border border-ink hover:bg-accent hover:border-accent',
+    'bg-forest text-paper border border-forest hover:bg-forest-deep hover:border-forest-deep',
   secondary:
-    'bg-transparent text-ink border border-line-strong hover:border-ink hover:bg-ink hover:text-paper',
-  // Sits on the green CTA band — stays solid and high-contrast on hover.
+    'bg-transparent text-ink border border-line-strong hover:border-forest hover:bg-forest hover:text-paper',
+  // Light button for dark / green surfaces.
   inverse:
-    'bg-paper text-ink border border-paper shadow-[0_1px_2px_rgb(0_0_0/0.18)] hover:bg-accent-wash hover:border-accent-wash',
+    'bg-paper text-forest-deep border border-paper hover:bg-grain hover:border-grain',
+  // Outline button for dark / green surfaces.
+  'outline-light':
+    'bg-transparent text-paper border border-paper/40 hover:border-paper hover:bg-paper hover:text-forest-deep',
   ghost:
     'bg-transparent text-ink border border-transparent hover:border-line-strong',
 }
 
 const SIZES = {
+  sm: 'h-10 px-4 text-[11px]',
   md: 'h-11 px-5 text-xs',
-  lg: 'h-14 px-8 text-xs',
+  lg: 'h-14 px-7 text-xs sm:px-8',
 }
 
 const BASE_DISABLED = 'disabled:cursor-not-allowed disabled:opacity-55'

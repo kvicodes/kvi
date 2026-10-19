@@ -17,7 +17,7 @@ export default function SectionHeading({
 }) {
   const alignment = align === 'center' ? 'items-center text-center mx-auto' : 'items-start'
   const introColor = tone === 'dark' ? 'text-paper/70' : 'text-ink-muted'
-  const eyebrowColor = tone === 'dark' ? 'text-paper/55' : 'text-ink-muted'
+  const eyebrowColor = tone === 'dark' ? 'text-grain' : 'text-accent'
 
   return (
     <div className={`flex flex-col ${alignment} max-w-3xl ${className}`}>
