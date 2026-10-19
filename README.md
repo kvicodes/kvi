@@ -54,7 +54,7 @@ Add a business, product or article by editing the relevant file there.
 | `/` | Corporate homepage |
 | `/about` | Company overview, mission, model, structure, vision |
 | `/businesses` | The three divisions and how they connect |
-| `/greens` | KVI Greens — farmer partnerships, ecosystem, Mokari |
+| `/greens` | KVI Greens — farmer partnerships, ecosystem, Mokari Gobindbhog Rice |
 | `/infra` | KV Infra — capability areas and execution |
 | `/tech` | KVI Tech — products and technology services |
 | `/products` | Full product portfolio by sector |
@@ -82,6 +82,7 @@ npm run dev
 | `npm run build`   | Production build to `dist/`              |
 | `npm run preview` | Preview the production build             |
 | `npm run lint`    | Run oxlint                               |
+| `npm run test:e2e` | Headless acceptance suite (after `npm run build`; see DEPLOYMENT.md §2) |
 
 No Node.js locally? Build in Docker:
 

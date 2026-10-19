@@ -35,7 +35,7 @@ export default function Greens() {
   useDocumentMeta({
     title: 'KVI Greens — Agriculture, food processing & natural products',
     description:
-      'KVI Greens partners with farmers and farm owners to develop farms, source and process agricultural produce, and build natural-product brands such as Mokari Premium Gobindbhog rice.',
+      'KVI Greens partners with farmers and farm owners to develop farms, source and process agricultural produce, and create agricultural products, starting with Mokari Gobindbhog Rice.',
     path: '/greens',
   })
 

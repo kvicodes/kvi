@@ -22,7 +22,7 @@ export const partnerAudiences = [
     key: 'buyers',
     division: 'kvi-greens',
     title: 'Distributors, retailers & institutional buyers',
-    body: 'Register interest in KVI Greens products, including Mokari Premium Gobindbhog rice.',
+    body: 'Register interest in KVI Greens products, including Mokari Gobindbhog Rice.',
     cta: 'Register buyer interest',
     enquiry: 'distribution',
   },

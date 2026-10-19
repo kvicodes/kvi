@@ -7,7 +7,7 @@ import { contactPath } from '../data/contact.js'
 
 const GRAINS = Array.from({ length: 9 }, (_, i) => i)
 
-/** Grain-stalk motif for the Mokari panel. Decorative — not packaging art. */
+/** Grain-stalk motif for the Mokari Gobindbhog Rice panel. Decorative — not packaging art. */
 function GrainArt() {
   return (
     <svg viewBox="0 0 240 240" fill="none" aria-hidden="true" focusable="false" className="h-full w-full">
@@ -36,7 +36,7 @@ function GrainArt() {
   )
 }
 
-/** KVI Greens product-branding direction: Mokari (early initiative) + planned lines. */
+/** KVI Greens products: Mokari Gobindbhog Rice (pre-launch) + planned lines. */
 export default function AgriProductsSection({ tone = 'paper' }) {
   const p = featuredProduct
   return (
@@ -44,7 +44,7 @@ export default function AgriProductsSection({ tone = 'paper' }) {
       <SectionHeading
         eyebrow="KVI Greens products"
         heading="Value addition, starting with one distinctive grain."
-        intro="KVI Greens is building agricultural products that carry more of their value back towards the farm. The first initiative is a premium aromatic rice."
+        intro="KVI Greens is building agricultural products that carry more of their value back towards the farm. The first is Mokari Gobindbhog Rice, a premium aromatic rice."
       />
 
       <div className="mt-14 grid gap-4 lg:grid-cols-12">
@@ -58,11 +58,21 @@ export default function AgriProductsSection({ tone = 'paper' }) {
             </div>
           </div>
           <div className="flex flex-col p-8 sm:col-span-3 sm:p-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-earth-deep">{p.brand}</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-earth-deep">{p.offeredBy}</p>
             <h3 className="mt-2 font-serif text-3xl font-medium sm:text-4xl">{p.name}</h3>
             <p className="mt-4 text-ink-muted">{p.body}</p>
             <p className="mt-3 text-sm text-ink-muted">{p.variety}</p>
-            <p className="mt-6 border-l-2 border-grain pl-4 text-sm text-ink-soft">{p.availability}</p>
+            <div className="mt-6 flex flex-wrap items-center gap-2">
+              <span className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">Planned packs</span>
+              <ul className="flex gap-2" aria-label="Planned pack sizes">
+                {p.packSizes.map((s) => (
+                  <li key={s} className="border border-line-strong px-2.5 py-1 font-display text-sm font-semibold tabular-nums">
+                    {s}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <p className="mt-4 border-l-2 border-grain pl-4 text-sm text-ink-soft">{p.availability}</p>
             <div className="mt-8">
               <Button to={contactPath('distribution', { product: 'mokari' })} withArrow>
                 Register buyer interest

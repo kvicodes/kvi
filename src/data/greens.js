@@ -63,17 +63,21 @@ export const partnershipModels = [
   },
 ]
 
-// The first product initiative. Keep the status honest: no availability,
-// pricing, volumes or retail presence until KVI confirms them.
+// KVI Greens' first product. It is a KVI Greens product — there is no separate
+// Mokari brand or company. Keep the status honest: not on sale until KVI
+// confirms launch; no prices, certifications, organic status, capacity or
+// marketplace listings. Do not add temple or public-figure associations
+// without founder-confirmed, citable evidence (see docs/content-claims.md).
 export const featuredProduct = {
-  brand: 'Mokari',
-  name: 'Mokari Premium Gobindbhog Rice',
-  status: 'Early initiative',
+  offeredBy: 'KVI Greens',
+  name: 'Mokari Gobindbhog Rice',
+  status: 'Pre-launch',
+  body: 'A premium aromatic rice offered by KVI Greens, highlighting the distinctive fragrance and culinary heritage of Gobindbhog rice — traditionally used in preparations such as kheer.',
   variety:
-    'Gobindbhog is a short-grain, aromatic rice variety traditionally prized in eastern India.',
-  body: 'Mokari is KVI Greens’ first product initiative and a concrete example of its value-addition direction: sourcing a distinctive crop, processing and packaging it with care, and building a brand around it.',
+    'Gobindbhog is a short-grain aromatic rice traditionally prized in eastern India. The product takes its name from Mokari village in Kaimur, Bihar, long associated with Gobindbhog rice.',
+  packSizes: ['500 g', '1 kg'],
   availability:
-    'Availability, pack sizes and purchase details will be published here once they are confirmed. Distributors, retailers and institutional buyers are welcome to register interest now.',
+    'Not yet on sale. Prices and purchase details will be published here at launch; distributors, retailers and institutional buyers can register interest now.',
 }
 
 // Broader directions — clearly labelled as not yet available.

@@ -29,12 +29,25 @@ Internet ─▶ kvi-proxy (Caddy, :80/:443, TLS via Let's Encrypt)
 host). Its `Caddyfile` holds the routing; `docs/kvi-website-integration.md`
 there records how this site was brought in.
 
+### Names (verified 2026-10-19)
+
+| What | Name |
+| --- | --- |
+| Compose project | `kvi` — derived from the directory name, so always run Compose from `~/kvi/repos/kvi` |
+| Compose service | `kvi` (use this in `docker compose … kvi` commands) |
+| Container | `kvi-website` (`container_name:`; use this with `docker ps/logs/exec`) |
+| Image | `kvi-kvi:latest` — implicit `<project>-<service>`, as the service has `build:` but no `image:` |
+
 ### Deploy a change
 
 ```bash
-# on the shared KVI host, from this repo:
-# 1. keep the running image for rollback (Compose names it kvi-kvi:latest —
-#    the service has no `image:` key, so the name is <project>-<service>)
+cd ~/kvi/repos/kvi
+# 0. test the candidate before touching production (isolated, localhost only)
+docker build -t kvi-website:candidate .
+docker run -d --rm --name kvi-website-candidate -p 127.0.0.1:18080:80 kvi-website:candidate
+BASE_URL=http://127.0.0.1:18080 npm run test:e2e
+docker stop kvi-website-candidate
+# 1. keep the running image for rollback
 docker tag kvi-kvi:latest kvi-kvi:rollback-$(date +%Y%m%d-%H%M)
 # 2. rebuild the image and recreate kvi-website (only this container)
 docker compose up -d --build
@@ -52,17 +65,28 @@ curl -sI https://www.kvinnovations.in/ | grep -i location      # https://kvinnov
 
 Then open the site on desktop and a phone: navigation menus, a product page,
 and the contact form (it opens an email draft unless an endpoint is set —
-see section 2).
+see section 3).
 
 ### Roll back
 
 ```bash
+cd ~/kvi/repos/kvi
 docker images kvi-kvi                                   # find the rollback-* tag
 docker tag kvi-kvi:rollback-YYYYMMDD-HHMM kvi-kvi:latest
-docker compose up -d --no-build --force-recreate kvi    # recreate from that image
+docker compose up -d --no-build --force-recreate kvi    # service name, not container name
+docker inspect kvi-website --format '{{.Image}}'        # confirm the expected image ID
 ```
 
-Rollback touches only `kvi-website`; Caddy keeps routing to it by name.
+Rollback touches only `kvi-website`; Caddy keeps routing to it by name. These
+mechanics (tag → rebuild → retag → `up --no-build --force-recreate`) were
+tested end to end in an isolated Compose project on 2026-10-19.
+
+Roll back to an **image**, not a commit: the image live before the redesign
+(`sha256:a0b827c4e435…`, built 2026-09-24) was built from an uncommitted
+working tree. It is also exported to
+`~/backups/kvi-website-live-image-20261019-135957/` — if its tag is ever
+lost, `gunzip -c kvi-kvi_a0b827c4e435.tar.gz | docker load` restores
+`kvi-kvi:latest`, then run the `up --no-build --force-recreate kvi` line.
 
 Caddy needs no restart — it already routes `kvinnovations.in` to the
 `kvi-website` container by name over the `kvi-proxy` network. If a routing
@@ -82,7 +106,24 @@ downtime), not a change here.
 
 ---
 
-## 2. Wiring the contact form to Formspree
+## 2. Acceptance tests
+
+`tests/e2e/site.mjs` is a headless-Chromium (Playwright library) suite: all
+public routes at desktop and mobile size, console errors and failed
+requests, overflow, h1 and metadata, link targets, menus, the `/farms`
+redirect, the Mokari Gobindbhog Rice panel, the privacy disclosures and the
+contact form. Requests to other hosts are stubbed, so it never depends on
+Google Fonts or the live product sites.
+
+```bash
+npx playwright install chromium     # once per machine
+npm run build && npm run test:e2e   # serves dist/ with vite preview
+BASE_URL=http://127.0.0.1:18080 npm run test:e2e   # or test a running container
+```
+
+---
+
+## 3. Wiring the contact form to Formspree
 
 The contact form (`src/components/ContactForm.jsx`) posts JSON to whatever
 `VITE_CONTACT_ENDPOINT` points at (`src/lib/submitContact.js`). This is a
@@ -97,10 +138,14 @@ set when the image is *built*, not when the container runs.
    ```
    VITE_CONTACT_ENDPOINT=https://formspree.io/f/xxxxxxxx
    ```
-3. Build with that value picked up automatically by Compose:
+3. Deploy with the procedure in section 1 (tag the running image, then
+   `docker compose up -d --build`); Compose reads `.env` automatically and
+   passes the value as a build arg. Check it was baked in:
    ```bash
-   docker compose up -d --build
+   docker exec kvi-website sh -c 'grep -l formspree.io /usr/share/nginx/html/assets/*.js'
    ```
+   The form's helper text and the Privacy page switch automatically to the
+   "delivered by a form-processing service" wording.
 4. Submit the live form once — Formspree requires one confirmation click on
    the first real submission before it starts delivering mail.
 
@@ -125,11 +170,20 @@ posting anywhere.
 - [x] Replaced `public/og.svg` with a real rasterized `public/og.png`
       (1200×630) — SVG `og:image` isn't reliably rendered by Facebook,
       LinkedIn, Slack or WhatsApp link previews; PNG is universally supported.
-- [ ] Set `VITE_CONTACT_ENDPOINT` per section 2 above so the contact form
+- [ ] Set `VITE_CONTACT_ENDPOINT` per section 3 above so the contact form
       delivers mail instead of the `mailto:` fallback.
+- [ ] SEO: `index.html` is one file for every route, so crawlers and link
+      previews that don't run JS see the homepage title/description. Follow-up:
+      a small post-build step that writes `dist/<route>/index.html` with each
+      route's title, description, canonical and `og:*` (nginx already serves
+      `$uri/` via `try_files`) — no framework change needed.
+- [ ] Privacy: consider self-hosting the fonts (removes the only third-party
+      request) and have a full policy reviewed (India DPDP Act 2023).
+- [ ] `npm audit`: 8 build-time advisories in transitive dev dependencies
+      (Tailwind 3 toolchain, `source-map-js`); none ship in the static bundle.
 - [ ] Publish real Privacy / Terms copy in [`src/pages/Legal.jsx`](./src/pages/Legal.jsx).
 - [ ] Add real articles to [`src/data/insights.js`](./src/data/insights.js).
 - [ ] Real photography: no authentic KVI farm, processing or project photos
       exist yet, so the site uses line illustrations. Replace/augment with
-      genuine KVI images (farms, Mokari processing/packing, sites) — never
+      genuine KVI images (farms, Mokari Gobindbhog Rice processing/packing, sites) — never
       stock photos presented as KVI work.

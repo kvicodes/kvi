@@ -13,7 +13,10 @@
       name="description"
       content="Kaimur Valley Innovations (KVI) is an AgroTech-led company building businesses around agriculture, food processing, rural infrastructure and software — through KVI Greens, KV Infra and KVI Tech."
     />
-    <link rel="canonical" href="https://kvinnovations.in/" />
+    <!-- No static canonical / og:url: this one HTML file is served for every
+         route, so a hard-coded "/" would contradict the per-route values that
+         useDocumentMeta sets. Scrapers without JS then fall back to the
+         requested URL instead of the homepage. -->
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -24,7 +27,6 @@
       property="og:description"
       content="An AgroTech-led company building businesses around agriculture, food processing, rural infrastructure and software."
     />
-    <meta property="og:url" content="https://kvinnovations.in/" />
     <meta property="og:image" content="https://kvinnovations.in/og.png" />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
