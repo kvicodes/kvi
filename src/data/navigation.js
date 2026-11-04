@@ -20,5 +20,7 @@ export const footerNav = [
 // state. Everything else starts dark-on-light.
 const DARK_TOP = ['/', '/about', '/greens', '/tech', '/projects', '/products', '/insights']
 
-export const hasDarkTop = (pathname) =>
-  DARK_TOP.includes(pathname) || pathname.startsWith('/products/')
+export const hasDarkTop = (pathname) => {
+  const path = pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname
+  return DARK_TOP.includes(path) || path.startsWith('/products/')
+}

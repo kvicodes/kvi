@@ -4,7 +4,7 @@
 // route. Crawlers and link previews that do not run JavaScript would all see the
 // homepage's title. This writes dist/<route>/index.html for each known route with
 // that route's title, description, canonical URL and Open Graph tags. nginx
-// serves these through `try_files $uri $uri/`. dist/index.html stays as it is: it
+// serves these through `try_files $uri/index.html`. dist/index.html stays as it is: it
 // is also the fallback for unknown paths, so it carries no canonical URL.
 // ---------------------------------------------------------------------------
 

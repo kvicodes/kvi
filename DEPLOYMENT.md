@@ -97,7 +97,7 @@ downtime), not a change here.
 ### Notes
 
 - Static files only — no backend, database, auth, or host-published port.
-- `nginx.conf`'s `try_files $uri $uri/ /index.html` is what makes deep links
+- `nginx.conf`'s `try_files $uri $uri/index.html /index.html` is what makes deep links
   (e.g. `/greens`) work with `BrowserRouter`. Do not remove it.
 - `nginx.conf` also 301-redirects `/farms` to `/greens` and `/businesses` to
   `/about#verticals`
@@ -175,7 +175,7 @@ posting anywhere.
       delivers mail instead of the `mailto:` fallback.
 - [x] SEO: `scripts/prerender-meta.mjs` writes `dist/<route>/index.html` with
       each route's title, description, canonical and `og:*`; nginx serves them
-      via `$uri/`.
+      via `$uri/index.html`.
 - [x] Fonts are self-hosted, so the site makes no third-party requests.
 - [ ] Privacy: have a full policy reviewed (India DPDP Act 2023).
 - [ ] `npm audit`: 8 build-time advisories in transitive dev dependencies

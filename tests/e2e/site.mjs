@@ -126,6 +126,7 @@ async function routeChecks(browser) {
       const info = await page.evaluate(inspect)
       const tag = `[${vp}] ${route}`
       if (res.status() !== 200) fail(`${tag} HTTP ${res.status()}`)
+      if (info.path !== route) fail(`${tag} redirected to ${info.path}`)
       if (errors.length) fail(`${tag} ${errors.join(' | ')}`)
       if (info.overflow > 0) fail(`${tag} horizontal overflow ${info.overflow}px`)
       if (info.h1.length !== 1) fail(`${tag} expected one h1, found ${info.h1.length}`)
