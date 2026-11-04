@@ -1,100 +1,89 @@
-import useDocumentMeta from '../lib/useDocumentMeta.js'
-import PageHeader from '../components/PageHeader.jsx'
-import Section from '../components/Section.jsx'
-import SectionHeading from '../components/SectionHeading.jsx'
-import Reveal from '../components/Reveal.jsx'
-import Button from '../components/Button.jsx'
-import BusinessGlyph from '../components/BusinessGlyph.jsx'
-import TechProductsSection from '../sections/TechProductsSection.jsx'
-import OperationsToBusinessSection from '../sections/OperationsToBusinessSection.jsx'
-import ContactCtaSection from '../sections/ContactCtaSection.jsx'
-import { byId } from '../data/businesses.js'
+import SitePlan from '../components/SitePlan.jsx'
+import { Button } from '../components/ui.jsx'
+import { PageHero, Partnerships, Portfolio, VerticalEyebrow } from '../components/shared.jsx'
 import { contactPath } from '../data/contact.js'
+import { agriProduct, productsNote } from '../data/products.js'
+import { techCapabilities } from '../data/verticals.js'
+import { seo } from '../data/seo.js'
+import useDocumentMeta from '../lib/useDocumentMeta.js'
 
-const SERVICES = [
-  {
-    title: 'Software products',
-    body: 'Live, multi-tenant SaaS products for specific industries — subscribed to and used as they are.',
-  },
-  {
-    title: 'Custom software development',
-    body: 'Software built around an organisation’s own operations where an off-the-shelf product does not fit.',
-  },
-  {
-    title: 'Implementation support',
-    body: 'Help setting up and adopting KVI products — configuration, data import and onboarding.',
-  },
-  {
-    title: 'Integrations & IT services',
-    body: 'Connecting systems, automating routine work and related IT services.',
-  },
-]
+const STATE_STYLE = { Live: 'text-rice', Research: 'text-sage' }
 
 export default function Tech() {
-  const b = byId('kvi-tech')
-  useDocumentMeta({
-    title: 'KVI Tech — Software products & technology services',
-    description:
-      'KVI Tech builds and operates FarmGrid, BillGrid, CampusGrid, BhattaGrid and ContractorOS, and provides software development and IT-related services.',
-    path: '/tech',
-  })
-
+  useDocumentMeta(seo.tech)
   return (
     <>
-      <PageHeader
-        tone="ink"
-        eyebrow={`KVI Tech · ${b.discipline}`}
-        title="Technology that helps real operations run better."
-        lede={b.summary}
-        figure={
-          <span className="text-paper">
-            <BusinessGlyph id={b.id} size={340} />
-          </span>
-        }
-        actions={
-          <>
-            <Button href="#products" variant="inverse" withArrow>
-              See the products
-            </Button>
-            <Button to={contactPath('technology')} variant="outline-light">
-              Talk to KVI Tech
-            </Button>
-          </>
-        }
+      <PageHero
+        eyebrow={<VerticalEyebrow id="tech" />}
+        title="Powering agricultural intelligence."
+        lede="KVI Tech develops the digital ecosystem that runs KVI's agricultural operations and serves other agricultural businesses."
+        art={<SitePlan active="tech" />}
       />
 
-      <TechProductsSection
-        tone="paper"
-        eyebrow="Product portfolio"
-        heading="Five live products, one portfolio."
-        intro="Each product starts from a specific operational problem — on a farm, in a business, at a college, a kiln or a contractor’s site — and is built to be used every day."
-      />
+      <section className="band">
+        <div className="shell grid gap-10 lg:grid-cols-12">
+          <h2 className="display display-m lg:col-span-5">A farm is a business that needs its records in one place.</h2>
+          <div className="lede space-y-5 lg:col-span-6 lg:col-start-7">
+            <p>Land, labour, inputs, animals, stock and cash usually sit in separate notebooks. Agricultural digitalization starts by bringing them into one system.</p>
+            <p className="text-muted">We build software for operations we understand, and test it against real farm and business work.</p>
+          </div>
+        </div>
+      </section>
 
-      <Section tone="sunken" divide id="services">
-        <SectionHeading
-          eyebrow="Technology services"
-          heading="Beyond the products."
-          intro="KVI Tech also provides software development and IT-related services to organisations."
-        />
-        <ul className="mt-12 grid gap-px overflow-hidden border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
-          {SERVICES.map((s, i) => (
-            <Reveal as="li" key={s.title} delay={i * 70} className="bg-paper-raised bg-lattice p-7">
-              <span className="font-display text-xs tabular-nums text-tech">{String(i + 1).padStart(2, '0')}</span>
-              <h3 className="mt-4 text-xl">{s.title}</h3>
-              <p className="mt-2 text-sm text-ink-muted">{s.body}</p>
-            </Reveal>
-          ))}
-        </ul>
-      </Section>
+      <section id="farmgrid" className="on-dark band bg-field text-paper">
+        <div className="shell grid gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-6">
+            <p className="text-base text-rice">{agriProduct.category}</p>
+            <h2 className="display display-l mt-3">{agriProduct.name}</h2>
+            <p className="lede mt-6 max-w-[46ch]">{agriProduct.intro}</p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Button href={agriProduct.url} external variant="solid-light" aria-label="FarmGrid website">Visit FarmGrid</Button>
+              <Button to="/products/farmgrid" variant="line-light">Product details</Button>
+            </div>
+          </div>
+          <div className="lg:col-span-5 lg:col-start-8">
+            <h3 className="text-sm text-sage">What it covers</h3>
+            <ul className="mt-3">
+              {agriProduct.modules.map((m) => <li key={m} className="border-t border-line-dark py-2.5">{m}</li>)}
+            </ul>
+          </div>
+        </div>
+      </section>
 
-      <OperationsToBusinessSection />
+      <section id="portfolio" className="band">
+        <div className="shell">
+          <h2 className="display display-m max-w-[14em]">The technology portfolio.</h2>
+          <p className="mt-5 max-w-prose text-muted">KVI Tech also builds products for adjacent industries. These are software products, and they are not agricultural businesses of KVI.</p>
+          <div className="mt-10"><Portfolio /></div>
+          <p className="small mt-4 text-muted">{productsNote}</p>
+        </div>
+      </section>
 
-      <ContactCtaSection
-        heading="Evaluating software for your organisation?"
-        body="Ask about a KVI Tech product, request a walkthrough, or discuss a software project."
-        to={contactPath('technology')}
-        cta="Contact KVI Tech"
-      />
+      <section className="band bg-stone">
+        <div className="shell grid gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-4">
+            <h2 className="display display-m">Technology capabilities.</h2>
+            <p className="mt-5 text-muted">Live capabilities are in use in KVI products today. Research means we are studying the area and have not released it.</p>
+          </div>
+          <ul className="on-dark bg-field p-6 text-paper lg:col-span-7 lg:col-start-6 lg:p-10">
+            {techCapabilities.map((c) => (
+              <li key={c.title} className="flex items-baseline justify-between gap-6 border-t border-line-dark py-3 first:border-t-0">
+                <span>{c.title}</span>
+                <span className={`small shrink-0 ${STATE_STYLE[c.state]}`}>{c.state}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="band-sm">
+        <div className="shell flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <h2 className="display display-m max-w-[14em]">Need software for an agricultural business?</h2>
+          <Button to={contactPath('technology')} className="shrink-0">Talk to KVI Tech</Button>
+        </div>
+      </section>
+
+      <Partnerships />
     </>
   )
 }

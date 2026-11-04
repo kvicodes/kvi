@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { company } from '../data/company.js'
-
-const BASE_TITLE = 'Kaimur Valley Innovations'
+import { fullTitle } from '../data/seo.js'
 
 function setMeta(selector, attr, value) {
   if (!value) return
@@ -17,20 +16,21 @@ function setMeta(selector, attr, value) {
 }
 
 /**
- * Per-route document metadata without a helmet dependency.
- * Pass a page title (composed with the brand), description, path and an
- * optional robots directive (e.g. 'noindex' for the 404 page).
+ * Per-route document metadata without a helmet dependency. Takes an entry from
+ * data/seo.js, or the same shape. `jsonLd` adds page-level structured data.
  */
-export default function useDocumentMeta({ title, description, path, robots } = {}) {
+export default function useDocumentMeta({ title, description, path, robots, jsonLd } = {}) {
+  const ld = jsonLd ? JSON.stringify(jsonLd) : null
+
   useEffect(() => {
-    const fullTitle = title ? `${title} | ${BASE_TITLE}` : `${BASE_TITLE} | ${company.positioning}`
-    document.title = fullTitle
+    const full = fullTitle(title)
+    document.title = full
 
     const desc = description || company.summary
     setMeta('meta[name="description"]', 'content', desc)
-    setMeta('meta[property="og:title"]', 'content', fullTitle)
+    setMeta('meta[property="og:title"]', 'content', full)
     setMeta('meta[property="og:description"]', 'content', desc)
-    setMeta('meta[name="twitter:title"]', 'content', fullTitle)
+    setMeta('meta[name="twitter:title"]', 'content', full)
     setMeta('meta[name="twitter:description"]', 'content', desc)
     setMeta('meta[name="robots"]', 'content', robots || 'index, follow')
 
@@ -45,5 +45,14 @@ export default function useDocumentMeta({ title, description, path, robots } = {
       }
       canonical.setAttribute('href', url)
     }
-  }, [title, description, path, robots])
+
+    if (ld) {
+      const node = document.createElement('script')
+      node.type = 'application/ld+json'
+      node.dataset.page = 'true'
+      node.textContent = ld
+      document.head.appendChild(node)
+      return () => node.remove()
+    }
+  }, [title, description, path, robots, ld])
 }

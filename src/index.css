@@ -3,299 +3,286 @@
 @tailwind utilities;
 
 /* ==========================================================================
-   KVI design tokens — single source of truth for the palette.
-   Values are RGB channel triplets ("R G B") consumed by Tailwind as
-   rgb(var(--token) / <alpha>). Re-skin the whole site from here.
+   KVI design tokens. RGB triplets, consumed by Tailwind as
+   rgb(var(--token) / <alpha>). Re-skin the site from here.
+
+   Colour is rationed: most surfaces are neutral stone and paper. Field is the
+   one dark surface. Copper belongs to Infra, rice-green to Tech, olive to
+   Greens, and those three only appear where a vertical is speaking.
    ========================================================================== */
 :root {
-  /* Charcoal — text and dark technical surfaces */
-  --c-ink: 25 28 26;
-  --c-ink-soft: 46 50 47;
-  --c-ink-muted: 88 93 89;
-
-  /* Warm off-white backgrounds */
-  --c-paper: 248 245 238;
-  --c-paper-raised: 253 251 246;
-  --c-paper-sunken: 240 236 226;
-
-  /* Neutral warm gray */
-  --c-mist-100: 236 232 222;
-  --c-mist-200: 222 217 205;
-  --c-mist-300: 200 194 180;
-  --c-mist-400: 163 157 143;
-  --c-mist-500: 120 116 105;
-  --c-mist-600: 86 83 75;
-
-  /* Hairline borders */
-  --c-line: 223 217 204;
-  --c-line-strong: 199 192 176;
-  --c-line-inverse: 255 255 255;
-
-  /* Deep forest green — the KVI brand colour. Agriculture is the centre of the
-     company, so the brand green is the agricultural green. */
-  --c-forest: 30 61 45;        /* #1E3D2D */
-  --c-forest-deep: 18 38 28;   /* #12261C */
-  --c-forest-soft: 86 122 98;  /* #567A62 */
-
-  /* Accent — the readable mid-green used for links, ticks and focus */
-  --c-accent: 44 92 66;        /* #2C5C42 */
-  --c-accent-soft: 108 144 120;
-  --c-accent-deep: 30 61 45;   /* = forest */
-  --c-accent-wash: 230 236 227;
-
-  /* Earthy tones — ripe grain and soil. Decorative / large text only on paper;
-     earth-deep is the text-safe variant. */
-  --c-grain: 214 182 118;      /* #D6B676 */
-  --c-earth: 168 116 62;       /* #A8743E */
-  --c-earth-deep: 120 80 40;   /* #785028 */
-  --c-earth-wash: 243 235 220;
-
-  /* Division identity tints — used for a hairline, a glyph stroke or a wash.
-     Greens shares the brand green; Infra and Tech get complementary accents. */
-  --c-greens: 44 92 66;        /* = accent */
-  --c-greens-wash: 230 236 227;
-  --c-infra: 70 84 100;        /* engineered slate */
-  --c-infra-wash: 232 235 238;
-  --c-tech: 64 72 112;         /* graphite indigo */
-  --c-tech-wash: 233 234 241;
-
+  --field: 20 33 27;          /* #14211B deep forest charcoal */
+  --field-raised: 31 46 38;   /* #1F2E26 */
+  --olive: 88 98 60;          /* #58623C */
+  --sage: 168 176 150;        /* #A8B096 */
+  --stone: 230 228 219;       /* #E6E4DB */
+  --paper: 244 243 237;       /* #F4F3ED */
+  --graphite: 35 38 35;       /* #232623 */
+  --muted: 84 89 80;          /* #545950 */
+  --line: 205 203 191;        /* #CDCBBF */
+  --line-dark: 62 78 69;      /* #3E4E45 */
+  --copper: 143 78 35;        /* #8F4E23 */
+  --copper-light: 217 150 100;/* #D99664 */
+  --rice: 197 206 122;        /* #C5CE7A */
   color-scheme: light;
 }
 
-/* ==========================================================================
-   Base
-   ========================================================================== */
 @layer base {
-  * {
-    border-color: rgb(var(--c-line));
-  }
-
   html {
     -webkit-text-size-adjust: 100%;
-    /* No global `scroll-behavior: smooth`. Wheel, trackpad, touch, spacebar and
-       arrow-key scrolling stay 100% native — the browser is never fought for
-       an effect. The few intentional jumps (in-page anchors, the KVI Greens
-       stage rail) opt into smooth per-call and drop it under reduced motion. */
-    scroll-padding-top: 5rem;
+    scroll-padding-top: 6rem;
   }
-
   body {
-    @apply bg-paper font-sans text-base text-ink antialiased;
-    font-feature-settings: 'ss01', 'cv05', 'cv11';
-    text-rendering: optimizeLegibility;
-    /* `clip` (not `hidden`) contains stray horizontal overflow without turning
-       <body> into a scroll container — which would destabilise the sticky nav
-       on iOS Safari during URL-bar resize. */
+    @apply bg-paper font-sans text-graphite antialiased;
+    font-size: 1.0625rem;
+    line-height: 1.6;
     overflow-x: clip;
   }
-
-  /* Editorial serif for the two top heading levels; the sans display face
-     carries card titles and UI labels. */
-  h1, h2 {
-    @apply font-serif font-medium;
-    color: inherit;
-    text-wrap: balance;
-    font-optical-sizing: auto;
-  }
-
-  h3, h4, h5, h6 {
-    @apply font-display font-semibold;
-    color: inherit;
-    text-wrap: balance;
-  }
-
-  p {
-    text-wrap: pretty;
-  }
-
-  ::selection {
-    background: rgb(var(--c-accent) / 0.18);
-  }
-
   :focus-visible {
-    outline: 2px solid rgb(var(--c-accent));
+    outline: 2px solid rgb(var(--copper));
     outline-offset: 3px;
-    border-radius: 1px;
+  }
+  .on-dark :focus-visible {
+    outline-color: rgb(var(--rice));
+  }
+  ::selection {
+    background: rgb(var(--rice));
+    color: rgb(var(--field));
+  }
+}
+
+@layer components {
+  /* Shell: one container width and gutter for the whole site. */
+  .shell {
+    @apply mx-auto w-full max-w-shell px-4 sm:px-6 lg:px-10 xl:px-14;
+  }
+  .band {
+    padding-block: clamp(4.5rem, 10vw, 10rem);
+  }
+  .band-sm {
+    padding-block: clamp(3rem, 6vw, 6rem);
   }
 
-  /* On dark / green surfaces the green ring disappears — switch to grain. */
-  [data-tone='dark'] :focus-visible {
-    outline-color: rgb(var(--c-grain));
+  /* Display type. Instrument Serif capitals, set like the title block of a
+     survey drawing. Sizes also respect viewport height, so the hero always
+     fits above the fold. */
+  .display {
+    @apply font-serif font-normal uppercase;
+    letter-spacing: -0.012em;
+    line-height: 0.92;
+    text-wrap: balance;
+  }
+  .display-xl {
+    font-size: min(13.4vw, 24svh);
+  }
+  .display-l {
+    font-size: clamp(2.65rem, 7.2vw, 7.5rem);
+  }
+  .display-m {
+    font-size: clamp(2.2rem, 4.6vw, 4.75rem);
+    line-height: 0.96;
+  }
+  .title {
+    @apply font-serif font-normal;
+    font-size: clamp(1.7rem, 2.6vw, 2.6rem);
+    line-height: 1.08;
+    letter-spacing: -0.008em;
+  }
+  .lede {
+    font-size: clamp(1.125rem, 1.5vw, 1.375rem);
+    line-height: 1.5;
+  }
+  .small {
+    font-size: 0.875rem;
+    line-height: 1.5;
   }
 
-  /* Only show focus ring for keyboard users on interactive elements */
-  a:focus:not(:focus-visible),
-  button:focus:not(:focus-visible) {
-    outline: none;
+  /* Buttons: flat, near-square, with a fill that rises on hover. */
+  .btn {
+    @apply relative inline-flex min-h-[3rem] items-center justify-center overflow-hidden rounded px-6 text-base font-medium;
+    isolation: isolate;
+    transition: color 0.3s ease;
+  }
+  .btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    transform: translateY(101%);
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .btn:hover::before,
+  .btn:focus-visible::before {
+    transform: translateY(0);
+  }
+  .btn[disabled] {
+    opacity: 0.6;
+    cursor: progress;
+  }
+  .btn-solid-dark {
+    @apply bg-field text-paper hover:text-field;
+  }
+  .btn-solid-dark::before {
+    background: rgb(var(--rice));
+  }
+  .btn-solid-light {
+    @apply bg-paper text-field hover:text-field;
+  }
+  .btn-solid-light::before {
+    background: rgb(var(--rice));
+  }
+  .btn-line-dark {
+    box-shadow: inset 0 0 0 1px rgb(var(--graphite) / 0.45);
+    @apply text-graphite hover:text-paper;
+  }
+  .btn-line-dark::before {
+    background: rgb(var(--field));
+  }
+  .btn-line-light {
+    box-shadow: inset 0 0 0 1px rgb(var(--paper) / 0.45);
+    @apply text-paper hover:text-field;
+  }
+  .btn-line-light::before {
+    background: rgb(var(--paper));
+  }
+
+  /* Text link: the underline retracts and redraws on hover. */
+  .tlink {
+    @apply font-medium;
+    background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat;
+    padding-bottom: 2px;
+    transition: background-size 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .tlink:hover {
+    background-size: 0 1px;
+    background-position: 100% 100%;
+  }
+
+  .field-input {
+    @apply mt-2 w-full rounded border-0 bg-transparent px-0 py-3 text-lg text-graphite outline-none;
+    box-shadow: inset 0 -1px 0 rgb(var(--graphite) / 0.4);
+    transition: box-shadow 0.2s ease;
+  }
+  .field-input:focus {
+    box-shadow: inset 0 -2px 0 rgb(var(--copper));
   }
 }
 
 /* ==========================================================================
-   Components / utilities
+   The site plan: one drawing, four layers.
    ========================================================================== */
-@layer components {
-  .shell {
-    @apply mx-auto w-full max-w-shell px-4 sm:px-8 lg:px-12;
-  }
-
-  .rule {
-    @apply border-t border-line;
-  }
-
-  .eyebrow {
-    @apply font-sans text-xs font-semibold uppercase tracking-[0.2em] text-ink-muted;
-  }
-
-  /* Editorial accent tick — a short green rule above a heading or eyebrow.
-     Draws itself in when revealed. */
-  .accent-tick::before {
-    content: '';
-    display: block;
-    width: 2.25rem;
-    height: 2px;
-    margin-bottom: 1.25rem;
-    background: rgb(var(--c-accent));
-    transform-origin: left;
-    transform: scaleX(0);
-    transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-    transition-delay: var(--reveal-delay, 0ms);
-  }
-  [data-tone='dark'] .accent-tick::before {
-    background: rgb(var(--c-grain));
-  }
-  .accent-tick.is-visible::before,
-  .is-visible .accent-tick::before {
-    transform: scaleX(1);
-  }
-  :where(html:not(.js)) .accent-tick::before {
-    transform: scaleX(1);
-  }
-
-  .link-underline {
-    background-image: linear-gradient(currentColor, currentColor);
-    background-position: 0 100%;
-    background-repeat: no-repeat;
-    background-size: 0% 1px;
-    transition: background-size 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .link-underline:hover,
-  .link-underline:focus-visible {
-    background-size: 100% 1px;
-  }
-
-  /* Scroll-reveal — progressively enhanced by useReveal(). The hidden start
-     state only applies when JS is running (html.js, set in index.html) so that
-     with JS disabled, or if the observer never runs, all content is visible. */
-  .js .reveal {
-    opacity: 0;
-    transform: translateY(18px) scale(0.992);
-    transition:
-      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-    transition-delay: var(--reveal-delay, 0ms);
-  }
-
-  .js .reveal.is-visible {
-    opacity: 1;
-    transform: none;
-  }
-
-  /* Heading "wipe up" — a clip reveal for large display headings. Negative
-     insets keep descenders and focus rings from being clipped once shown. */
-  .js .reveal-heading {
-    opacity: 0;
-    clip-path: inset(-15% -15% 100% -15%);
-    transform: translateY(0.28em);
-    transition:
-      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-      clip-path 0.9s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
-    transition-delay: var(--reveal-delay, 0ms);
-  }
-
-  .js .reveal-heading.is-visible {
-    opacity: 1;
-    clip-path: inset(-15% -15% -15% -15%);
-    transform: none;
-  }
+.plan {
+  --plan-ground: transparent;
+  --plan-contour: rgb(var(--sage) / 0.2);
+  --plan-parcel-a: #24382c;
+  --plan-parcel-b: #2c4030;
+  --plan-parcel-c: #354730;
+  --plan-pattern: rgb(var(--sage) / 0.34);
+  --plan-water: #2f4a4e;
+  --plan-infra: rgb(var(--copper-light));
+  --plan-infra-soft: rgb(var(--copper-light) / 0.5);
+  --plan-tech: rgb(var(--rice));
+  --plan-label: rgb(var(--paper) / 0.86);
+  width: 100%;
+  height: 100%;
+}
+.plan[data-tone='light'] {
+  --plan-contour: rgb(var(--olive) / 0.24);
+  --plan-parcel-a: #ccd0b4;
+  --plan-parcel-b: #bcc3a0;
+  --plan-parcel-c: #aab28a;
+  --plan-pattern: rgb(var(--olive) / 0.55);
+  --plan-water: #9fb7b4;
+  --plan-infra: rgb(var(--copper));
+  --plan-infra-soft: rgb(var(--copper) / 0.5);
+  --plan-tech: rgb(var(--field));
+  --plan-label: rgb(var(--graphite));
+}
+.plan-layer {
+  transition: opacity 0.6s ease;
+}
+.plan-layer[data-on='false'] {
+  opacity: 0.09;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-
-  /* Faint architectural grid */
-  .bg-grid {
-    background-image:
-      linear-gradient(to right, rgb(var(--c-ink) / 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(var(--c-ink) / 0.05) 1px, transparent 1px);
-    background-size: clamp(48px, 8vw, 96px) clamp(48px, 8vw, 96px);
-  }
-
-  .bg-grid-inverse {
-    background-image:
-      linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
-    background-size: clamp(48px, 8vw, 96px) clamp(48px, 8vw, 96px);
-  }
-
-  /* Fine blueprint grid — behind KV Infra surfaces */
-  .bg-blueprint {
-    background-image:
-      linear-gradient(to right, rgb(var(--c-infra) / 0.09) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(var(--c-infra) / 0.09) 1px, transparent 1px);
-    background-size: 22px 22px;
-  }
-
-  /* Contour furrows — behind KVI Greens surfaces */
-  .bg-furrow {
-    background-image: repeating-linear-gradient(
-      to bottom,
-      rgb(var(--c-greens) / 0.10) 0 1px,
-      transparent 1px 14px
-    );
-  }
-
-  /* Dot lattice — behind KVI Tech surfaces */
-  .bg-lattice {
-    background-image: radial-gradient(rgb(var(--c-tech) / 0.16) 1px, transparent 1.4px);
-    background-size: 16px 16px;
+/* The one orchestrated moment: on load the hero plan draws itself in the order
+   KVI works. Land, then roads and water, then planting, then the network. */
+@keyframes plan-draw {
+  to {
+    stroke-dashoffset: 0;
   }
 }
-
-@keyframes reveal-up {
+@keyframes plan-fade {
   from {
     opacity: 0;
-    transform: translateY(14px);
   }
-  to {
-    opacity: 1;
-    transform: none;
+}
+.plan-animate .plan-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: plan-draw 1.5s cubic-bezier(0.45, 0, 0.2, 1) forwards;
+  animation-delay: var(--d, 0.2s);
+}
+.plan-animate .plan-grow {
+  animation: plan-fade 0.9s ease both;
+  animation-delay: var(--d, 1s);
+}
+
+/* Scroll reveal. Hidden state only applies when JS can undo it. */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.8s ease var(--reveal-delay, 0ms),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms);
+}
+.js .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Route change: a short fade rather than a hard cut. */
+@keyframes page-enter {
+  from {
+    opacity: 0;
   }
+}
+.page-enter {
+  animation: page-enter 0.35s ease both;
+}
+
+/* Photographs sit in one tonal family, whatever their source. */
+.photo {
+  filter: saturate(0.82) contrast(1.03);
+}
+
+/* Horizontal rail for the six build stages on tablet. */
+.rail {
+  scrollbar-width: thin;
+  scroll-snap-type: x proximity;
+}
+.rail > * {
+  scroll-snap-align: start;
 }
 
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
   }
-
-  .js .reveal,
-  .js .reveal-heading {
+  .js .reveal {
     opacity: 1;
     transform: none;
-    clip-path: none;
-    transition: none;
   }
+}
 
-  .accent-tick::before {
-    transform: scaleX(1) !important;
-    transition: none !important;
+@media print {
+  header,
+  footer {
+    display: none;
   }
 }

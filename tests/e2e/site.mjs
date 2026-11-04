@@ -1,9 +1,9 @@
 // ---------------------------------------------------------------------------
 // Local acceptance suite for the KVI website (Playwright library, headless
 // Chromium). Deterministic: every request to another host is answered with an
-// empty stub, so results never depend on Google Fonts or the live product
-// sites being reachable. External product links are checked for their href
-// only, never fetched.
+// empty stub, so results never depend on the live product sites being
+// reachable. Fonts and media are self-hosted. External product links are
+// checked for their href only, never fetched.
 //
 //   npm run build && npm run test:e2e            # serves dist/ via vite preview
 //   BASE_URL=http://127.0.0.1:18080 npm run test:e2e   # e.g. a Docker build
@@ -20,7 +20,7 @@ let BASE = process.env.BASE_URL
 let preview
 
 const ROUTES = [
-  '/', '/about', '/businesses', '/greens', '/infra', '/tech', '/products',
+  '/', '/about', '/greens', '/infra', '/tech', '/projects', '/products',
   '/products/farmgrid', '/products/billgrid', '/products/campusgrid',
   '/products/bhattagrid', '/products/contractoros', '/insights', '/contact',
   '/privacy', '/terms',
@@ -31,12 +31,12 @@ const VIEWPORTS = {
   desktop: { viewport: { width: 1440, height: 900 } },
   mobile: { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true },
 }
-// Third-party hosts the Privacy page discloses. Anything else is a failure.
-const ALLOWED_THIRD_PARTY = new Set(['fonts.googleapis.com', 'fonts.gstatic.com'])
+// The site loads nothing from third parties (the Privacy page says so).
+const ALLOWED_THIRD_PARTY = new Set()
 const LIVE_PRODUCT_LINKS = ['farmgrid', 'billgrid', 'campusgrid', 'bhattagrid', 'contractoros']
   .map((p) => `https://${p}.kvinnovations.in/`)
 // Unverified claims that must not appear on the site (see docs/content-claims.md).
-const FORBIDDEN_TEXT = [/Mokari Premium/i, /Mokari brand/i, /\bModi\b/, /Ayodhya/i, /Ram Lalla/i]
+const FORBIDDEN_TEXT = [/Mokari Premium/i, /Mokari brand/i, /\bModi\b/, /Ayodhya/i, /Ram Lalla/i, /KV Infra/, /AgroTech/, /verified carbon/i, /certified/i]
 
 const results = []
 const fail = (msg) => results.push(`FAIL ${msg}`)
@@ -67,8 +67,7 @@ async function newContext(browser, opts) {
     const url = new URL(route.request().url())
     if (url.host === origin || url.protocol === 'data:') return route.continue()
     thirdPartyHosts.add(url.host)
-    const type = url.host === 'fonts.googleapis.com' ? 'text/css' : 'application/octet-stream'
-    return route.fulfill({ status: 200, contentType: type, body: '' })
+    return route.fulfill({ status: 200, contentType: 'application/octet-stream', body: '' })
   })
   return ctx
 }
@@ -145,7 +144,7 @@ async function routeChecks(browser) {
         const want = `https://kvinnovations.in${route === '/' ? '/' : route}`
         if (info.canonical !== want) fail(`${tag} canonical ${info.canonical} != ${want}`)
         if (!info.description || info.description.length < 50) fail(`${tag} weak meta description`)
-        if (info.robots !== 'index, follow') fail(`${tag} robots=${info.robots}`)
+        if (info.robots !== (route === '/insights' ? 'noindex, follow' : 'index, follow')) fail(`${tag} robots=${info.robots}`)
         if (titles.has(info.title)) fail(`${tag} duplicate title with ${titles.get(info.title)}`)
         titles.set(info.title, route)
       }
@@ -173,51 +172,94 @@ async function interactionChecks(browser) {
   await page.goto(BASE + '/farms', { waitUntil: 'networkidle' })
   check(new URL(page.url()).pathname === '/greens', '/farms -> /greens', `/farms ended at ${page.url()}`)
 
+  await page.goto(BASE + '/businesses', { waitUntil: 'networkidle' })
+  check(new URL(page.url()).pathname === '/about', '/businesses -> /about', `/businesses ended at ${page.url()}`)
+
   await page.goto(BASE + '/', { waitUntil: 'networkidle' })
   const primary = page.getByRole('navigation', { name: 'Primary' })
-  for (const [menu, expected] of [
-    ['Our Businesses', ['KVI Greens', 'KV Infra', 'KVI Tech']],
-    ['Products', ['FarmGrid', 'BillGrid', 'CampusGrid', 'BhattaGrid', 'ContractorOS']],
-  ]) {
-    await primary.getByRole('button', { name: new RegExp(menu) }).click()
-    const items = await primary.locator('a').allTextContents()
-    check(expected.every((n) => items.some((t) => t.includes(n))), `desktop "${menu}" menu lists ${expected.join(', ')}`, `desktop "${menu}" menu items: ${items.join(' / ')}`)
-    await page.keyboard.press('Escape')
-  }
+  const navItems = await primary.locator('a').allTextContents()
+  check(['About', 'Greens', 'Tech', 'Infra', 'Projects', 'Contact'].every((n) => navItems.includes(n)), 'primary nav lists all sections', `primary nav: ${navItems.join(' / ')}`)
 
-  await page.getByRole('link', { name: 'Partner With KVI' }).click()
-  await page.waitForTimeout(1200)
+  // Every briefed homepage headline, in order.
+  const headings = (await page.locator('h2').allTextContents()).map((t) => t.toLowerCase())
+  const wanted = ['agriculture is more than production.', 'three capabilities. one agricultural ecosystem.', 'from land to a fully operational farm.', 'building across the agricultural value chain.', 'technology that works behind the farm.', 'building productive systems for the long term.', 'our work. our initiatives. our direction.', "let's build something that grows."]
+  check(wanted.every((w, i) => headings[i] === w), 'homepage sections appear in the briefed order', `homepage h2s: ${headings.join(' / ')}`)
+
+  await page.getByRole('link', { name: 'Explore Our Ecosystem' }).click()
+  await page.waitForTimeout(1400)
   const inView = await page.evaluate(() => {
-    const r = document.getElementById('partner')?.getBoundingClientRect()
+    const r = document.getElementById('ecosystem')?.getBoundingClientRect()
     return Boolean(r) && r.top < innerHeight && r.bottom > 0
   })
-  check(inView, 'hero "Partner With KVI" scrolls to #partner', '#partner not in view after hero CTA')
+  check(inView, 'hero "Explore Our Ecosystem" scrolls to #ecosystem', '#ecosystem not in view after hero CTA')
 
-  // KVI Greens product facts.
-  for (const route of ['/', '/greens']) {
-    await page.goto(BASE + route, { waitUntil: 'networkidle' })
-    const panel = await page.locator('#agri-products').innerText()
-    const checks = [
-      /Mokari Gobindbhog Rice/.test(panel),
-      /KVI GREENS/i.test(panel),
-      /500 g/.test(panel) && /1 kg/.test(panel),
-      /Pre-launch/i.test(panel) && /Not yet on sale/.test(panel),
-    ]
-    check(checks.every(Boolean), `${route} Mokari Gobindbhog Rice panel: KVI Greens product, 500 g / 1 kg, pre-launch`, `${route} Mokari panel checks ${checks}: ${panel.slice(0, 200)}`)
-  }
-  await page.getByRole('link', { name: 'Register buyer interest' }).click()
+  // The ecosystem plan follows the scroll position.
+  await page.evaluate(() => document.querySelector('#ecosystem article:nth-of-type(2)').scrollIntoView({ block: 'center', behavior: 'instant' }))
+  await page.waitForTimeout(400)
+  const techLayer = await page.locator('#ecosystem .sticky').locator('p').innerText()
+  check(/^KVI Tech/.test(techLayer), 'ecosystem plan switches layer with scroll', `ecosystem caption: ${techLayer}`)
+
+  // Mokari Gobindbhog Rice facts.
+  await page.goto(BASE + '/greens', { waitUntil: 'networkidle' })
+  const panel = await page.locator('#agri-products').innerText()
+  const facts = [
+    /Mokari Gobindbhog Rice/i.test(panel),
+    /KVI Greens/.test(panel),
+    /500 g/.test(panel) && /1 kg/.test(panel),
+    /Pre-launch/i.test(panel) && /Not yet on sale/.test(panel),
+  ]
+  check(facts.every(Boolean), '/greens Mokari Gobindbhog Rice panel: KVI Greens product, 500 g / 1 kg, pre-launch', `Mokari panel checks ${facts}: ${panel.slice(0, 200)}`)
+  await page.getByRole('link', { name: 'Register interest' }).click()
   await page.waitForURL(/\/contact/)
   const prefill = [await page.locator('#cf-type').inputValue(), await page.locator('#cf-message').inputValue()]
-  check(prefill[0] === 'distribution' && prefill[1].includes('Mokari Gobindbhog Rice'), `buyer-interest CTA preselects distribution + "${prefill[1]}"`, `buyer-interest prefill: ${prefill}`)
+  check(prefill[0] === 'product-partnership' && prefill[1].includes('Mokari Gobindbhog Rice'), `register-interest CTA preselects product partnerships + "${prefill[1]}"`, `register-interest prefill: ${prefill}`)
+
+  // Old enquiry links keep working.
+  await page.goto(BASE + '/contact?enquiry=distribution', { waitUntil: 'networkidle' })
+  check((await page.locator('#cf-type').inputValue()) === 'product-partnership', 'legacy enquiry value maps to a current one', 'legacy enquiry value not mapped')
+
+  // Projects: every entry has a status; filter narrows the list.
+  await page.goto(BASE + '/projects', { waitUntil: 'networkidle' })
+  const before = await page.locator('main article').count()
+  await page.getByRole('button', { name: 'KVI Tech' }).click()
+  const after = await page.locator('main article').count()
+  check(before === 6 && after === 2, 'projects filter narrows 6 entries to 2 for KVI Tech', `projects filter ${before} -> ${after}`)
+
+  // Portfolio names offline products without linking them.
+  await page.goto(BASE + '/tech', { waitUntil: 'networkidle' })
+  const tech = await page.locator('#portfolio').innerText()
+  check(/BuildGrid/.test(tech) && /FamGrid/.test(tech), 'BuildGrid and FamGrid are named in the portfolio (unlinked)', 'portfolio is missing BuildGrid or FamGrid')
+
+  // Static per-route metadata for crawlers without JS (skipped if a host does not serve it).
+  for (const [route, want] of [['/greens', 'KVI Greens'], ['/products/farmgrid', 'FarmGrid']]) {
+    const html = await (await fetch(`${BASE}${route}/index.html`)).text()
+    check(html.includes(`<title>${want}`) && html.includes(`rel="canonical" href="https://kvinnovations.in${route}"`), `${route} has static title and canonical`, `${route} static metadata missing`)
+  }
 
   // Privacy text must match the deployed delivery mode and third parties.
   await page.goto(BASE + '/privacy', { waitUntil: 'networkidle' })
   const privacy = await page.locator('main').innerText()
-  if (/Google Fonts/.test(privacy) && /access logs/.test(privacy) && /Kaimur Valley Innovations Pvt\. Ltd\./.test(privacy)) {
-    ok('privacy notice discloses Google Fonts, access logs and the legal name')
+  if (!/Google/.test(privacy) && /access logs/.test(privacy) && /Kaimur Valley Innovations Pvt\. Ltd\./.test(privacy)) {
+    ok('privacy notice covers access logs and the legal name, and no third-party fonts')
   } else fail('privacy notice is missing a disclosure')
 
   await ctx.close()
+}
+
+async function widthChecks(browser) {
+  const widths = [360, 390, 430, 768, 1024, 1440, 1920]
+  for (const width of widths) {
+    const ctx = await newContext(browser, { viewport: { width, height: 900 } })
+    const page = await ctx.newPage()
+    for (const route of ROUTES) {
+      await page.goto(BASE + route, { waitUntil: 'load' })
+      await page.waitForTimeout(60)
+      const over = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)
+      if (over > 0) fail(`[${width}px] ${route} horizontal overflow ${over}px`)
+    }
+    await ctx.close()
+  }
+  ok(`${ROUTES.length} routes have no horizontal overflow at ${widths.join(', ')}px`)
 }
 
 async function contactChecks(browser, vp) {
@@ -259,7 +301,7 @@ async function contactChecks(browser, vp) {
   const good =
     /One more step/.test(status) && !/has been sent/i.test(status) &&
     href.startsWith('mailto:kaimurvalleyinnovations@gmail.com?') &&
-    params.get('subject') === '[KVI Tech — products or software services] Website enquiry from Acceptance Test' &&
+    params.get('subject') === '[Technology solutions] Website enquiry from Acceptance Test' &&
     ['Name: Acceptance Test', 'Email: test@example.com', 'Phone: +91 90000 00000', 'Organisation / farm: Test Farm', 'Testing the enquiry form flow.']
       .every((line) => body.includes(line))
   check(good, `${tag} mailto fallback: correct recipient, subject and body; no "sent" claim`, `${tag} done state: ${status} | ${href}`)
@@ -279,7 +321,7 @@ async function mobileNavChecks(browser) {
   const menu = page.locator('#mobile-menu')
   await menu.waitFor({ state: 'visible' })
   const locked = await page.evaluate(() => getComputedStyle(document.body).overflow)
-  await menu.getByRole('link', { name: 'BillGrid' }).first().click()
+  await menu.getByRole('link', { name: 'Projects' }).click()
   await page.waitForTimeout(600)
   const path = new URL(page.url()).pathname
   // Closed = aria-hidden + inert + opacity 0 (Playwright's isVisible ignores opacity).
@@ -289,8 +331,8 @@ async function mobileNavChecks(browser) {
     bodyOverflow: getComputedStyle(document.body).overflow,
   }))
   check(
-    path === '/products/billgrid' && locked === 'hidden' && closed.hidden === 'true' && closed.opacity === '0' && closed.bodyOverflow !== 'hidden',
-    'mobile menu opens (scroll locked), navigates to a product page, closes and unlocks scroll',
+    path === '/projects' && locked === 'hidden' && closed.hidden === 'true' && closed.opacity === '0' && closed.bodyOverflow !== 'hidden',
+    'mobile menu opens (scroll locked), navigates, closes and unlocks scroll',
     `mobile menu path=${path} lockedWhileOpen=${locked} afterClose=${JSON.stringify(closed)}`,
   )
   await ctx.close()
@@ -301,6 +343,7 @@ try {
   const browser = await chromium.launch()
   await routeChecks(browser)
   await interactionChecks(browser)
+  await widthChecks(browser)
   await contactChecks(browser, 'desktop')
   await contactChecks(browser, 'mobile')
   await mobileNavChecks(browser)

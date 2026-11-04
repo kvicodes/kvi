@@ -10,10 +10,10 @@
 //
 // `url` — the product's live public site. Only set when the domain is routed
 //         by kvi-proxy and responds. Never invent URLs.
-// `listed: false` — kept in data but hidden everywhere. BuildGrid and FamGrid
-//         are KVI Tech products whose public sites are offline (containers
-//         stopped since 2026-09-28; HTTP 502 as of 2026-10-19); set
-//         `listed: true` once they are back up.
+// `listed: false` — named in the portfolio but with no link and no product page.
+//         BuildGrid and FamGrid are KVI Tech products whose public sites are
+//         offline (containers stopped since 2026-09-28; HTTP 502 as of
+//         2026-10-19). Set `listed: true` once they are back up.
 // Order here is the order shown everywhere.
 // ---------------------------------------------------------------------------
 
@@ -186,3 +186,8 @@ export const productBySlug = (slug) => products.find((p) => p.id === slug)
 export const productPath = (p) => `/products/${p.id}`
 
 export const productsNote = 'More products are in active development.'
+
+// FarmGrid is the agricultural platform; everything else serves adjacent
+// industries and must not be described as an agricultural product.
+export const agriProduct = allProducts.find((p) => p.id === 'farmgrid')
+export const adjacentProducts = allProducts.filter((p) => p.id !== 'farmgrid')

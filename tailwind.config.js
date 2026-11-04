@@ -1,127 +1,50 @@
 /** @type {import('tailwindcss').Config} */
 
 // ---------------------------------------------------------------------------
-// KVI design tokens
+// KVI design tokens.
 //
-// Colours are defined once as RGB channel triplets on :root in src/index.css
-// and consumed here via rgb(var(--…) / <alpha-value>). To re-skin the entire
-// site, edit the CSS variables in index.css — nothing here needs to change.
+// Colours are defined once as RGB triplets on :root in src/index.css and
+// consumed here, so the palette has one source of truth.
 // ---------------------------------------------------------------------------
 
-const withVar = (name) => `rgb(var(${name}) / <alpha-value>)`
+const v = (name) => `rgb(var(${name}) / <alpha-value>)`
 
 export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
-    // A deliberately small, editorial scale.
     screens: {
       sm: '480px',
       md: '768px',
       lg: '1024px',
       xl: '1280px',
-      '2xl': '1440px',
+      '2xl': '1680px',
     },
     extend: {
       colors: {
-        // Primary — deep charcoal / near-black
-        ink: {
-          DEFAULT: withVar('--c-ink'),
-          soft: withVar('--c-ink-soft'),
-          muted: withVar('--c-ink-muted'),
-        },
-        // Background — warm white / off-white
-        paper: {
-          DEFAULT: withVar('--c-paper'),
-          raised: withVar('--c-paper-raised'),
-          sunken: withVar('--c-paper-sunken'),
-        },
-        // Secondary — neutral warm gray
-        mist: {
-          100: withVar('--c-mist-100'),
-          200: withVar('--c-mist-200'),
-          300: withVar('--c-mist-300'),
-          400: withVar('--c-mist-400'),
-          500: withVar('--c-mist-500'),
-          600: withVar('--c-mist-600'),
-        },
-        // Hairline borders
-        line: {
-          DEFAULT: withVar('--c-line'),
-          strong: withVar('--c-line-strong'),
-          inverse: withVar('--c-line-inverse'),
-        },
-        // Brand — deep forest green
-        forest: {
-          DEFAULT: withVar('--c-forest'),
-          deep: withVar('--c-forest-deep'),
-          soft: withVar('--c-forest-soft'),
-        },
-        // Earthy tones — ripe grain and soil
-        grain: withVar('--c-grain'),
-        earth: {
-          DEFAULT: withVar('--c-earth'),
-          deep: withVar('--c-earth-deep'),
-          wash: withVar('--c-earth-wash'),
-        },
-        // Accent — the readable mid-green
-        accent: {
-          DEFAULT: withVar('--c-accent'),
-          soft: withVar('--c-accent-soft'),
-          deep: withVar('--c-accent-deep'),
-          wash: withVar('--c-accent-wash'),
-        },
-        // Division identity tints (used sparingly — one hairline / glyph)
-        greens: { DEFAULT: withVar('--c-greens'), wash: withVar('--c-greens-wash') },
-        infra: { DEFAULT: withVar('--c-infra'), wash: withVar('--c-infra-wash') },
-        tech: { DEFAULT: withVar('--c-tech'), wash: withVar('--c-tech-wash') },
+        field: { DEFAULT: v('--field'), raised: v('--field-raised') },
+        olive: v('--olive'),
+        sage: v('--sage'),
+        stone: v('--stone'),
+        paper: v('--paper'),
+        graphite: v('--graphite'),
+        muted: v('--muted'),
+        line: { DEFAULT: v('--line'), dark: v('--line-dark') },
+        copper: { DEFAULT: v('--copper'), light: v('--copper-light') },
+        rice: v('--rice'),
       },
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
-        display: ['"Inter Tight"', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        // Editorial serif for h1 / h2
-        serif: ['Fraunces', 'ui-serif', 'Georgia', 'Cambria', '"Times New Roman"', 'serif'],
-      },
-      fontSize: {
-        // Body scale
-        'xs': ['0.75rem', { lineHeight: '1.5' }],
-        'sm': ['0.8125rem', { lineHeight: '1.55' }],
-        'base': ['0.9375rem', { lineHeight: '1.65' }],
-        'lg': ['1.0625rem', { lineHeight: '1.6' }],
-        'xl': ['1.1875rem', { lineHeight: '1.55' }],
-        // Display scale — tight tracking handled via utilities
-        '2xl': ['1.5rem', { lineHeight: '1.22', letterSpacing: '-0.015em' }],
-        '3xl': ['1.9375rem', { lineHeight: '1.14', letterSpacing: '-0.018em' }],
-        '4xl': ['2.5rem', { lineHeight: '1.08', letterSpacing: '-0.02em' }],
-        '5xl': ['3.25rem', { lineHeight: '1.04', letterSpacing: '-0.022em' }],
-        '6xl': ['4.25rem', { lineHeight: '1', letterSpacing: '-0.025em' }],
-        '7xl': ['5.5rem', { lineHeight: '0.98', letterSpacing: '-0.028em' }],
-      },
-      spacing: {
-        section: 'clamp(4.5rem, 9vw, 8.5rem)',
-        'section-sm': 'clamp(3rem, 6vw, 5rem)',
+        sans: ['"Geist Variable"', 'ui-sans-serif', 'system-ui', 'Segoe UI', 'Roboto', 'sans-serif'],
+        serif: ['"Instrument Serif"', 'ui-serif', 'Georgia', 'Times New Roman', 'serif'],
       },
       maxWidth: {
-        shell: '1280px',
-        prose: '68ch',
+        shell: '1560px',
+        prose: '62ch',
       },
       borderRadius: {
-        card: '2px',
-      },
-      boxShadow: {
-        card: '0 1px 2px rgb(var(--c-ink) / 0.04), 0 12px 32px -18px rgb(var(--c-ink) / 0.14)',
-        lift: '0 2px 4px rgb(var(--c-ink) / 0.05), 0 24px 56px -22px rgb(var(--c-ink) / 0.22)',
+        DEFAULT: '3px',
       },
       transitionTimingFunction: {
-        editorial: 'cubic-bezier(0.22, 1, 0.36, 1)',
-      },
-      keyframes: {
-        'reveal-up': {
-          '0%': { opacity: '0', transform: 'translateY(14px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
-        },
-      },
-      animation: {
-        'reveal-up': 'reveal-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both',
+        survey: 'cubic-bezier(0.22, 1, 0.36, 1)',
       },
     },
   },

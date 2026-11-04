@@ -1,70 +1,24 @@
-// Primary and footer navigation. Divisions and products are derived from their
-// data files so that a name or URL is only ever written in one place.
+import { verticals } from './verticals.js'
 
-import { businesses } from './businesses.js'
-import { products, productPath } from './products.js'
-
-export const divisionLinks = businesses.map((b) => ({
-  label: b.name,
-  to: b.to,
-  desc: b.discipline,
-  division: b.id,
-}))
-
-export const productLinks = products.map((p) => ({
-  label: p.name,
-  to: productPath(p),
-  desc: p.category,
-  product: p.id,
-}))
-
-// `menu` items open a dropdown panel on desktop and an expanded group on
-// mobile. The parent `to` is still a real page (the panel's first link).
 export const primaryNav = [
-  { label: 'Home', to: '/' },
-  { label: 'About KVI', to: '/about' },
-  {
-    label: 'Our Businesses',
-    to: '/businesses',
-    menu: 'businesses',
-    overview: { label: 'All businesses', to: '/businesses', desc: 'How the three divisions connect' },
-    items: divisionLinks,
-  },
-  {
-    label: 'Products',
-    to: '/products',
-    menu: 'products',
-    overview: { label: 'View all products', to: '/products', desc: 'The KVI Tech portfolio' },
-    items: productLinks,
-  },
+  { label: 'About', to: '/about' },
+  ...verticals.map((v) => ({ label: v.name.replace('KVI ', ''), to: v.to })),
+  { label: 'Projects', to: '/projects' },
 ]
 
 export const footerNav = [
-  {
-    heading: 'Company',
-    links: [
-      { label: 'About KVI', to: '/about' },
-      { label: 'Our Businesses', to: '/businesses' },
-      { label: 'Insights', to: '/insights' },
-      { label: 'Contact', to: '/contact' },
-    ],
-  },
-  {
-    heading: 'Divisions',
-    links: divisionLinks.map(({ label, to }) => ({ label, to })),
-  },
-  {
-    heading: 'Products',
-    links: [
-      ...productLinks.map(({ label, to }) => ({ label, to })),
-      { label: 'All products', to: '/products' },
-    ],
-  },
-  {
-    heading: 'Legal',
-    links: [
-      { label: 'Privacy Policy', to: '/privacy' },
-      { label: 'Terms', to: '/terms' },
-    ],
-  },
+  { label: 'Home', to: '/' },
+  { label: 'About', to: '/about' },
+  { label: 'Greens', to: '/greens' },
+  { label: 'Tech', to: '/tech' },
+  { label: 'Infra', to: '/infra' },
+  { label: 'Projects', to: '/projects' },
+  { label: 'Contact', to: '/contact' },
 ]
+
+// Routes whose first screen is dark, so the header starts in its light-on-dark
+// state. Everything else starts dark-on-light.
+const DARK_TOP = ['/', '/about', '/greens', '/tech', '/projects', '/products', '/insights']
+
+export const hasDarkTop = (pathname) =>
+  DARK_TOP.includes(pathname) || pathname.startsWith('/products/')

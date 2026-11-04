@@ -1,143 +1,102 @@
-import { Link } from 'react-router-dom'
-import useDocumentMeta from '../lib/useDocumentMeta.js'
-import PageHeader from '../components/PageHeader.jsx'
-import Section from '../components/Section.jsx'
-import SectionHeading from '../components/SectionHeading.jsx'
-import Reveal from '../components/Reveal.jsx'
-import Button from '../components/Button.jsx'
-import Icon from '../components/Icon.jsx'
-import BusinessGlyph from '../components/BusinessGlyph.jsx'
-import ActivityGrid from '../components/ActivityGrid.jsx'
-import GreensEcosystemSection from '../sections/GreensEcosystemSection.jsx'
-import AgriProductsSection from '../sections/AgriProductsSection.jsx'
-import ContactCtaSection from '../sections/ContactCtaSection.jsx'
-import { byId } from '../data/businesses.js'
-import { partnershipModels } from '../data/greens.js'
+import SitePlan from '../components/SitePlan.jsx'
+import Photo from '../components/Photo.jsx'
+import { Button, Reveal, TextLink } from '../components/ui.jsx'
+import { PageHero, Partnerships, VerticalEyebrow } from '../components/shared.jsx'
 import { contactPath } from '../data/contact.js'
-
-const SUPPORT = [
-  {
-    to: '/infra',
-    label: 'KV Infra',
-    title: 'Infrastructure for farm development',
-    body: 'Land preparation, irrigation, farm buildings and storage — executed by KVI’s infrastructure division where a farm needs it.',
-  },
-  {
-    to: '/products/farmgrid',
-    label: 'FarmGrid · KVI Tech',
-    title: 'Software for farm operations',
-    body: 'Units, activities, inventory, labour, finance and production records in one system — built for diversified farms.',
-  },
-]
+import { ecosystemNote, featuredProduct, greensChain, greensScope, partnershipModels } from '../data/verticals.js'
+import { seo } from '../data/seo.js'
+import useDocumentMeta from '../lib/useDocumentMeta.js'
 
 export default function Greens() {
-  const b = byId('kvi-greens')
-  useDocumentMeta({
-    title: 'KVI Greens — Agriculture, food processing & natural products',
-    description:
-      'KVI Greens partners with farmers and farm owners to develop farms, source and process agricultural produce, and create agricultural products, starting with Mokari Gobindbhog Rice.',
-    path: '/greens',
-  })
-
+  useDocumentMeta(seo.greens)
   return (
     <>
-      <PageHeader
-        tone="forest"
-        eyebrow={`KVI Greens · ${b.discipline}`}
-        title="Building an agricultural ecosystem — with farmers, not around them."
-        lede={b.summary}
-        figure={
-          <span className="text-paper">
-            <BusinessGlyph id={b.id} size={340} />
-          </span>
-        }
-        actions={
-          <>
-            <Button to={contactPath('farm-partnership')} variant="inverse" withArrow>
-              Partner as a farmer
-            </Button>
-            <Button href="#ecosystem" variant="outline-light">
-              See the ecosystem
-            </Button>
-          </>
-        }
+      <PageHero
+        eyebrow={<VerticalEyebrow id="greens" />}
+        title="Growing agricultural businesses."
+        lede="KVI Greens is the business of growing, producing, processing and commercializing agricultural resources."
+        art={<SitePlan show={['greens']} />}
       />
 
-      <Section tone="paper">
-        <SectionHeading
-          eyebrow="An ecosystem builder"
-          heading="More than a food brand — the whole chain behind it."
-          intro="KVI Greens works across the stages that decide what a farm earns: how it is developed and run, what happens to its produce after harvest, and how that produce reaches customers."
-        />
-        <ActivityGrid division={b.id} items={b.activities} label="KVI Greens activities" />
-      </Section>
-
-      <GreensEcosystemSection
-        heading="Five stages, from the farmer to the market."
-        tone="sunken"
-        showLinks={false}
-      />
-
-      <Section tone="paper" divide id="farmers">
-        <div className="grid gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-5">
-            <SectionHeading
-              eyebrow="Working with farmers"
-              heading="Partnership models we offer and explore."
-              intro="Every farm is different. These are the ways KVI Greens can work with farmers and farm owners; the right arrangement depends on the land, the crop and what the owner wants."
-            />
-            <Reveal className="mt-10">
-              <Button to={contactPath('farm-partnership')} withArrow>
-                Discuss your farm
-              </Button>
-            </Reveal>
+      <section className="band-sm">
+        <div className="shell grid grid-cols-6 gap-2 lg:gap-3">
+          <Photo slot="aerial-farm" sizes="(min-width:1024px) 66vw, 100vw" className="col-span-6 aspect-[16/9] lg:col-span-4 lg:aspect-auto" />
+          <div className="col-span-6 grid grid-cols-2 gap-2 lg:col-span-2 lg:grid-cols-1 lg:gap-3">
+            <Photo slot="orchard" sizes="33vw" className="aspect-[4/3]" />
+            <Photo slot="fish-pond" sizes="33vw" className="aspect-[4/3]" />
           </div>
-          <ul className="grid gap-4 sm:grid-cols-2 lg:col-span-7">
-            {partnershipModels.map((m, i) => (
-              <Reveal as="li" key={m.title} delay={i * 70} className="border border-line bg-paper-raised bg-furrow p-7">
-                <span className="font-display text-xs tabular-nums text-greens">{String(i + 1).padStart(2, '0')}</span>
-                <h3 className="mt-4 text-xl">{m.title}</h3>
-                <p className="mt-2 text-sm text-ink-muted">{m.body}</p>
+          <Photo slot="poultry" sizes="33vw" className="col-span-3 aspect-[4/3] lg:col-span-2" />
+          <Photo slot="greenhouse" sizes="33vw" className="col-span-3 aspect-[4/3] lg:col-span-2" />
+          <Photo slot="packaging" sizes="33vw" className="col-span-6 aspect-[2/1] lg:col-span-2 lg:aspect-[4/3]" />
+        </div>
+      </section>
+
+      <section className="band-sm">
+        <div className="shell">
+          <h2 className="display display-m max-w-[14em]">From production to commercialization.</h2>
+          <ol className="mt-10 grid gap-px bg-line md:grid-cols-5">
+            {greensChain.map((step, i) => (
+              <Reveal as="li" key={step.title} delay={i * 60} className="bg-paper py-4 md:px-5 md:first:pl-0">
+                <h3 className="title">{step.title}</h3>
+                <p className="small mt-2 text-muted">{step.body}</p>
               </Reveal>
             ))}
-          </ul>
+          </ol>
+          <p className="small mt-6 max-w-prose text-muted">{ecosystemNote}</p>
         </div>
-      </Section>
+      </section>
 
-      <AgriProductsSection tone="sunken" />
+      <section id="agri-products" className="on-dark band scroll-mt-16 bg-[rgb(var(--olive))] text-paper">
+        <div className="shell grid gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-7">
+            <p className="text-base">{featuredProduct.status}, offered by {featuredProduct.offeredBy}</p>
+            <h2 className="display display-l mt-4">{featuredProduct.name}</h2>
+            <p className="lede mt-6 max-w-[46ch]">{featuredProduct.body}</p>
+          </div>
+          <div className="lg:col-span-4 lg:col-start-9 lg:self-end">
+            <p>{featuredProduct.variety}</p>
+            <p className="mt-5">Planned retail packs: {featuredProduct.packSizes.join(' and ')}.</p>
+            <p className="mt-5">{featuredProduct.availability}</p>
+            <Button to={contactPath('product-partnership', { product: 'mokari' })} variant="solid-light" className="mt-7">Register interest</Button>
+          </div>
+        </div>
+      </section>
 
-      <Section tone="paper" divide>
-        <SectionHeading
-          eyebrow="Connected support"
-          heading="Infrastructure and technology from inside KVI."
-          intro="Farms that partner with KVI Greens can draw on KVI’s other two divisions — on normal commercial terms."
-        />
-        <ul className="mt-12 grid gap-4 md:grid-cols-2">
-          {SUPPORT.map((s, i) => (
-            <Reveal as="li" key={s.to} delay={i * 80}>
-              <Link
-                to={s.to}
-                className="group flex h-full flex-col border border-line bg-paper-raised p-8 transition duration-300 ease-editorial hover:-translate-y-1 hover:border-ink/40 hover:shadow-card"
-              >
-                <span className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-muted">{s.label}</span>
-                <span className="mt-3 font-serif text-2xl font-medium">{s.title}</span>
-                <span className="mt-3 flex-1 text-sm text-ink-muted">{s.body}</span>
-                <span className="mt-6 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.12em]">
-                  Learn more
-                  <Icon name="arrow-right" size={15} className="transition-transform duration-300 group-hover:translate-x-1" />
-                </span>
-              </Link>
-            </Reveal>
-          ))}
-        </ul>
-      </Section>
+      <section className="band">
+        <div className="shell grid gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-4">
+            <h2 className="display display-m">What KVI Greens covers.</h2>
+            <p className="mt-5 text-muted">This is the scope of the vertical. Not every activity operates commercially today.</p>
+          </div>
+          <div className="grid gap-x-10 gap-y-10 md:grid-cols-2 lg:col-span-7 lg:col-start-6">
+            {greensScope.map((group) => (
+              <div key={group.heading}>
+                <h3 className="title border-b border-line pb-3">{group.heading}</h3>
+                <ul className="mt-3 space-y-1.5">
+                  {group.items.map((item) => <li key={item}>{item}</li>)}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-      <ContactCtaSection
-        heading="Farmers and farm owners — let’s talk about your land."
-        body="Tell us about your farm, what it grows today and what you would like it to become. KVI Greens will get back to you."
-        to={contactPath('farm-partnership')}
-        cta="Start a conversation"
-      />
+      <section className="band bg-stone">
+        <div className="shell">
+          <h2 className="display display-m max-w-[14em]">Working with farm owners.</h2>
+          <div className="mt-10 grid gap-x-10 gap-y-8 md:grid-cols-2 lg:grid-cols-4">
+            {partnershipModels.map((m) => (
+              <div key={m.title} className="border-t border-graphite/25 pt-4">
+                <h3 className="text-lg font-medium">{m.title}</h3>
+                <p className="small mt-2 text-muted">{m.body}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-10"><TextLink to={contactPath('agri-partnership')}>Discuss a farm partnership</TextLink></p>
+        </div>
+      </section>
+
+      <Partnerships />
     </>
   )
 }

@@ -1,23 +1,20 @@
 // ---------------------------------------------------------------------------
-// Company-level facts and positioning copy.
-// Keep claims restrained and verifiable — no invented history, headcount,
-// revenue, clients, projects, certifications or awards.
+// Company-level facts and positioning.
+//
+// Keep claims measured and verifiable. No invented history, headcount, revenue,
+// acreage, clients, certifications, awards or market position. Contact details
+// here are the verified ones already published; do not replace them.
 // ---------------------------------------------------------------------------
 
 export const company = {
   name: 'Kaimur Valley Innovations',
   legalName: 'Kaimur Valley Innovations Pvt. Ltd.',
   shortName: 'KVI',
-  positioning: 'Growing agriculture. Building enterprises. Enabling progress.',
-  supporting:
-    'KVI brings together agricultural development, food processing, infrastructure and technology to create practical, connected business opportunities.',
+  tagline: 'Building the Future of Farming.',
+  positioning: 'An integrated farm development and agritech company',
   summary:
-    'An AgroTech-led company building businesses around agriculture, food processing, rural infrastructure and software.',
-  // The primary business email (configured in the repo). Do not replace with an
-  // invented address.
+    'Kaimur Valley Innovations (KVI) is an integrated farm development and agritech company. We combine agricultural operations, digital technology and farm infrastructure to build productive agricultural businesses.',
   email: 'kaimurvalleyinnovations@gmail.com',
-  // Primary business number — also reachable on WhatsApp. Do not replace with
-  // an invented number.
   phone: '+91 87559 48184',
   phoneE164: '+918755948184',
   origin: 'Kaimur',
@@ -27,56 +24,56 @@ export const company = {
 
 export const whatsappUrl = `https://wa.me/${company.phoneE164.replace('+', '')}`
 
-export const philosophy = {
-  heading: 'We solve problems we actually understand.',
-  intro:
-    'We do not build solutions from a distance. We encounter problems through real work on farms, sites and in businesses, build solutions to solve them, and test those solutions in practice.',
-  steps: [
-    { no: '01', title: 'Encounter', body: 'Real operations reveal problems worth solving.' },
-    { no: '02', title: 'Build', body: 'Develop infrastructure, systems and practical solutions.' },
-    { no: '03', title: 'Test', body: 'Use them in the conditions they were made for.' },
-    { no: '04', title: 'Share', body: 'Turn useful solutions into products and services for others.' },
-  ],
-}
+export const operatingChain = ['Develop', 'Build', 'Operate', 'Digitize', 'Optimize', 'Scale']
 
-// How the three divisions relate — agriculture at the centre.
-export const ecosystem = {
-  heading: 'Agriculture leads. Infrastructure and technology make it work.',
-  intro:
-    'The three divisions are distinct businesses with their own customers. What connects them is a single focus: making agricultural and rural enterprise more productive and more commercially viable.',
-  nodes: [
-    {
-      verb: 'Grow',
-      division: 'kvi-greens',
-      body: 'Partners with farmers, develops farms, adds value through processing and builds brands that reach customers.',
-    },
-    {
-      verb: 'Build',
-      division: 'kv-infra',
-      body: 'Executes the infrastructure that farms, processing and rural enterprises depend on — and takes on infrastructure work for other clients.',
-    },
-    {
-      verb: 'Enable',
-      division: 'kvi-tech',
-      body: 'Builds software that keeps operations disciplined — for farms, contractors, kilns, institutions and businesses of every kind.',
-    },
-  ],
-  note:
-    'Each division stands on its own commercially. Where one can help another — infrastructure for a farm, software for a site — it does so on normal terms.',
-}
+export const valueChain = [
+  { word: 'Land', note: 'Where every agricultural business starts' },
+  { word: 'Infrastructure', note: 'Water, roads, power and purpose-built structures' },
+  { word: 'Operations', note: 'Production run with discipline, season after season' },
+  { word: 'Technology', note: 'Records, monitoring and decisions in one system' },
+  { word: 'Value', note: 'Processed, branded and sold beyond the farm gate' },
+]
 
-export const vision = {
-  heading: 'Connecting agricultural production, rural enterprise, infrastructure and software.',
-  paragraphs: [
-    'Our long-term aim is an enterprise in which these parts strengthen each other: farms that are better developed and better run, produce that is processed and branded closer to where it is grown, infrastructure that holds up, and software that keeps operations disciplined.',
-    'We are early in that journey. We would rather show work as it becomes real than describe it before it is.',
-  ],
-}
+export const buildStages = [
+  { no: '01', title: 'Plan', body: 'Identify opportunities and develop an agricultural project strategy.' },
+  { no: '02', title: 'Design', body: 'Plan the farm layout, infrastructure and operational requirements.' },
+  { no: '03', title: 'Build', body: 'Develop physical infrastructure and essential farm facilities.' },
+  { no: '04', title: 'Operate', body: 'Establish agricultural operations and commercial activities.' },
+  { no: '05', title: 'Connect', body: 'Integrate technology, monitoring and management systems.' },
+  { no: '06', title: 'Scale', body: 'Improve productivity, develop value-added products and expand operations.' },
+]
+
+export const focusAreas = [
+  { title: 'Integrated Farming', slot: 'aerial-farm', vertical: 'greens' },
+  { title: 'Poultry & Livestock', slot: 'poultry', vertical: 'greens' },
+  { title: 'Aquaculture', slot: 'fish-pond', vertical: 'greens' },
+  { title: 'Horticulture & Agroforestry', slot: 'orchard', vertical: 'greens' },
+  { title: 'Farm Infrastructure', slot: 'farm-building', vertical: 'infra' },
+  { title: 'Smart Farming', slot: 'irrigation', vertical: 'tech' },
+  { title: 'Agricultural Technology', slot: 'crop-rows', vertical: 'tech' },
+  { title: 'Processing & Value Addition', slot: 'rice-grains', vertical: 'greens' },
+  { title: 'Carbon Credit Projects', slot: 'plantation', vertical: 'greens' },
+  { title: 'Agricultural Supply Chains', slot: 'packaging', vertical: 'greens' },
+]
+
+export const sustainability = [
+  { title: 'Responsible land development', body: 'Plan around slope, drainage and existing vegetation before anything is built.' },
+  { title: 'Efficient water management', body: 'Design irrigation, storage and drainage as one system.' },
+  { title: 'Resource optimization', body: 'Use farm records to see where inputs, feed and labour go.' },
+  { title: 'Agroforestry', body: 'Bring trees into farm layouts where they suit the land and the business.' },
+  { title: 'Plantations', body: 'Develop plantation and nursery work as long-term assets.' },
+  { title: 'Carbon credit project development', body: 'Explore projects that could qualify under recognised standards.' },
+  { title: 'Agricultural waste utilization', body: 'Look for productive uses for residues and by-products.' },
+  { title: 'Sustainable farm operations', body: 'Run farms so that they stay productive year after year.' },
+]
+
+export const sustainabilityNote =
+  'These are the principles we plan and build by. KVI does not publish environmental impact figures, and has not issued or claimed carbon credits.'
 
 export const rooted = {
-  heading: 'Rooted in Kaimur. Built for a wider world.',
-  paragraphs: [
-    'The name comes from the Kaimur region of Bihar, where KVI began. It reflects where the work started and the kind of ground-level, practical approach that shaped it.',
-    'The businesses KVI builds — on farms, on sites and in software — are designed to work well beyond any single region.',
-  ],
+  heading: 'Rooted in Kaimur.',
+  body: 'The name comes from the Kaimur region of Bihar, where KVI began. It reflects where the work started and the ground-level, practical approach that shaped it.',
 }
+
+export const photoNote =
+  'Photographs and site plans on this website are illustrative. They do not depict KVI projects unless stated.'

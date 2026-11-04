@@ -1,90 +1,114 @@
+import SitePlan from '../components/SitePlan.jsx'
+import { Reveal, StatusLabel, TextLink, VerticalMark } from '../components/ui.jsx'
+import { PageHero, Partnerships } from '../components/shared.jsx'
+import { company, operatingChain, rooted } from '../data/company.js'
+import { verticals } from '../data/verticals.js'
+import { seo } from '../data/seo.js'
 import useDocumentMeta from '../lib/useDocumentMeta.js'
-import PageHeader from '../components/PageHeader.jsx'
-import Section from '../components/Section.jsx'
-import SectionHeading from '../components/SectionHeading.jsx'
-import Reveal from '../components/Reveal.jsx'
-import GroupStructure from '../components/GroupStructure.jsx'
-import PhilosophySection from '../sections/PhilosophySection.jsx'
-import VisionSection from '../sections/VisionSection.jsx'
-import RootedSection from '../sections/RootedSection.jsx'
-import ContactCtaSection from '../sections/ContactCtaSection.jsx'
-import { about } from '../data/about.js'
-import { company } from '../data/company.js'
-import { businesses } from '../data/businesses.js'
+
+const STATE = [
+  {
+    status: 'operational',
+    heading: 'What runs today',
+    body: 'KVI Tech software platforms, including FarmGrid and the wider product portfolio.',
+  },
+  {
+    status: 'development',
+    heading: 'What we are developing',
+    body: 'The KVI Greens partner farm model, Mokari Gobindbhog Rice and the KVI Infra farm development practice.',
+  },
+  {
+    status: 'planned',
+    heading: 'What we plan to pursue',
+    body: 'Carbon credit project development, wider value addition, and smart farming and automation research.',
+  },
+]
 
 export default function About() {
-  useDocumentMeta({
-    title: 'About KVI',
-    description:
-      'Kaimur Valley Innovations Pvt. Ltd. is an AgroTech-led company from Kaimur, Bihar, building businesses around agriculture, food processing, rural infrastructure and enterprise software.',
-    path: '/about',
-  })
-
-  const facts = [
-    { term: 'Company', value: company.legalName },
-    { term: 'Origin', value: `${company.origin}, ${company.region}` },
-    { term: 'Focus', value: 'Agriculture, food processing, infrastructure and technology' },
-    { term: 'Divisions', value: businesses.map((b) => b.name).join(' · ') },
-  ]
-
+  useDocumentMeta(seo.about)
   return (
     <>
-      <PageHeader
-        eyebrow="About KVI"
-        title="An AgroTech-led company, built from the ground up."
-        lede={about.lede}
+      <PageHero
+        title="An operating company built around agriculture."
+        lede={`${company.legalName} is an integrated farm development and agritech company.`}
+        art={<SitePlan />}
       />
 
-      <Section tone="paper">
-        <div className="grid gap-12 lg:grid-cols-12">
-          <Reveal className="lg:col-span-7">
-            <p className="font-serif text-2xl font-medium leading-snug sm:text-3xl">{company.supporting}</p>
-          </Reveal>
-          <Reveal delay={80} className="lg:col-span-4 lg:col-start-9">
-            <dl className="divide-y divide-line border-y border-line">
-              {facts.map((f) => (
-                <div key={f.term} className="py-4">
-                  <dt className="eyebrow">{f.term}</dt>
-                  <dd className="mt-1.5 text-base text-ink">{f.value}</dd>
-                </div>
-              ))}
-            </dl>
-          </Reveal>
-        </div>
-      </Section>
-
-      {about.sections.map((s, i) => (
-        <Section key={s.key} id={s.key} tone={i % 2 === 0 ? 'sunken' : 'paper'} divide>
-          <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
-            <Reveal className="lg:col-span-4">
-              <h2 className="text-2xl sm:text-3xl">{s.heading}</h2>
-            </Reveal>
-            <Reveal delay={80} className="lg:col-span-7 lg:col-start-6">
-              {s.body.map((p) => (
-                <p key={p} className="mt-5 max-w-prose text-lg text-ink-muted first:mt-0">
-                  {p}
-                </p>
-              ))}
-            </Reveal>
+      <section className="band">
+        <div className="shell grid gap-10 lg:grid-cols-12">
+          <p className="title lg:col-span-7">
+            KVI operates around one domain: agriculture. We develop agricultural businesses, build their physical infrastructure, and create the digital technology needed to manage and scale them.
+          </p>
+          <div className="space-y-8 lg:col-span-4 lg:col-start-9">
+            <div>
+              <h2 className="text-sm text-muted">Vision</h2>
+              <p className="mt-2 text-lg">To advance agriculture through integrated farm development, technology and infrastructure.</p>
+            </div>
+            <div>
+              <h2 className="text-sm text-muted">Mission</h2>
+              <p className="mt-2 text-lg">To develop productive agricultural businesses by combining operational expertise, digital innovation and purpose-built infrastructure.</p>
+            </div>
           </div>
-        </Section>
-      ))}
+        </div>
+      </section>
 
-      <Section tone="paper" divide id="structure">
-        <SectionHeading
-          eyebrow="Company structure"
-          heading="One company. Three divisions. Agriculture at the centre."
-          intro="KVI Greens leads the agricultural work. KV Infra and KVI Tech provide infrastructure and technology — for KVI’s own ventures and for their own clients. Software products sit inside KVI Tech."
-        />
-        <Reveal className="mx-auto mt-14 max-w-3xl">
-          <GroupStructure />
-        </Reveal>
-      </Section>
+      <section className="band bg-stone">
+        <div className="shell">
+          <h2 className="display display-m max-w-[14em]">We build capabilities, operate real projects and commercialize what works.</h2>
+          <ol className="mt-12 grid grid-cols-2 border-l border-t border-graphite/25 md:grid-cols-3 xl:grid-cols-6">
+            {operatingChain.map((step, i) => (
+              <Reveal as="li" key={step} delay={i * 60} className="border-b border-r border-graphite/25 p-4 lg:p-6">
+                <span className="small text-muted">{i + 1}</span>
+                <p className="title mt-6 lg:mt-14">{step}</p>
+              </Reveal>
+            ))}
+          </ol>
+        </div>
+      </section>
 
-      <PhilosophySection tone="sunken" />
-      <VisionSection showLink={false} />
-      <RootedSection />
-      <ContactCtaSection />
+      <section id="verticals" className="band">
+        <div className="shell">
+          <h2 className="display display-m max-w-[14em]">Three capabilities, one integrated ecosystem.</h2>
+          <div className="mt-12">
+            {verticals.map((v) => (
+              <article key={v.id} className="grid gap-x-8 gap-y-3 border-t border-line py-8 lg:grid-cols-12">
+                <div className="flex items-center gap-3 lg:col-span-3">
+                  <VerticalMark id={v.id} />
+                  <h3 className="title">{v.name}</h3>
+                </div>
+                <p className="font-medium lg:col-span-3">{v.role}</p>
+                <p className="lg:col-span-4">{v.body}</p>
+                <p className="lg:col-span-2 lg:text-right"><TextLink to={v.to}>{v.cta}</TextLink></p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="band bg-stone">
+        <div className="shell">
+          <h2 className="display display-m max-w-[14em]">Long-term direction, stated plainly.</h2>
+          <p className="mt-5 max-w-prose text-muted">We separate what operates today from what we are still building, and we will keep this page up to date as that changes.</p>
+          <div className="mt-12 grid gap-10 md:grid-cols-3">
+            {STATE.map((s) => (
+              <div key={s.status}>
+                <StatusLabel status={s.status} />
+                <h3 className="title mt-4">{s.heading}</h3>
+                <p className="mt-3">{s.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="band-sm">
+        <div className="shell grid gap-6 lg:grid-cols-12">
+          <h2 className="display display-m lg:col-span-5">{rooted.heading}</h2>
+          <p className="lede lg:col-span-6 lg:col-start-7">{rooted.body}</p>
+        </div>
+      </section>
+
+      <Partnerships />
     </>
   )
 }

@@ -1,71 +1,74 @@
-# Kaimur Valley Innovations — Corporate Website
+# Kaimur Valley Innovations: Corporate Website
 
 The corporate website for **Kaimur Valley Innovations Pvt. Ltd. (KVI)**, an
-AgroTech-led company building businesses and technology around agriculture,
-food processing, rural infrastructure and enterprise software.
+integrated farm development and agritech company.
 
-## Business structure
+## Structure
 
 ```
 Kaimur Valley Innovations Pvt. Ltd.
-├── KVI Greens   Agriculture, food processing & natural products  (lead division)
-├── KV Infra     Infrastructure & project execution
-└── KVI Tech     Software products & technology services
-    ├── FarmGrid       farmgrid.kvinnovations.in
-    ├── BillGrid       billgrid.kvinnovations.in
-    ├── CampusGrid     campusgrid.kvinnovations.in
-    ├── BhattaGrid     bhattagrid.kvinnovations.in
-    └── ContractorOS   contractoros.kvinnovations.in
+├── KVI Greens   Agriculture, agribusiness and natural resources
+├── KVI Tech     Agritech, software, AI and automation
+│   ├── FarmGrid       farmgrid.kvinnovations.in (agricultural platform)
+│   ├── BillGrid       billgrid.kvinnovations.in
+│   ├── CampusGrid     campusgrid.kvinnovations.in
+│   ├── BhattaGrid     bhattagrid.kvinnovations.in
+│   └── ContractorOS   contractoros.kvinnovations.in
+└── KVI Infra    Farm architecture, agricultural infrastructure, farm development
 ```
 
-BuildGrid and FamGrid are kept in `src/data/products.js` with `listed: false`
-while their public sites are offline; flip the flag to show them again.
+BuildGrid and FamGrid are named in the portfolio with no link while their
+public sites are offline. Set `listed: true` in `src/data/products.js` to link
+them and give them product pages.
 
 ## Tech stack
 
-- [React 19](https://react.dev/) + [Vite 8](https://vite.dev/) (plain JSX)
-- [React Router 7](https://reactrouter.com/) — `BrowserRouter` (clean URLs)
-- [Tailwind CSS 3](https://tailwindcss.com/) with a token-based theme
-  (all colours are CSS variables in [`src/index.css`](./src/index.css) — edit
-  there to re-skin the whole site; `tailwind.config.js` only maps them)
-- [Fraunces](https://fonts.google.com/specimen/Fraunces) (h1/h2) + [Inter / Inter Tight](https://fonts.google.com/specimen/Inter) via Google Fonts
-- Local inline-SVG icon set ([`src/components/Icon.jsx`](./src/components/Icon.jsx)) — no icon dependency
-- `oxlint` for linting
+- React 19 and Vite 8 (plain JSX)
+- React Router 7, `BrowserRouter` (clean URLs)
+- Tailwind CSS 3. Colours are CSS variables in `src/index.css`;
+  `tailwind.config.js` only maps them
+- Self-hosted fonts: Instrument Serif (display) and Geist (text), via Fontsource
+- `oxlint` for linting, Playwright for the acceptance suite
 
 ## Project structure
 
 ```
 src/
-  components/   Reusable UI (Nav, Footer, Button, Section, Card, Icon, …)
-  layouts/      SiteLayout — the app shell
-  sections/     Page-level composed blocks (Hero, EcosystemSection, …)
+  assets/       Photographs and video (see docs/media-plan.md)
+  components/   Nav, Footer, SitePlan, Photo, Drawings, shared blocks, ui
+  layouts/      SiteLayout, the app shell
   pages/        One file per route
-  data/         Structured content: businesses, products, insights, navigation
-  lib/          Hooks + the contact-submit seam + per-route <meta> helper
+  data/         Content: company, verticals, projects, products, seo, media
+  lib/          Hooks, the contact-submit seam, the per-route <meta> helper
+scripts/
+  fetch-media.mjs      Downloads the site's photographs and video
+  prerender-meta.mjs   Writes per-route HTML metadata after the build
 ```
 
-Content lives in `src/data/` as structured data, not hardcoded in components.
-Add a business, product or article by editing the relevant file there.
+Content lives in `src/data/`. To add a project, add an entry to
+`src/data/projects.js`; the card, filters and status labels follow.
+
+The signature visual is `SitePlan`: one generated farm plan
+(`src/data/sitePlan.js`) with Greens, Infra and Tech as layers.
 
 ## Routes
 
 | Route | Page |
 | --- | --- |
-| `/` | Corporate homepage |
-| `/about` | Company overview, mission, model, structure, vision |
-| `/businesses` | The three divisions and how they connect |
-| `/greens` | KVI Greens — farmer partnerships, ecosystem, Mokari Gobindbhog Rice |
-| `/infra` | KV Infra — capability areas and execution |
-| `/tech` | KVI Tech — products and technology services |
-| `/products` | Full product portfolio by sector |
-| `/products/:slug` | One page per product (`farmgrid`, `billgrid`, `campusgrid`, `bhattagrid`, `contractoros`) |
-| `/contact` | Enquiry routes + form (`?enquiry=<type>&product=<slug>` preselects) |
-| `/insights`, `/privacy`, `/terms` | Supporting pages |
-| `/farms` | 301 → `/greens` (nginx) and client-side redirect |
+| `/` | Homepage |
+| `/about` | Company, vision, mission, philosophy, verticals, direction |
+| `/greens`, `/tech`, `/infra` | The three verticals |
+| `/projects` | Projects and initiatives with status labels |
+| `/products`, `/products/:slug` | Software portfolio and product pages |
+| `/contact` | Enquiry form (`?enquiry=<type>&product=<slug>` preselects) |
+| `/insights` | Empty until articles exist (noindex) |
+| `/privacy`, `/terms` | Legal |
+| `/farms` | 301 to `/greens` |
+| `/businesses` | 301 to `/about#verticals` |
 
-Content rules (see the comments at the top of each `src/data/*.js` file): no
-invented projects, clients, figures, certifications or history. The KVI Greens
-ecosystem is always shown with its "being built progressively" note.
+Content rules: no invented projects, clients, figures, certifications or
+history. Keep what operates today separate from what is planned.
+`docs/content-claims.md` records claims that need evidence.
 
 ## Getting started
 
@@ -79,7 +82,8 @@ npm run dev
 | Command           | Description                              |
 | ----------------- | ---------------------------------------- |
 | `npm run dev`     | Local dev server with hot reload         |
-| `npm run build`   | Production build to `dist/`              |
+| `npm run build`   | Production build to `dist/`, with per-route metadata |
+| `npm run media:fetch` | Download photographs and video (see docs/media-plan.md) |
 | `npm run preview` | Preview the production build             |
 | `npm run lint`    | Run oxlint                               |
 | `npm run test:e2e` | Headless acceptance suite (after `npm run build`; see DEPLOYMENT.md §2) |
@@ -98,7 +102,7 @@ is configured, hands the visitor a pre-filled `mailto:` draft — it never shows
 a fake "sent" confirmation. To wire it to a real
 service (e.g. Formspree), set `VITE_CONTACT_ENDPOINT` (POST JSON) at **build**
 time — see [`src/lib/submitContact.js`](./src/lib/submitContact.js) and
-[`DEPLOYMENT.md`](./DEPLOYMENT.md#2-wiring-the-contact-form-to-formspree).
+[`DEPLOYMENT.md`](./DEPLOYMENT.md#3-wiring-the-contact-form-to-formspree).
 
 ## Deployment
 

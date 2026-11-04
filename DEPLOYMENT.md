@@ -98,8 +98,9 @@ downtime), not a change here.
 
 - Static files only — no backend, database, auth, or host-published port.
 - `nginx.conf`'s `try_files $uri $uri/ /index.html` is what makes deep links
-  (e.g. `/businesses`) work with `BrowserRouter`. Do not remove it.
-- `nginx.conf` also 301-redirects the renamed `/farms` route to `/greens`
+  (e.g. `/greens`) work with `BrowserRouter`. Do not remove it.
+- `nginx.conf` also 301-redirects `/farms` to `/greens` and `/businesses` to
+  `/about#verticals`
   (`absolute_redirect off` keeps the Location relative behind Caddy).
 - First-time build with no local Node: see the Docker one-liner in
   [`README.md`](./README.md).
@@ -113,7 +114,7 @@ public routes at desktop and mobile size, console errors and failed
 requests, overflow, h1 and metadata, link targets, menus, the `/farms`
 redirect, the Mokari Gobindbhog Rice panel, the privacy disclosures and the
 contact form. Requests to other hosts are stubbed, so it never depends on
-Google Fonts or the live product sites.
+the live product sites, and any third-party request is a failure.
 
 ```bash
 npx playwright install chromium     # once per machine
@@ -172,18 +173,15 @@ posting anywhere.
       LinkedIn, Slack or WhatsApp link previews; PNG is universally supported.
 - [ ] Set `VITE_CONTACT_ENDPOINT` per section 3 above so the contact form
       delivers mail instead of the `mailto:` fallback.
-- [ ] SEO: `index.html` is one file for every route, so crawlers and link
-      previews that don't run JS see the homepage title/description. Follow-up:
-      a small post-build step that writes `dist/<route>/index.html` with each
-      route's title, description, canonical and `og:*` (nginx already serves
-      `$uri/` via `try_files`) — no framework change needed.
-- [ ] Privacy: consider self-hosting the fonts (removes the only third-party
-      request) and have a full policy reviewed (India DPDP Act 2023).
+- [x] SEO: `scripts/prerender-meta.mjs` writes `dist/<route>/index.html` with
+      each route's title, description, canonical and `og:*`; nginx serves them
+      via `$uri/`.
+- [x] Fonts are self-hosted, so the site makes no third-party requests.
+- [ ] Privacy: have a full policy reviewed (India DPDP Act 2023).
 - [ ] `npm audit`: 8 build-time advisories in transitive dev dependencies
       (Tailwind 3 toolchain, `source-map-js`); none ship in the static bundle.
 - [ ] Publish real Privacy / Terms copy in [`src/pages/Legal.jsx`](./src/pages/Legal.jsx).
 - [ ] Add real articles to [`src/data/insights.js`](./src/data/insights.js).
-- [ ] Real photography: no authentic KVI farm, processing or project photos
-      exist yet, so the site uses line illustrations. Replace/augment with
-      genuine KVI images (farms, Mokari Gobindbhog Rice processing/packing, sites) — never
-      stock photos presented as KVI work.
+- [ ] Photographs: run `npm run media:fetch` (see `docs/media-plan.md`), then
+      replace with genuine KVI images as they become available. Stock photos
+      are illustrative and never presented as KVI work.
