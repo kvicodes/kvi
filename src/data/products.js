@@ -69,6 +69,21 @@ export const allProducts = [
     url: 'https://billgrid.kvinnovations.in/',
     status: 'live',
     listed: true,
+    // Windows launcher for the same web app (BillGrid repo, desktop/). The ZIP in
+    // public/downloads/ is the CI artifact from kvicodes/BillGrid Actions run
+    // 42763101377, published byte-for-byte; update every field together.
+    desktopApp: {
+      name: 'BillGrid Desktop',
+      version: '0.1.0',
+      released: '10 November 2026',
+      platform: 'Windows 10 and Windows 11, 64-bit',
+      format: 'ZIP archive containing an NSIS installer (.exe)',
+      href: '/downloads/billgrid-desktop-0.1.0-x64-1.zip',
+      size: '3.0 MB',
+      bytes: 3137194,
+      installer: 'BillGrid-Desktop-0.1.0-x64-setup.exe',
+      installerSha256: '9a0d479ab918702d03ebc932fd3b246d09e22c3aa7cd182a04ebff55819dc2b7',
+    },
   },
   {
     id: 'campusgrid',

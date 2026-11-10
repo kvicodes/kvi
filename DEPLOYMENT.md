@@ -102,6 +102,15 @@ downtime), not a change here.
 - `nginx.conf` also 301-redirects `/farms` to `/greens` and `/businesses` to
   `/about#verticals`
   (`absolute_redirect off` keeps the Location relative behind Caddy).
+- Published downloads live in `public/downloads/` (copied verbatim into
+  `dist/downloads/`). nginx serves that path as real files only — ZIPs as
+  `application/zip` attachments, a plain 404 for anything missing, no SPA
+  fallback and no directory listing. Release facts (version, size in bytes,
+  installer SHA-256) live next to the product in `src/data/products.js`
+  (`desktopApp`), and the acceptance suite fetches every download link and
+  checks status, type and exact byte size. To publish a new version, add the
+  new versioned file, update `desktopApp`, and remove the old file in the
+  same commit.
 - First-time build with no local Node: see the Docker one-liner in
   [`README.md`](./README.md).
 

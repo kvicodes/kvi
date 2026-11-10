@@ -14,6 +14,7 @@
 
 import { spawn } from 'node:child_process'
 import { chromium } from 'playwright'
+import { allProducts } from '../../src/data/products.js'
 
 const PREVIEW_PORT = 4317
 let BASE = process.env.BASE_URL
@@ -36,6 +37,8 @@ const ALLOWED_THIRD_PARTY = new Set()
 const LIVE_PRODUCT_LINKS = ['farmgrid', 'billgrid', 'campusgrid', 'bhattagrid', 'contractoros']
   .map((p) => `https://${p}.kvinnovations.in/`)
 // Unverified claims that must not appear on the site (see docs/content-claims.md).
+// Published files (public/downloads/): every download link must be one of these.
+const DOWNLOADS = allProducts.filter((p) => p.desktopApp).map((p) => p.desktopApp)
 const FORBIDDEN_TEXT = [/Mokari Premium/i, /Mokari brand/i, /\bModi\b/, /Ayodhya/i, /Ram Lalla/i, /KV Infra/, /AgroTech/, /verified carbon/i, /certified/i]
 
 const results = []
@@ -43,6 +46,7 @@ const fail = (msg) => results.push(`FAIL ${msg}`)
 const ok = (msg) => results.push(`ok   ${msg}`)
 const check = (cond, good, bad) => (cond ? ok(good) : fail(bad))
 const thirdPartyHosts = new Set()
+const downloadLinks = new Set()
 
 async function startPreview() {
   preview = spawn('npx', ['vite', 'preview', '--port', String(PREVIEW_PORT), '--strictPort'], {
@@ -136,7 +140,8 @@ async function routeChecks(browser) {
       const offline = info.links.filter((h) => /buildgrid|famgrid/i.test(h))
       if (offline.length) fail(`${tag} links to an offline product: ${offline.join(', ')}`)
       for (const h of info.links) {
-        if (h.startsWith('/')) internal.add(h)
+        if (h.startsWith('/downloads/')) downloadLinks.add(h)
+        else if (h.startsWith('/')) internal.add(h)
         else if (/^https?:/.test(h)) external.add(h)
       }
       if (NOT_FOUND.includes(route)) {
@@ -164,6 +169,33 @@ async function routeChecks(browser) {
   check(missing.length === 0, 'all 5 live product sites are linked (hrefs only, not fetched)', `missing product links: ${missing.join(', ')}`)
   const unexpected = [...external].filter((u) => !LIVE_PRODUCT_LINKS.includes(u) && !u.startsWith('https://wa.me/'))
   check(unexpected.length === 0, 'no other external links', `unexpected external links: ${unexpected.join(', ')}`)
+}
+
+// Download links point at real, complete files (fetched over HTTP, not via a click).
+async function downloadChecks(browser) {
+  const ctx = await newContext(browser, VIEWPORTS.desktop)
+  for (const d of DOWNLOADS) {
+    check(downloadLinks.has(d.href), `${d.name} ${d.version} download is linked (${d.href})`, `${d.href} is not linked from any page`)
+    const res = await ctx.request.get(BASE + d.href)
+    const body = await res.body()
+    const type = res.headers()['content-type'] || ''
+    check(
+      res.status() === 200 && body.length === d.bytes && body.subarray(0, 4).toString('latin1') === 'PK\x03\x04' && /zip/.test(type),
+      `${d.href} serves the ${d.bytes}-byte ZIP (${type})`,
+      `${d.href}: HTTP ${res.status()}, ${body.length} bytes, type ${type}`,
+    )
+  }
+  const unknown = [...downloadLinks].filter((h) => !DOWNLOADS.some((d) => d.href === h))
+  check(unknown.length === 0, 'every download link is a published file', `unpublished download links: ${unknown.join(', ')}`)
+  if (process.env.BASE_URL) {
+    // nginx only (vite preview has no /downloads/ rules): attachment, no SPA fallback, no listing.
+    const res = await ctx.request.get(BASE + DOWNLOADS[0].href)
+    check(/attachment/.test(res.headers()['content-disposition'] || ''), 'downloads are sent as attachments', 'missing Content-Disposition: attachment')
+    const missing = await ctx.request.get(`${BASE}/downloads/does-not-exist.zip`)
+    const listing = await ctx.request.get(`${BASE}/downloads/`)
+    check(missing.status() === 404 && listing.status() === 404, 'missing downloads and /downloads/ return 404 (no SPA fallback, no listing)', `missing=${missing.status()} listing=${listing.status()}`)
+  }
+  await ctx.close()
 }
 
 async function interactionChecks(browser) {
@@ -343,6 +375,7 @@ try {
   if (!BASE) await startPreview()
   const browser = await chromium.launch()
   await routeChecks(browser)
+  await downloadChecks(browser)
   await interactionChecks(browser)
   await widthChecks(browser)
   await contactChecks(browser, 'desktop')
