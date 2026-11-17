@@ -8,6 +8,7 @@ import Infra from './pages/Infra.jsx'
 import Projects from './pages/Projects.jsx'
 import Products from './pages/Products.jsx'
 import Product from './pages/Product.jsx'
+import Innovation from './pages/Innovation.jsx'
 import Insights from './pages/Insights.jsx'
 import Contact from './pages/Contact.jsx'
 import Legal from './pages/Legal.jsx'
@@ -29,6 +30,7 @@ export default function App() {
           <Route path="/projects" element={<Projects />} />
           <Route path="/products" element={<Products />} />
           <Route path="/products/:slug" element={<Product />} />
+          <Route path="/innovation" element={<Innovation />} />
           <Route path="/insights" element={<Insights />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/privacy" element={<Legal kind="privacy" />} />

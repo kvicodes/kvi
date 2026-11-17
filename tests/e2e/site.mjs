@@ -23,10 +23,10 @@ let preview
 const ROUTES = [
   '/', '/about', '/greens', '/infra', '/tech', '/projects', '/products',
   '/products/farmgrid', '/products/billgrid', '/products/campusgrid',
-  '/products/bhattagrid', '/products/contractoros', '/insights', '/contact',
+  '/products/bhattagrid', '/products/contractoros', '/innovation', '/insights', '/contact',
   '/privacy', '/terms',
 ]
-const NOT_FOUND = ['/products/buildgrid', '/products/famgrid', '/does-not-exist']
+const NOT_FOUND = ['/products/buildgrid', '/products/famgrid', '/products/athletixgrid', '/does-not-exist']
 const KNOWN = new Set(ROUTES)
 const VIEWPORTS = {
   desktop: { viewport: { width: 1440, height: 900 } },
@@ -210,8 +210,16 @@ async function interactionChecks(browser) {
 
   await page.goto(BASE + '/', { waitUntil: 'networkidle' })
   const primary = page.getByRole('navigation', { name: 'Primary' })
-  const navItems = await primary.locator('a').allTextContents()
-  check(['About', 'Greens', 'Tech', 'Infra', 'Projects', 'Contact'].every((n) => navItems.includes(n)), 'primary nav lists all sections', `primary nav: ${navItems.join(' / ')}`)
+  const businesses = primary.getByRole('button', { name: 'Businesses' })
+  check((await businesses.getAttribute('aria-expanded')) === 'false' && (await primary.getByRole('link', { name: 'KVI Greens' }).count()) === 0, 'Businesses menu starts closed with no focusable links', 'Businesses menu is open or leaks links while closed')
+  await businesses.focus()
+  await page.keyboard.press('Enter')
+  const bizLinks = await primary.locator('#businesses-menu a').count()
+  await page.keyboard.press('Escape')
+  const closedAgain = (await businesses.getAttribute('aria-expanded')) === 'false'
+  check(bizLinks === 3 && closedAgain, 'Businesses menu opens from the keyboard (3 verticals) and closes on Escape', `Businesses menu: ${bizLinks} links, closedAgain=${closedAgain}`)
+  const navItems = await primary.locator('a, button').allTextContents()
+  check(['About', 'Businesses', 'Products', 'Innovation', 'Projects', 'Contact'].every((n) => navItems.some((t) => t.trim() === n)), 'primary nav lists all sections', `primary nav: ${navItems.join(' / ')}`)
 
   // Every briefed homepage headline, in order.
   const headings = (await page.locator('h2').allTextContents()).map((t) => t.toLowerCase())
@@ -262,6 +270,7 @@ async function interactionChecks(browser) {
   await page.goto(BASE + '/tech', { waitUntil: 'networkidle' })
   const tech = await page.locator('#portfolio').innerText()
   check(/BuildGrid/.test(tech) && /FamGrid/.test(tech), 'BuildGrid and FamGrid are named in the portfolio (unlinked)', 'portfolio is missing BuildGrid or FamGrid')
+  check(/AthletixGrid/.test(tech) && /In development/.test(tech) && !/athletixgrid\.kvinnovations/.test(await page.content()), 'AthletixGrid is named as In development, with no invented link', 'AthletixGrid missing, mislabelled or linked')
 
   // Static per-route metadata for crawlers without JS (skipped if a host does not serve it).
   for (const [route, want] of [['/greens', 'KVI Greens'], ['/products/farmgrid', 'FarmGrid']]) {

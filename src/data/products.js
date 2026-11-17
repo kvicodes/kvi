@@ -192,6 +192,20 @@ export const allProducts = [
     status: 'offline',
     listed: false,
   },
+  {
+    // Source: the AthletixGrid repository README (2026-11-17): "Phase 1 (project
+    // foundation) complete ... No business features yet; nothing deployed."
+    // No public URL, no product page. Update status/listed together once it
+    // ships.
+    id: 'athletixgrid',
+    name: 'AthletixGrid',
+    category: 'Sports organisation management',
+    sector: 'Sports',
+    summary:
+      'A planned ERP for sports organisations in India: membership, fees, coaches, athlete performance and competitions.',
+    status: 'development',
+    listed: false,
+  },
 ]
 
 export const products = allProducts.filter((p) => p.listed)

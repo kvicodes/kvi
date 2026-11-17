@@ -7,6 +7,27 @@ import { techCapabilities } from '../data/verticals.js'
 import { seo } from '../data/seo.js'
 import useDocumentMeta from '../lib/useDocumentMeta.js'
 
+// Source: the FarmGrid repository README (Core principle, Unit Types, Production
+// Records, Reporting). Describe design, never outcomes: no measured results exist.
+const farmChanges = [
+  {
+    problem: 'Land, labour, inputs, animals and cash sit in separate notebooks.',
+    answer: 'One structure: organization, farm, unit, batch, activity, resources and financials, so every record belongs to something.',
+  },
+  {
+    problem: 'A mixed farm does not fit software built for one crop.',
+    answer: 'Unit types and custom fields are configured by the client with no code deployment, so a field, an orchard block, a shed or a pond each keep the records that suit them.',
+  },
+  {
+    problem: 'It is hard to see which part of the farm makes or loses money.',
+    answer: 'Activities, inputs, labour and costs roll up into farm, unit and batch profit-and-loss reporting.',
+  },
+  {
+    problem: 'Production is tracked differently on every unit.',
+    answer: 'One production-records engine handles milk yield, egg count, weight, feed, mortality and other record types the farm defines.',
+  },
+]
+
 const STATE_STYLE = { Live: 'text-rice', Research: 'text-sage' }
 
 export default function Tech() {
@@ -47,6 +68,27 @@ export default function Tech() {
               {agriProduct.modules.map((m) => <li key={m} className="border-t border-line-dark py-2.5">{m}</li>)}
             </ul>
           </div>
+        </div>
+      </section>
+
+      <section id="on-the-farm" className="band">
+        <div className="shell">
+          <h2 className="display display-m max-w-[14em]">What software changes on a farm.</h2>
+          <p className="mt-5 max-w-prose text-muted">What FarmGrid is built to do, as set out in its own documentation. It describes the design, not measured results.</p>
+          <dl className="mt-10 border-b border-line">
+            {farmChanges.map((c) => (
+              <div key={c.problem} className="grid gap-x-8 gap-y-2 border-t border-line py-6 lg:grid-cols-12">
+                <dt className="lg:col-span-4">
+                  <span className="small block text-muted">The problem</span>
+                  <span className="title mt-1 block">{c.problem}</span>
+                </dt>
+                <dd className="lg:col-span-7 lg:col-start-6">
+                  <span className="small block text-muted">In FarmGrid</span>
+                  <span className="mt-1 block">{c.answer}</span>
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </section>
 

@@ -45,6 +45,12 @@ export const seo = {
     description:
       'The KVI Tech software portfolio: FarmGrid for farm operations, and products for billing, education, brick kilns and civil contractors.',
   },
+  innovation: {
+    path: '/innovation',
+    title: 'Innovation: Software, Automation and Sustainable Agriculture',
+    description:
+      'How KVI approaches innovation: software built for real operations, agricultural development, automation and applied AI under research, and sustainable farm practice.',
+  },
   contact: {
     path: '/contact',
     title: 'Contact',

@@ -35,7 +35,7 @@ function Hero() {
         </h1>
         <div className="mt-6 grid gap-6 lg:mt-8 lg:grid-cols-12 lg:items-end">
           <p className="lede lg:col-span-6">
-            We bring together agricultural operations, digital innovation and infrastructure development to build a more productive, connected and sustainable agricultural ecosystem.
+            KVI is building an integrated model for farming: land, infrastructure, operations and software planned, built, run and measured as one system.
           </p>
           <div className="flex flex-wrap gap-3 lg:col-span-6 lg:justify-end">
             <Button to="/#ecosystem" variant="solid-light" className="max-sm:px-4">Explore Our Ecosystem</Button>

@@ -25,6 +25,9 @@ export default function Products() {
           <h2 className="title mt-16">Technology portfolio</h2>
           <div className="mt-6"><Portfolio /></div>
           <p className="small mt-4 text-muted">{productsNote}</p>
+          <p className="mt-8 max-w-prose">
+            Why a farm group builds billing and school software: KVI Tech is a software team first. Building and running products for other industries keeps the engineering practice real, and FarmGrid benefits from it. These products are sold as software, not as agricultural businesses.
+          </p>
           <p className="mt-8"><TextLink to="/tech">About KVI Tech</TextLink></p>
         </div>
       </section>

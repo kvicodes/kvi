@@ -2,7 +2,8 @@ import SitePlan from '../components/SitePlan.jsx'
 import { Reveal, StatusLabel, TextLink, VerticalMark } from '../components/ui.jsx'
 import { PageHero, Partnerships } from '../components/shared.jsx'
 import { company, operatingChain, rooted } from '../data/company.js'
-import { verticals } from '../data/verticals.js'
+import { verticals, verticalById } from '../data/verticals.js'
+import { projects } from '../data/projects.js'
 import { seo } from '../data/seo.js'
 import useDocumentMeta from '../lib/useDocumentMeta.js'
 
@@ -98,6 +99,25 @@ export default function About() {
               </div>
             ))}
           </div>
+
+          <h3 className="title mt-16">Where each part stands today</h3>
+          <ul className="mt-4 border-b border-line">
+            <li className="grid gap-x-6 gap-y-2 border-t border-line py-4 sm:grid-cols-12 sm:items-baseline">
+              <span className="sm:col-span-5">Business software for adjacent industries</span>
+              <span className="sm:col-span-3"><StatusLabel status="operational" /></span>
+              <span className="small text-muted sm:col-span-4">BillGrid, CampusGrid, BhattaGrid, ContractorOS</span>
+            </li>
+            {projects.map((p) => (
+              <li key={p.slug} className="grid gap-x-6 gap-y-2 border-t border-line py-4 sm:grid-cols-12 sm:items-baseline">
+                <span className="sm:col-span-5">{p.title}</span>
+                <span className="sm:col-span-3"><StatusLabel status={p.status} /></span>
+                <span className="small text-muted sm:col-span-4">{verticalById(p.vertical).name}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="small mt-4 max-w-prose text-muted">
+            Anything not listed here, including processing, storage, traceability, energy and housing, is not something KVI offers today. See <TextLink to="/projects">projects and initiatives</TextLink> for detail.
+          </p>
         </div>
       </section>
 

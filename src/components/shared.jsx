@@ -108,7 +108,7 @@ export function Portfolio({ onDark = false }) {
             {p.listed ? (
               <a href={p.url} target="_blank" rel="noreferrer noopener" className="tlink" aria-label={`${p.name} website`}>Visit website</a>
             ) : (
-              <span className={soft}>Site not currently public</span>
+              <span className={soft}>{p.status === 'development' ? 'In development' : 'Site not currently public'}</span>
             )}
           </p>
         </li>
