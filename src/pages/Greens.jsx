@@ -23,11 +23,11 @@ export default function Greens() {
           <Photo slot="aerial-farm" sizes="(min-width:1024px) 66vw, 100vw" className="col-span-6 aspect-[16/9] lg:col-span-4 lg:aspect-auto" />
           <div className="col-span-6 grid grid-cols-2 gap-2 lg:col-span-2 lg:grid-cols-1 lg:gap-3">
             <Photo slot="orchard" sizes="33vw" className="aspect-[4/3]" />
-            <Photo slot="fish-pond" sizes="33vw" className="aspect-[4/3]" />
+            <Photo slot="field-pond" sizes="33vw" className="aspect-[4/3]" />
           </div>
-          <Photo slot="poultry" sizes="33vw" className="col-span-3 aspect-[4/3] lg:col-span-2" />
+          <Photo slot="crop-rows" sizes="33vw" className="col-span-3 aspect-[4/3] lg:col-span-2" />
           <Photo slot="greenhouse" sizes="33vw" className="col-span-3 aspect-[4/3] lg:col-span-2" />
-          <Photo slot="packaging" sizes="33vw" className="col-span-6 aspect-[2/1] lg:col-span-2 lg:aspect-[4/3]" />
+          <Photo slot="rice-field" sizes="33vw" className="col-span-6 aspect-[2/1] lg:col-span-2 lg:aspect-[4/3]" />
         </div>
       </section>
 

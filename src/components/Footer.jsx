@@ -56,6 +56,7 @@ export default function Footer() {
           <p className="flex shrink-0 gap-6">
             <Link to="/privacy" className="hover:text-rice">Privacy</Link>
             <Link to="/terms" className="hover:text-rice">Terms</Link>
+            <Link to="/credits" className="hover:text-rice">Photo credits</Link>
           </p>
         </div>
       </div>

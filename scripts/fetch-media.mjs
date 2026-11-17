@@ -77,7 +77,9 @@ async function main() {
   const failed = []
   let fetched = 0
 
-  for (const item of media) {
+  // Only slots with a Unsplash `id` are fetched. Current photographs come from
+  // Wikimedia Commons and are already in src/assets/photos (see src/data/media.js).
+  for (const item of media.filter((m) => m.id)) {
     const targets = WIDTHS.map((w) => ({ w, dest: join(PHOTOS, `${item.slot}-${w}.webp`) }))
     const todo = []
     for (const t of targets) if (force || !(await exists(t.dest))) todo.push(t)

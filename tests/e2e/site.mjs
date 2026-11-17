@@ -24,7 +24,7 @@ const ROUTES = [
   '/', '/about', '/greens', '/infra', '/tech', '/projects', '/products',
   '/products/farmgrid', '/products/billgrid', '/products/campusgrid',
   '/products/bhattagrid', '/products/contractoros', '/innovation', '/insights', '/contact',
-  '/privacy', '/terms',
+  '/privacy', '/terms', '/credits',
 ]
 const NOT_FOUND = ['/products/buildgrid', '/products/famgrid', '/products/athletixgrid', '/does-not-exist']
 const KNOWN = new Set(ROUTES)
@@ -34,6 +34,8 @@ const VIEWPORTS = {
 }
 // The site loads nothing from third parties (the Privacy page says so).
 const ALLOWED_THIRD_PARTY = new Set()
+// Photo credits link to licences and sources (see /credits).
+const CREDIT_LINK = /^https:\/\/(commons\.wikimedia\.org\/wiki\/File:|creativecommons\.org\/licenses\/|mixkit\.co\/free-stock-video\/)/
 const LIVE_PRODUCT_LINKS = ['farmgrid', 'billgrid', 'campusgrid', 'bhattagrid', 'contractoros']
   .map((p) => `https://${p}.kvinnovations.in/`)
 // Unverified claims that must not appear on the site (see docs/content-claims.md).
@@ -150,7 +152,7 @@ async function routeChecks(browser) {
         const want = `https://kvinnovations.in${route === '/' ? '/' : route}`
         if (info.canonical !== want) fail(`${tag} canonical ${info.canonical} != ${want}`)
         if (!info.description || info.description.length < 50) fail(`${tag} weak meta description`)
-        if (info.robots !== (route === '/insights' ? 'noindex, follow' : 'index, follow')) fail(`${tag} robots=${info.robots}`)
+        if (info.robots !== (['/insights', '/credits'].includes(route) ? 'noindex, follow' : 'index, follow')) fail(`${tag} robots=${info.robots}`)
         if (titles.has(info.title)) fail(`${tag} duplicate title with ${titles.get(info.title)}`)
         titles.set(info.title, route)
       }
@@ -167,7 +169,7 @@ async function routeChecks(browser) {
   ok(`${internal.size} distinct internal link targets resolve to known routes`)
   const missing = LIVE_PRODUCT_LINKS.filter((u) => !external.has(u))
   check(missing.length === 0, 'all 5 live product sites are linked (hrefs only, not fetched)', `missing product links: ${missing.join(', ')}`)
-  const unexpected = [...external].filter((u) => !LIVE_PRODUCT_LINKS.includes(u) && !u.startsWith('https://wa.me/'))
+  const unexpected = [...external].filter((u) => !LIVE_PRODUCT_LINKS.includes(u) && !u.startsWith('https://wa.me/') && !CREDIT_LINK.test(u))
   check(unexpected.length === 0, 'no other external links', `unexpected external links: ${unexpected.join(', ')}`)
 }
 

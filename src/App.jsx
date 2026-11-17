@@ -11,6 +11,7 @@ import Product from './pages/Product.jsx'
 import Innovation from './pages/Innovation.jsx'
 import Insights from './pages/Insights.jsx'
 import Contact from './pages/Contact.jsx'
+import Credits from './pages/Credits.jsx'
 import Legal from './pages/Legal.jsx'
 import NotFound from './pages/NotFound.jsx'
 
@@ -33,6 +34,7 @@ export default function App() {
           <Route path="/innovation" element={<Innovation />} />
           <Route path="/insights" element={<Insights />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/credits" element={<Credits />} />
           <Route path="/privacy" element={<Legal kind="privacy" />} />
           <Route path="/terms" element={<Legal kind="terms" />} />
           <Route path="/farms" element={<Navigate to="/greens" replace />} />

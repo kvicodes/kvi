@@ -69,6 +69,12 @@ export const seo = {
     description:
       'Terms for using the Kaimur Valley Innovations Pvt. Ltd. website: general information only, not an offer, commitment or professional advice.',
   },
+  credits: {
+    path: '/credits',
+    title: 'Photo Credits',
+    description: 'Attribution and licences for the free-licence photographs used on the Kaimur Valley Innovations website.',
+    robots: 'noindex, follow',
+  },
   insights: {
     path: '/insights',
     title: 'Insights',
